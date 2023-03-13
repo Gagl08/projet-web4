@@ -1,15 +1,15 @@
 import {NextApiRequest, NextApiResponse} from 'next';
 import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient();
 
+export const prisma = new PrismaClient();
 export default async function createUser(req: NextApiRequest, res: NextApiResponse) {
 
+  const {email, password} = req.query
+  if (!email || !password) return res.status(400).send({message: "error"})
+
   const newUser = await prisma.user.create({
-    data: {
-      name: 'Alice',
-      email: 'alice@prisma.io',
-    },
+    data: {email, password},
   });
 
-  return res.status(201).send({message: "createUser"}); // TODO
+  return res.status(201).send({message: "createUser", newUser});
 }
