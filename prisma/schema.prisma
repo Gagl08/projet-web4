@@ -11,4 +11,17 @@ model User {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   email     String    @unique
   password  String?
+  
+  messageSent Chat[]
+  messageReceived Chat[] @relation("chatReceived")
 }
+
+model Chat {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  message String 
+  sender    User?  @relation(fields: [senderId], references: [id])
+  senderId  String @db.ObjectId
+  receiver  User? @relation(name:"chatReceived", fields: [receiverId], references: [id])
+  receiverId String @db.ObjectId
+}
+
