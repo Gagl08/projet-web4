@@ -65,7 +65,7 @@ export default function Register() {
         <form onSubmit={handleSubmit(onRegister)}>
           <FormControl isInvalid={errors.name}>
             <Flex mb={"1rem"} gap={5}>
-              <Box>
+              <FormControl>
                 <FormLabel>Prénom</FormLabel>
                 <Input
                   id="prenom"
@@ -75,8 +75,8 @@ export default function Register() {
                     required: "This is required",
                   })}
                 />
-              </Box>
-              <Box>
+              </FormControl>
+              <FormControl>
                 <FormLabel>Nom</FormLabel>
                 <Input
                   id="nom"
@@ -86,9 +86,9 @@ export default function Register() {
                     required: "This is required",
                   })}
                 />
-              </Box>
+              </FormControl>
             </Flex>
-            <Box mb={"1rem"}>
+            <FormControl mb={"1rem"}>
               <FormLabel>Adresse email</FormLabel>
               <Input
                 id="email"
@@ -98,8 +98,8 @@ export default function Register() {
                   required: "This is required",
                 })}
               />
-            </Box>
-            <Box mb={"1rem"}>
+            </FormControl>
+            <FormControl mb={"1rem"}>
               <FormLabel>Mot de passe</FormLabel>
               <Input
                 id="pwd"
@@ -109,9 +109,9 @@ export default function Register() {
                   required: "This is required",
                 })}
               />
-            </Box>
+            </FormControl>
             {/* Il y a une margin en trop mais je me suis dit que c'etais mieux d'avoir plus d'expace entre les deux */}
-            <Box mb={"1rem"}>
+            <FormControl mb={"1rem"}>
               <FormLabel>Confirmation du mot de passe</FormLabel>
               <Input
                 id="pwd_bis"
@@ -121,7 +121,7 @@ export default function Register() {
                   required: "This is required",
                 })}
               />
-            </Box>
+            </FormControl>
 
             <FormErrorMessage>
               {errors.name && errors.name.message}
