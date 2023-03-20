@@ -27,30 +27,30 @@ export default function Register() {
   };
 
   const onRegister = async (values) => {
-    alert(JSON.stringify(values, null, 2));
-    // if (values.pwd !== values.pwd_bis) {
-    //   alert("Les mots de passe ne correspondent pas");
-    //   return;
-    // }
-    // try {
-    //   const response = await fetch("/api/user/", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(values),
-    //   });
-    //   const data = await response.json();
-    //   if (data.error) {
-    //     alert(data.message);
-    //   } else {
-    //     console.log(data);
-    //     alert("Inscription réussie");
-    //     router.push("/");
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    // alert(JSON.stringify(values, null, 2));
+    if (values.password !== values.password_bis) {
+      alert("Les mots de passe ne correspondent pas");
+      return;
+    }
+    try {
+      const response = await fetch("/api/user/", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const data = await response.json();
+      if (data.error) {
+        alert(data.message);
+      } else {
+        console.log(data);
+        alert("Inscription réussie");
+        router.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const RightSide = () => (
@@ -68,10 +68,10 @@ export default function Register() {
               <FormControl>
                 <FormLabel>Prénom</FormLabel>
                 <Input
-                  id="prenom"
+                  id="surname"
                   type="text"
                   placeholder="Prénom"
-                  {...register("prenom", {
+                  {...register("surname", {
                     required: "This is required",
                   })}
                 />
@@ -79,10 +79,10 @@ export default function Register() {
               <FormControl>
                 <FormLabel>Nom</FormLabel>
                 <Input
-                  id="nom"
+                  id="name"
                   type="text"
                   placeholder="Nom"
-                  {...register("nom", {
+                  {...register("name", {
                     required: "This is required",
                   })}
                 />
@@ -102,10 +102,10 @@ export default function Register() {
             <FormControl mb={"1rem"}>
               <FormLabel>Mot de passe</FormLabel>
               <Input
-                id="pwd"
+                id="password"
                 type="password"
                 placeholder="Mot de passe"
-                {...register("pwd", {
+                {...register("password", {
                   required: "This is required",
                 })}
               />
@@ -114,10 +114,10 @@ export default function Register() {
             <FormControl mb={"1rem"}>
               <FormLabel>Confirmation du mot de passe</FormLabel>
               <Input
-                id="pwd_bis"
+                id="password_bis"
                 type="password"
                 placeholder="Mot de passe"
-                {...register("pwd_bis", {
+                {...register("password_bis", {
                   required: "This is required",
                 })}
               />
