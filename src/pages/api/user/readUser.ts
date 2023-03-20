@@ -4,7 +4,20 @@ import { PrismaClient } from '@prisma/client'
 export const prisma = new PrismaClient();
 
 export default async function readUser(req: NextApiRequest, res: NextApiResponse) {
-  const users = await prisma.user.findMany()
+  
+  const {email, password} = req.query
+  
+  if(!email) {
+    const users = await prisma.user.findMany()
+    return res.status(200).send({message: "readUser", users});
+  }
+  
+  const user = await prisma.user.findUnique({where :{"email" : email}})
+  
+  if (user?.password == password) {
+    res.status(200).send({message: "User found", user});
+  }
 
-  return res.status(200).send({message: "readUser", users});
+  res.status(400).send({message: "Mot de passe incorrect"});
+
 }

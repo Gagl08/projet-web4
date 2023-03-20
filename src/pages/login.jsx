@@ -22,8 +22,24 @@ export default function Login() {
   const router = useRouter();
 
   const onLogin = async (values) => {
-    alert(JSON.stringify(values, null, 2));
-    // faut voir ce qu'on fait quand on se connecte
+    try {
+      const response = await fetch(`/api/user/?email=${values.email}&password=${values.password}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      const data = await response.json();
+      if (data.error) {
+        alert(data.message);
+      } else {
+        console.log(data);
+        alert("connexion réussie");
+        // router.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const redirect_home = () => {
@@ -55,10 +71,10 @@ export default function Login() {
             <Box mb={"1rem"}>
               <FormLabel>Mot de passe</FormLabel>
               <Input
-                id="pwd"
+                id="password"
                 type="password"
                 placeholder="Mot de passe"
-                {...register("pwd", {
+                {...register("password", {
                   required: "This is required",
                 })}
               />
