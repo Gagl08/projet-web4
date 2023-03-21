@@ -4,7 +4,7 @@ import Carousel from "./Carousel";
 export default function CardUser(props) {
   const { user } = props;
   // const data_user = props;
-  const borderRad = "1.5rem";
+  const borderRad = "2rem";
 
   return (
     <Card
@@ -16,8 +16,8 @@ export default function CardUser(props) {
       <Carousel
         user={user}
         borderRadiusImg={borderRad}
-        heightPhoto={"60vh"}
-        heightText={"40vh"}
+        heightPhoto={"75vh"}
+        heightText={"25vh"}
       />
       <Flex>
         <Box></Box>

@@ -1,7 +1,23 @@
 import React from "react";
-import { Box, IconButton, useBreakpointValue } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Spacer,
+  IconButton,
+  useBreakpointValue,
+  ButtonGroup,
+  Badge,
+  Text,
+} from "@chakra-ui/react";
 // Here we have used react-icons package for the icons
-import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
+import {
+  BiLeftArrowAlt,
+  BiRightArrowAlt,
+  BiHeart,
+  // RxCross1,
+} from "react-icons/bi";
+
+import { RxCross1 } from "react-icons/rx";
 // And react-slick as our Carousel Lib
 import Slider from "react-slick";
 
@@ -19,10 +35,24 @@ const settings = {
 };
 
 export default function Carousel(props) {
-  const { heightPhoto, heightText, borderRadiusImg, user } = props;
+  const { borderRadiusImg, user } = props;
   // As we have used custom buttons, we need a reference variable to
   // change the state
+
+  // C'est l'utilisateur qui est login
+  const actualUser = {
+    lastName: "Alexandra",
+    firstName: "Lamie",
+    age: 21,
+    aPropos: "Je suis la personne fictive la plus fictive",
+    images: ["401446.webp"],
+    passions: ["Sport", "Voiture", "Cuisine"],
+  };
+
   const [slider, setSlider] = React.useState();
+
+  const heightPhoto = "75vh";
+  const heightText = "25vh";
 
   // These are the breakpoints which changes the position of the
   // buttons as the screen size changes
@@ -98,10 +128,53 @@ export default function Carousel(props) {
           ))}
         </Slider>
       </Box>
-      <Box height={heightText} bgGradient="radial(purple.200, purple.300)">
-        <h1>
-          {user.name} {user.surname} , {user.age}
-        </h1>
+      <Box
+        height={heightText}
+        borderBottomRadius={borderRadiusImg}
+        // bgGradient="radial(purple.200, purple.300)"
+      >
+        <Flex m={"1vh"}>
+          <h1
+            style={{
+              fontSize: "1.5rem",
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            {user.firstName} {user.lastName} , {user.age} ans
+          </h1>
+          <Spacer />
+          <Box alignItems="center" display="flex">
+            <Flex flexDirection={{ base: "row", sm: "column" }}>
+              <ButtonGroup gap={"0.5rem"}>
+                <IconButton borderRadius={"1rem"} colorScheme={"pink"}>
+                  <BiHeart />
+                </IconButton>
+                <IconButton borderRadius={"1rem"} colorScheme={"red"}>
+                  <RxCross1 />
+                </IconButton>
+              </ButtonGroup>
+            </Flex>
+          </Box>
+        </Flex>
+
+        <Box m={"1vh"}>
+          <Text style={{ fontWeight: "bold" }}>{user.aPropos}</Text>
+        </Box>
+        <Box m={"1vh"}>
+          <h2 style={{ fontWeight: "bold" }}>Passions :</h2>
+          <Flex gap={"0.5rem"} mt={"1vh"}>
+            {user.passions.map((passion, index) =>
+              actualUser.passions.includes(passion) ? (
+                <Badge borderRadius={"0.5rem"} colorScheme={"purple"}>
+                  #{passion}
+                </Badge>
+              ) : (
+                <Badge borderRadius={"0.5rem"}>#{passion}</Badge>
+              )
+            )}
+          </Flex>
+        </Box>
       </Box>
     </>
   );
