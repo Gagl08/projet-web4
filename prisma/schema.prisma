@@ -1,3 +1,4 @@
+// Connexion
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,24 +8,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Models
 model User {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  email     String    @unique
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  email     String  @unique
   password  String?
-  name  String
-  surname String
-  admin Boolean @default(false)
-  
-  messageSent Chat[]
-  messageReceived Chat[] @relation("chatReceived")
+  firstName String
+  lastName  String
+  role      Role    @default(USER)
+
+  Chat    Chat?     @relation(fields: [chatId], references: [id])
+  chatId  String?   @db.ObjectId
+  Message Message[]
 }
 
 model Chat {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  message String 
-  sender    User?  @relation(fields: [senderId], references: [id])
-  senderId  String @db.ObjectId
-  receiver  User? @relation(name:"chatReceived", fields: [receiverId], references: [id])
-  receiverId String @db.ObjectId
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  messages Message[]
+  users    User[]
 }
 
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  message   String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  Chat      Chat     @relation(fields: [chatId], references: [id])
+  userId    String   @db.ObjectId
+  chatId    String   @db.ObjectId
+}
+
+enum Role {
+  USER
+  ADMIN
+}
