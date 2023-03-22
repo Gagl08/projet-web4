@@ -10,12 +10,12 @@ datasource db {
 
 // Models
 model User {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  email     String  @unique
-  password  String?
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  email     String @unique
+  password  String
   firstName String
   lastName  String
-  role      Role    @default(USER)
+  role      Role   @default(USER)
 
   Chat    Chat?     @relation(fields: [chatId], references: [id])
   chatId  String?   @db.ObjectId

@@ -21,13 +21,7 @@ export default function HomeHero() {
   );
 
   const LeftSide = () => (
-    <Box flexBasis={"100%"}>
-      <Image
-        boxShadow={"lg"}
-        minH={"100vh"}
-        src={"/couple_funny.png"}
-        alt="funny couple"
-      />
+    <Box flexBasis={"100%"} minH={"100vh"} bgImage={"/couple_funny.png"} bgSize={'cover'} bgPos={"center"}>
     </Box>
   );
 
