@@ -1,8 +1,7 @@
 import Head from 'next/head';
 import Navbar from '@/components/Navbar';
-import {Box, Image} from '@chakra-ui/react';
-import HomeHero from '@/components/layout/Home/HomeHero';
-import HomePresentation from '@/components/layout/Home/HomePresentation';
+import HeroBanner from '@/components/layout/Home/HeroBanner';
+import HomePresentation from '@/components/layout/Home/PresentationSection';
 
 
 export default function Home() {
@@ -16,11 +15,8 @@ export default function Home() {
         </Head>
 
         <Navbar/>
-        <HomeHero/>
+        <HeroBanner/>
         <HomePresentation/>
-
-        <Box minH={'100vh'}>
-        </Box>
       </>
   );
 }
