@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import {PrismaClient} from '@prisma/client';
 import {NextApiRequest, NextApiResponse} from 'next';
 import {LoginData} from '@/models/form/LoginData';
+import {isSamePassword} from '@/lib/PasswordTools';
 
 const prisma = new PrismaClient();
 
@@ -24,7 +25,10 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         });
 
         // Vérification de la connexion
-        if (user && user.password === password) return user;
+        if (user && await isSamePassword(password, user.password)) {
+          return user;
+        }
+
         return null;
       },
     })

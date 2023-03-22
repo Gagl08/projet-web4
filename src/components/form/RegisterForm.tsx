@@ -25,18 +25,16 @@ export default function RegisterForm() {
   };
 
   const handleSubmit = () => {
-    const {password, confirmPassword} = registerData;
+    let {email, firstName, lastName, password, confirmPassword} = registerData;
     if (password !== confirmPassword) setInvalidInput(true);
 
     fetch('/api/user', {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(registerData),
+      body: JSON.stringify({email, firstName, lastName, password}),
     }).then(() => {
-      const {email, password} = registerData;
-
-      signIn('credentials',
-          {email, password, redirect: false}).then((res) => {
+      signIn('credentials', {email, password, redirect: false})
+      .then((res) => {
         const {ok: connexionSuccess} = res as SignInResponse;
 
         // TODO If success -> goto interactive form else login
