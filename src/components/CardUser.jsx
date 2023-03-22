@@ -6,22 +6,30 @@ export default function CardUser(props) {
   // const data_user = props;
   const borderRad = "2rem";
 
+  const potentialMatch = {
+    lastName: "dujardin",
+    firstName: "jean",
+    age: 19,
+    aPropos: "Je suis une personne fictive, pas tres fictive",
+    images: ["401446.webp"],
+    passions: ["Sport", "Piscine", "Formule1"],
+  };
+
   return (
     <Card
       borderRadius={borderRad}
-      width={"30vw"}
-      height={"100vh"}
+      width={"35vw"}
+      height={"90vh"}
       padding={"0px"}
+      marginY={"auto"}
     >
       <Carousel
-        user={user}
+        actualUser={user}
+        potentialMatch={potentialMatch}
         borderRadiusImg={borderRad}
         heightPhoto={"75vh"}
         heightText={"25vh"}
       />
-      <Flex>
-        <Box></Box>
-      </Flex>
     </Card>
   );
 }

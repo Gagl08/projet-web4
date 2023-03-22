@@ -1,16 +1,22 @@
+import { Flex } from "@chakra-ui/react";
 import CardUser from "../components/CardUser";
+import InfoUser from "../components/InfoUser";
 
 export default function Test_card() {
   const user = {
-    lastName: "dujardin",
-    firstName: "jean",
-    age: 19,
-    aPropos: "Je suis une personne fictive, pas tres fictive",
-    images: ["401446.webp"],
-    passions: ["Sport", "Piscine", "Formule1"],
+    lastName: "Alexandra",
+    firstName: "Lamy",
+    age: 21,
+    aPropos: "Je suis la personne fictive la plus fictive",
+    images: ["135538.webp"],
+    passions: ["Sport", "Voiture", "Cuisine"],
   };
 
-  //faudra faire une requete sur la BD pour chaque utilisateurs
-
-  return <CardUser user={user} />;
+  return (
+    <Flex gap={10}>
+      {/* à terme, envoyer les données du user depuis la session */}
+      <InfoUser user={user} />
+      <CardUser user={user} />
+    </Flex>
+  );
 }

@@ -10,11 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import {
-  BiLeftArrowAlt,
-  BiRightArrowAlt,
-  BiHeart,
-} from "react-icons/bi";
+import { BiLeftArrowAlt, BiRightArrowAlt, BiHeart } from "react-icons/bi";
 
 import { RxCross1 } from "react-icons/rx";
 import Slider from "react-slick";
@@ -32,17 +28,7 @@ const settings = {
 };
 
 export default function Carousel(props) {
-  const { borderRadiusImg, user } = props;
-
-  // C'est l'utilisateur qui est login
-  const actualUser = {
-    lastName: "Alexandra",
-    firstName: "Lamie",
-    age: 21,
-    aPropos: "Je suis la personne fictive la plus fictive",
-    images: ["401446.webp"],
-    passions: ["Sport", "Voiture", "Cuisine"],
-  };
+  const { borderRadiusImg, actualUser, potentialMatch } = props;
 
   const [slider, setSlider] = React.useState();
 
@@ -51,13 +37,6 @@ export default function Carousel(props) {
 
   const top = useBreakpointValue({ base: "90%", md: "50%" });
   const side = useBreakpointValue({ base: "30%", md: "10px" });
-
-  // These are the images used in the slide
-  //   const cards = [
-  //     'https://images.unsplash.com/photo-1612852098516-55d01c75769a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
-  //     'https://images.unsplash.com/photo-1627875764093-315831ac12f7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDJ8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
-  //     'https://images.unsplash.com/photo-1571432248690-7fd6980a1ae2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDl8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
-  //   ];
 
   return (
     <>
@@ -109,10 +88,10 @@ export default function Carousel(props) {
         </IconButton>
         {/* Slider */}
         <Slider {...settings} ref={(slider) => setSlider(slider)}>
-          {user.images.map((url, index) => (
+          {potentialMatch.images.map((url, index) => (
             <Box
               key={index}
-              borderTopEndRadius={borderRadiusImg}
+              borderTopRadius={borderRadiusImg}
               height={heightPhoto}
               backgroundPosition="center"
               backgroundSize="cover"
@@ -134,7 +113,8 @@ export default function Carousel(props) {
               textAlign: "center",
             }}
           >
-            {user.firstName} {user.lastName} , {user.age} ans
+            {potentialMatch.firstName} {potentialMatch.lastName} ,{" "}
+            {potentialMatch.age} ans
           </h1>
           <Spacer />
           <Box alignItems="center" display="flex">
@@ -152,12 +132,12 @@ export default function Carousel(props) {
         </Flex>
 
         <Box m={"1vh"}>
-          <Text style={{ fontWeight: "bold" }}>{user.aPropos}</Text>
+          <Text style={{ fontWeight: "bold" }}>{potentialMatch.aPropos}</Text>
         </Box>
         <Box m={"1vh"}>
           <h2 style={{ fontWeight: "bold" }}>Passions :</h2>
           <Flex gap={"0.5rem"} mt={"1vh"}>
-            {user.passions.map((passion, index) =>
+            {potentialMatch.passions.map((passion, index) =>
               actualUser.passions.includes(passion) ? (
                 <Badge borderRadius={"0.5rem"} colorScheme={"purple"}>
                   #{passion}
