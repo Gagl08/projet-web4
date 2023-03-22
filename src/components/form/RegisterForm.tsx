@@ -10,6 +10,7 @@ import {
 import {useRouter} from 'next/router';
 import {useState} from 'react';
 import {RegisterData} from '@/models/form/RegisterData';
+import {signIn, SignInResponse} from 'next-auth/react';
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -27,11 +28,22 @@ export default function RegisterForm() {
     const {password, confirmPassword} = registerData;
     if (password !== confirmPassword) setInvalidInput(true);
 
-    fetch('/api/user/new', {
+    fetch('/api/user', {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(registerData),
-    }).then(() => router.push('/')).catch(() => {
+    }).then(() => {
+      const {email, password} = registerData;
+
+      signIn('credentials',
+          {email, password, redirect: false}).then((res) => {
+        const {ok: connexionSuccess} = res as SignInResponse;
+
+        // TODO If success -> goto interactive form else login
+        router.push( connexionSuccess ? "/" : "/login");
+      });
+
+    }).catch(() => {
       setInvalidInput(true);
       setRegisterData({...registerData, password: '', confirmPassword: ''});
     });

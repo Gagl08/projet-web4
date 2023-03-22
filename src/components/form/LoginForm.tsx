@@ -28,9 +28,9 @@ export default function LoginForm() {
   const handleSubmit = async () => {
     await signIn('credentials',
         {...loginData, redirect: false}).then((res) => {
-      const {ok} = res as SignInResponse;
+      const {ok: connexionSuccess} = res as SignInResponse;
 
-      if (!ok) setInvalidInput(true);
+      if (!connexionSuccess) setInvalidInput(true);
       else router.push('/');
     });
   };
