@@ -35,8 +35,10 @@ async function createUser(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function readUser(req: NextApiRequest, res: NextApiResponse) {
+  const {id} = req.query as {id: string}
+  
   const user = (req.query.id)
-      ? await prisma.user.findUnique({where: {id: req.query.id}})
+      ? await prisma.user.findUnique({where: {id}})
       : await prisma.user.findMany()
   ;
 
