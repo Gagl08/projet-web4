@@ -9,19 +9,16 @@ import {
   Badge,
   Text,
 } from "@chakra-ui/react";
-// Here we have used react-icons package for the icons
+
 import {
   BiLeftArrowAlt,
   BiRightArrowAlt,
   BiHeart,
-  // RxCross1,
 } from "react-icons/bi";
 
 import { RxCross1 } from "react-icons/rx";
-// And react-slick as our Carousel Lib
 import Slider from "react-slick";
 
-// Settings for the slider
 const settings = {
   dots: true,
   arrows: false,
@@ -36,8 +33,6 @@ const settings = {
 
 export default function Carousel(props) {
   const { borderRadiusImg, user } = props;
-  // As we have used custom buttons, we need a reference variable to
-  // change the state
 
   // C'est l'utilisateur qui est login
   const actualUser = {
@@ -54,8 +49,6 @@ export default function Carousel(props) {
   const heightPhoto = "75vh";
   const heightText = "25vh";
 
-  // These are the breakpoints which changes the position of the
-  // buttons as the screen size changes
   const top = useBreakpointValue({ base: "90%", md: "50%" });
   const side = useBreakpointValue({ base: "30%", md: "10px" });
 

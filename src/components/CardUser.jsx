@@ -1,4 +1,4 @@
-import { CardBody, Card, Image, Flex, Box } from "@chakra-ui/react";
+import { Card, Flex, Box } from "@chakra-ui/react";
 import Carousel from "./Carousel";
 
 export default function CardUser(props) {
