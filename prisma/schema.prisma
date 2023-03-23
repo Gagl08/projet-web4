@@ -10,32 +10,67 @@ datasource db {
 
 // Models
 model User {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  email     String @unique
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
   password  String
-  firstName String
-  lastName  String
-  role      Role   @default(USER)
+  firstName String?
+  lastName  String?
+  bio       String?
+  location  String?
+  images    String[]
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
 
-  Chat    Chat?     @relation(fields: [chatId], references: [id])
-  chatId  String?   @db.ObjectId
+  // Liste des chats de l'utilisateur
+  ChatID String[] @db.ObjectId
+  Chat   Chat[]   @relation(fields: [ChatID], references: [id])
+
+  // Liste des passions de l'utilisateur
+  PassionID String[]  @db.ObjectId
+  Passion   Passion[] @relation(fields: [PassionID], references: [id])
+
+  // Les messages envoyés
   Message Message[]
+
+  // Les personnes que l'utilisateur aime
+  UserLikesID String[] @db.ObjectId
+  UserLikes   User[]   @relation("Likes", fields: [UserLikesID], references: [id])
+
+  // Les personnes qui aiment l'utilisateur
+  OtherUserLikesID String[] @db.ObjectId
+  OtherUserLikes   User[]   @relation("Likes", fields: [OtherUserLikesID], references: [id])
 }
 
 model Chat {
   id       String    @id @default(auto()) @map("_id") @db.ObjectId
   messages Message[]
-  users    User[]
+
+  // Les utilisateurs qui ont un chat en commun
+  User   User[]   @relation(fields: [UserId], references: [id])
+  UserId String[] @db.ObjectId
+}
+
+model Passion {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+
+  // Les utilisateurs qui on en commun cette passion
+  UserId String[] @db.ObjectId
+  User   User[]   @relation(fields: [UserId], references: [id])
 }
 
 model Message {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   message   String
-  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
-  Chat      Chat     @relation(fields: [chatId], references: [id])
-  userId    String   @db.ObjectId
-  chatId    String   @db.ObjectId
+
+  // L'utilisateur qui a envoyé le message
+  UserID String @db.ObjectId
+  User   User   @relation(fields: [UserID], references: [id])
+
+  // Le chat où ce trouve le message
+  ChatID String? @db.ObjectId
+  Chat   Chat?   @relation(fields: [ChatID], references: [id])
 }
 
 enum Role {
