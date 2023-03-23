@@ -10,16 +10,18 @@ datasource db {
 
 // Models
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String   @unique
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email     String    @unique
   password  String
   firstName String?
   lastName  String?
   bio       String?
   location  String?
   images    String[]
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
+  birthdate DateTime?
+  sex       Sex?
+  role      Role      @default(USER)
+  createdAt DateTime  @default(now())
 
   // Liste des chats de l'utilisateur
   ChatID String[] @db.ObjectId
@@ -71,6 +73,11 @@ model Message {
   // Le chat où ce trouve le message
   ChatID String? @db.ObjectId
   Chat   Chat?   @relation(fields: [ChatID], references: [id])
+}
+
+enum Sex {
+  MALE
+  FEMALE
 }
 
 enum Role {
