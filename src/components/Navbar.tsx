@@ -9,7 +9,11 @@ import {
 import {useRouter} from 'next/router';
 import {signOut, useSession} from 'next-auth/react';
 
-export default function Navbar() {
+type Props = {
+  variant: "static" | "fixed"
+}
+
+export default function Navbar({variant = "fixed"}: Props) {
   const router = useRouter();
   const {data: session, status} = useSession();
 
@@ -40,7 +44,7 @@ export default function Navbar() {
   };
 
   return (
-      <Box position={'fixed'} zIndex={9999} top={0} width={'100vw'}
+      <Box position={variant} zIndex={9999} top={0} width={'100vw'}
            backdropFilter={'auto'} backdropBlur={'20px'} px={10} py={2}>
         <Flex align={'center'}>
           <Box flexBasis={'100%'}>

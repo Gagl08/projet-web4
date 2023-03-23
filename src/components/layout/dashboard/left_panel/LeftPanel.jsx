@@ -4,8 +4,6 @@ import {
   Box,
   Image,
   Text,
-  Button,
-  VStack,
   Spacer,
 } from '@chakra-ui/react';
 import {useRouter} from 'next/router';
@@ -19,7 +17,7 @@ export default function LeftPanel(props) {
   const {user} = props;
 
   return (
-    <Card width={'20vw'} height={'100vh'} padding={'0px'}>
+    <Card width={'20vw'} height={'100%'} borderRadius={0} padding={'0px'} bg={'#faf9ff'}>
       <Flex direction={'column'} height={'100%'} margin={'10%'}>
         <Box>
           <Image src={user.images[0]} borderRadius={'1rem'}/>
