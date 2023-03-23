@@ -1,4 +1,11 @@
-import {Box, Flex, Text, ButtonGroup, Button} from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Text,
+  ButtonGroup,
+  Button,
+  Image,
+} from '@chakra-ui/react';
 import {useRouter} from 'next/router';
 import {signOut, useSession} from 'next-auth/react';
 
@@ -7,7 +14,6 @@ export default function Navbar() {
   const {data: session, status} = useSession();
 
   const RightSection = () => {
-
     if (status === "authenticated" && session.user) return (
         <Flex justify={'right'} flexBasis={'100%'}>
           <Text>{session.user.email}</Text>
@@ -38,7 +44,7 @@ export default function Navbar() {
            backdropFilter={'auto'} backdropBlur={'20px'} px={10} py={2}>
         <Flex align={'center'}>
           <Box flexBasis={'100%'}>
-            <Text>Logo</Text>
+            <Image src={"/logo.svg"} h={"100px"} objectFit={"contain"}/>
           </Box>
 
           <Flex gap={5} justify={'center'} flexBasis={'100%'}>
