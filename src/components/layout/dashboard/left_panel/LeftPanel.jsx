@@ -12,7 +12,7 @@ import {useRouter} from 'next/router';
 import {AiFillMessage} from 'react-icons/ai';
 import {BsFillPersonFill} from 'react-icons/bs';
 import LeftPanelButton
-  from '@/components/layout/Dashboard/LeftPanel/LeftPanelButton';
+  from '@/components/layout/dashboard/left_panel/LeftPanelButton';
 
 export default function LeftPanel(props) {
   const router = useRouter();

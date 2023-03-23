@@ -1,9 +1,13 @@
 import { Box, Flex } from "@chakra-ui/react";
 import RegisterForm from "@/components/form/RegisterForm";
+import {websiteName} from '@/lib/constants';
+import Head from 'next/head';
 
 export default function Register() {
   return (
-    <Box>
+    <>
+      <Head><title>{websiteName} | Inscription</title></Head>
+
       <Flex gap={10} h={"100vh"} alignItems={"center"}>
         <Box
           display={{ base: "none", md: "block" }}
@@ -15,6 +19,6 @@ export default function Register() {
         />
         <RegisterForm />
       </Flex>
-    </Box>
+    </>
   );
 }

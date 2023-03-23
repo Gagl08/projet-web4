@@ -31,7 +31,7 @@ export default function LoginForm() {
       const {ok: connexionSuccess} = res as SignInResponse;
 
       if (!connexionSuccess) setInvalidInput(true);
-      else router.push('/');
+      else router.push('/dashboard');
     });
   };
 

@@ -1,5 +1,5 @@
 import type {NextApiRequest, NextApiResponse} from 'next';
-import CRUD from '@/utils/CRUD';
+import CRUD from '@/models/api/CRUD';
 import {CreateUserQuery} from '@/models/api/UserQuery';
 import {hashPassword} from '@/lib/PasswordTools';
 import prismaClient from '@/lib/prismaClient';
