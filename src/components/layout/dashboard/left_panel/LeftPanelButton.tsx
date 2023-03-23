@@ -1,19 +1,20 @@
-import {Button} from '@chakra-ui/react';
+import {Button, ResponsiveValue} from '@chakra-ui/react';
 import {ReactJSXElement} from '@emotion/react/types/jsx-namespace';
 
 type Props = {
   children?: ReactJSXElement
   onClickHandler: () => void
-  leftIcon ?: ReactJSXElement
+  leftIcon?: ReactJSXElement,
+  variant?: ResponsiveValue<'link' | 'outline' | string | 'ghost' | 'solid' | 'unstyled'>
 }
 
 export default function LeftPanelButton(props: Props) {
-  const {children, onClickHandler, leftIcon: icon} = props;
+  const {children, onClickHandler, leftIcon: icon, variant = "ghost"} = props;
 
   return (
       <Button
           colorScheme={'purple'}
-          variant={'ghost'}
+          variant={variant}
           width={'100%'}
           justifyContent={'left'}
           onClick={onClickHandler}

@@ -7,10 +7,14 @@ import {
   Spacer,
 } from '@chakra-ui/react';
 import {useRouter} from 'next/router';
+
 import {AiFillMessage} from 'react-icons/ai';
 import {BsFillPersonFill} from 'react-icons/bs';
+import {BiLogOut} from 'react-icons/bi';
+
 import LeftPanelButton
   from '@/components/layout/dashboard/left_panel/LeftPanelButton';
+import {signOut} from 'next-auth/react';
 
 export default function LeftPanel(props) {
   const router = useRouter();
@@ -41,6 +45,10 @@ export default function LeftPanel(props) {
           <LeftPanelButton leftIcon={<BsFillPersonFill/>}
                            onClickHandler={() => router.push('/dashboard')}>
             Profile
+          </LeftPanelButton>
+          <LeftPanelButton variant={"outline"} leftIcon={<BiLogOut/>}
+                           onClickHandler={() => signOut()}>
+            Deconnexion
           </LeftPanelButton>
         </Flex>
       </Flex>
