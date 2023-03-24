@@ -19,7 +19,7 @@ model User {
   location  String?
   images    String[]
   birthdate DateTime?
-  sex       Sex?
+  gender    Gender    @default(UNKNOWN)
   role      Role      @default(USER)
   createdAt DateTime  @default(now())
 
@@ -75,9 +75,11 @@ model Message {
   Chat   Chat?   @relation(fields: [ChatID], references: [id])
 }
 
-enum Sex {
+enum Gender {
   MALE
   FEMALE
+  OTHER
+  UNKNOWN
 }
 
 enum Role {

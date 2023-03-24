@@ -5,7 +5,7 @@ import {
   CardBody,
   IconButton,
   Heading,
-  Box
+  Box, CardHeader,
 } from '@chakra-ui/react';
 import Carousel from '../../../Carousel';
 import {BiHeart} from 'react-icons/bi';
@@ -27,7 +27,9 @@ export default function CardUser(props) {
 
   return (
     <Card maxW="md" borderRadius={'1rem'} overflow={'hidden'}>
-      <Carousel images={interestingUser.images}/>
+      <CardHeader>
+        <Carousel borderRadius={"1rem"} images={interestingUser.images}/>
+      </CardHeader>
 
       <CardBody>
         <Flex justify={'space-between'} mb={'20px'}>
