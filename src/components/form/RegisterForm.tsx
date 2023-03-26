@@ -9,12 +9,13 @@ import {
 } from '@chakra-ui/react';
 import {useRouter} from 'next/router';
 import {useState} from 'react';
-import {RegisterData} from '@/models/form/RegisterData';
 import {signIn, SignInResponse} from 'next-auth/react';
+import {RegisterData} from '@/models/form/RegisterData';
 
 export default function RegisterForm() {
   const router = useRouter();
   const [registerData, setRegisterData] = useState(new RegisterData());
+  const [isLoading, setIsLoading] = useState(false);
   const [invalidInput, setInvalidInput] = useState(false);
 
   const buttonWidth = {base: '100%', md: 'unset'};
@@ -28,31 +29,34 @@ export default function RegisterForm() {
     let {email, firstName, lastName, password, confirmPassword} = registerData;
     if (password !== confirmPassword) setInvalidInput(true);
 
-    fetch('/api/user', {
-      method: 'PUT',
+    const options = {
+      method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({email, firstName, lastName, password}),
-    }).then(() => {
+    };
+
+    setIsLoading(true);
+    fetch('/api/users', options).then(() => {
       signIn('credentials', {email, password, redirect: false})
-      .then((res) => {
-        const {ok: connexionSuccess} = res as SignInResponse;
+      .then((res: unknown) => {
+            const {ok: connexionSuccess} = res as SignInResponse;
 
-        // TODO If success -> goto interactive form else login
-        router.push( connexionSuccess ? "/" : "/login");
-      });
-
+            // TODO If success -> goto interactive form else login
+            router.push(connexionSuccess ? '/' : '/login');
+          });
     }).catch(() => {
+      setIsLoading(false);
       setInvalidInput(true);
       setRegisterData({...registerData, password: '', confirmPassword: ''});
     });
   };
 
   return (
-      <Box flexBasis={"100%"}>
+      <Box flexBasis={'100%'}>
         <Container>
-          <Heading textAlign={"center"} size={"2xl"}>Inscription</Heading>
+          <Heading textAlign={'center'} size={'2xl'}>Inscription</Heading>
 
-          <Flex mt={"100px"} mb={'1rem'} gap={5}>
+          <Flex mt={'100px'} mb={'1rem'} gap={5}>
             {/*Prénom*/}
             <FormControl>
               <FormLabel>Prénom</FormLabel>
@@ -119,8 +123,9 @@ export default function RegisterForm() {
 
 
           <Flex mt={'50px'} w={'100%'} justify={'space-between'} gap={5}>
-            <Button onClick={() => router.push('/')} w={buttonWidth}>Retour</Button>
-            <Button onClick={handleSubmit} w={buttonWidth} colorScheme="purple">Je
+            <Button onClick={() => router.push('/')}
+                    w={buttonWidth}>Retour</Button>
+            <Button isLoading={isLoading} onClick={handleSubmit} w={buttonWidth} colorScheme="purple">Je
               m&apos;inscris</Button>
           </Flex>
         </Container>

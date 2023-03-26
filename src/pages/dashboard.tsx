@@ -2,7 +2,7 @@ import {Grid, GridItem, Text, Box} from '@chakra-ui/react';
 import {useSession} from 'next-auth/react';
 import {useRouter} from 'next/router';
 
-import type {Session} from '@/models/data_models/Session';
+import type {Session} from '@/models/auth/Session';
 import CardUser from '../components/layout/dashboard/card_user/CardUser';
 import LeftPanel from '../components/layout/dashboard/left_panel/LeftPanel';
 import Head from 'next/head';

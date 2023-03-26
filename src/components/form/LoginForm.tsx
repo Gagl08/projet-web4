@@ -16,6 +16,7 @@ import {LoginData} from '@/models/form/LoginData';
 export default function LoginForm() {
   const router = useRouter();
   const [loginData, setLoginData] = useState(new LoginData());
+  const [isLoading, setIsLoading] = useState(false);
   const [invalidInput, setInvalidInput] = useState(false);
 
   const buttonWidth = {base: '100%', md: 'unset'};
@@ -26,11 +27,15 @@ export default function LoginForm() {
   };
 
   const handleSubmit = async () => {
-    await signIn('credentials',
-        {...loginData, redirect: false}).then((res) => {
+    setIsLoading(true)
+    signIn('credentials', {...loginData, redirect: false})
+    .then((res: unknown) => {
       const {ok: connexionSuccess} = res as SignInResponse;
 
-      if (!connexionSuccess) setInvalidInput(true);
+      if (!connexionSuccess) {
+        setIsLoading(false);
+        setInvalidInput(true);
+      }
       else router.push('/dashboard');
     });
   };
@@ -76,7 +81,7 @@ export default function LoginForm() {
                 justifyContent={'space-between'}>
             <Button onClick={() => router.push('/')}
                     w={buttonWidth}>Retour</Button>
-            <Button onClick={handleSubmit}
+            <Button isLoading={isLoading} onClick={handleSubmit}
                     w={buttonWidth} colorScheme="purple">Connexion</Button>
           </Flex>
       </Container>

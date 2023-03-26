@@ -43,15 +43,6 @@ model User {
   OtherUserLikes   User[]   @relation("Likes", fields: [OtherUserLikesID], references: [id])
 }
 
-model Chat {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  messages Message[]
-
-  // Les utilisateurs qui ont un chat en commun
-  User   User[]   @relation(fields: [UserId], references: [id])
-  UserId String[] @db.ObjectId
-}
-
 model Passion {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String
@@ -59,6 +50,15 @@ model Passion {
   // Les utilisateurs qui on en commun cette passion
   UserId String[] @db.ObjectId
   User   User[]   @relation(fields: [UserId], references: [id])
+}
+
+model Chat {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  messages Message[]
+
+  // Les utilisateurs qui ont un chat en commun
+  User   User[]   @relation(fields: [UserId], references: [id])
+  UserId String[] @db.ObjectId
 }
 
 model Message {

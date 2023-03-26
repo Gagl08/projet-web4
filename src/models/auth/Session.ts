@@ -1,4 +1,4 @@
-import {User} from '@/models/data_models/User';
+import type {User} from "@prisma/client";
 
 export type Session = {
   user: User

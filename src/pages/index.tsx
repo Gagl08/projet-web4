@@ -10,7 +10,7 @@ export default function Home() {
       <>
         <Head><title>{websiteName}</title></Head>
 
-        <Navbar/>
+        <Navbar variant={"fixed"}/>
         <HeroBanner/>
         <HomePresentation/>
       </>

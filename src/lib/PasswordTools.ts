@@ -6,7 +6,7 @@ export async function hashPassword(unHashedPassword: string): Promise<string> {
 
 export async function isSamePassword(
     unHashedPassword: string,
-    hashedPassword: string
+    hashedPassword: string,
 ): Promise<boolean> {
   return await bcrypt.compare(unHashedPassword, hashedPassword).
       then((result: boolean) => result);
