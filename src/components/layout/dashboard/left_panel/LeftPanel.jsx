@@ -47,7 +47,7 @@ export default function LeftPanel(props) {
             Profile
           </LeftPanelButton>
           <LeftPanelButton variant={"outline"} leftIcon={<BiLogOut/>}
-                           onClickHandler={() => signOut()}>
+                           onClickHandler={() => signOut({callbackUrl: "/"})}>
             Deconnexion
           </LeftPanelButton>
         </Flex>
