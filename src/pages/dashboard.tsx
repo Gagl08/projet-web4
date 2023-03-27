@@ -19,6 +19,7 @@ export default function Dashboard() {
   if (status === 'authenticated') {
     const {user} = session as unknown as Session;
 
+    // il faudra l'enlever
     const refinedUser = {
       ...user,
       age: 21,
