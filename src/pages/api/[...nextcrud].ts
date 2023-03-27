@@ -3,13 +3,6 @@ import prismaClient from '@/lib/prismaClient';
 import {NextApiRequest, NextApiResponse} from 'next';
 import {hashPassword} from '@/lib/PasswordTools';
 
-type CreateUserQuery = {
-  email: string
-  password: string
-  firstName: string
-  lastName: string
-}
-
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
@@ -19,16 +12,14 @@ export default async function handler(
     adapter: new PrismaAdapter({prismaClient: prismaClient}),
   });
 
-  // Hash le mot de passe quand on crée un utilisateur
-  if (req.url === "/api/users" && req.method === "POST") {
-    const {email, password, firstName, lastName} = req.body as CreateUserQuery;
-
-    if (!email || !password || !firstName || !lastName)
-      return res.status(400).send({message: req.body});
-
-    const hashedPassword: string = await hashPassword(password);
-    req.body = {...req.body, password: hashedPassword}
-  }
+  await onUserCreate(req);
 
   return nextCrudHandler(req, res);
+}
+
+async function onUserCreate(req: NextApiRequest) {
+  if (req.url === "/api/users" && req.method === "POST") {
+    const password: string = await hashPassword(req.body.password);
+    req.body = {...req.body, password}
+  }
 }

@@ -10,18 +10,20 @@ datasource db {
 
 // Models
 model User {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  email     String    @unique
-  password  String
-  firstName String?
-  lastName  String?
-  bio       String?
-  location  String?
-  images    String[]
-  birthdate DateTime?
-  gender    Gender    @default(UNKNOWN)
-  role      Role      @default(USER)
-  createdAt DateTime  @default(now())
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  email         String    @unique
+  password      String
+  firstName     String?
+  lastName      String?
+  bio           String?
+  location      String?
+  images        String[]
+  birthdate     DateTime?
+  gender        Gender    @default(UNKNOWN)
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now())
+  lastConnexion DateTime  @default(now())
 
   // Liste des chats de l'utilisateur
   ChatID String[] @db.ObjectId
@@ -41,6 +43,24 @@ model User {
   // Les personnes qui aiment l'utilisateur
   OtherUserLikesID String[] @db.ObjectId
   OtherUserLikes   User[]   @relation("Likes", fields: [OtherUserLikesID], references: [id])
+
+  MatchId String[] @db.ObjectId
+  Match   Match[]  @relation(fields: [MatchId], references: [id])
+
+  Notification Notification[]
+}
+
+model Notification {
+  id     String           @id @default(auto()) @map("_id") @db.ObjectId
+  type   NotificationType
+  UserId String           @db.ObjectId
+  User   User             @relation(fields: [UserId], references: [id])
+}
+
+model Match {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  UserId String[] @db.ObjectId
+  User   User[]   @relation(fields: [UserId], references: [id])
 }
 
 model Passion {
@@ -80,6 +100,12 @@ enum Gender {
   FEMALE
   OTHER
   UNKNOWN
+}
+
+enum NotificationType {
+  NEW_MATCH
+  NEW_LIKE
+  NEW_MESSAGE
 }
 
 enum Role {
