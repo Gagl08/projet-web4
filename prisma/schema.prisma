@@ -10,20 +10,19 @@ datasource db {
 
 // Models
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  email         String    @unique
-  password      String
-  firstName     String?
-  lastName      String?
-  bio           String?
-  location      String?
-  images        String[]
-  birthdate     DateTime?
-  gender        Gender    @default(UNKNOWN)
-  role          Role      @default(USER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now())
-  lastConnexion DateTime  @default(now())
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email     String    @unique
+  password  String
+  firstName String?
+  lastName  String?
+  bio       String?
+  location  String?
+  images    String[]
+  birthdate DateTime?
+  gender    Gender    @default(UNKNOWN)
+  role      Role      @default(USER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   // Liste des chats de l'utilisateur
   ChatID String[] @db.ObjectId
@@ -51,21 +50,28 @@ model User {
 }
 
 model Notification {
-  id     String           @id @default(auto()) @map("_id") @db.ObjectId
-  type   NotificationType
-  UserId String           @db.ObjectId
-  User   User             @relation(fields: [UserId], references: [id])
+  id               String           @id @default(auto()) @map("_id") @db.ObjectId
+  type             NotificationType
+  createdAt        DateTime         @default(now())
+  hasBeenConsulted Boolean          @default(false)
+
+  UserId String @db.ObjectId
+  User   User   @relation(fields: [UserId], references: [id])
 }
 
 model Match {
-  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+
   UserId String[] @db.ObjectId
   User   User[]   @relation(fields: [UserId], references: [id])
 }
 
 model Passion {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Les utilisateurs qui on en commun cette passion
   UserId String[] @db.ObjectId
@@ -73,8 +79,9 @@ model Passion {
 }
 
 model Chat {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  messages Message[]
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  messages  Message[]
+  createdAt DateTime  @default(now())
 
   // Les utilisateurs qui ont un chat en commun
   User   User[]   @relation(fields: [UserId], references: [id])
@@ -85,6 +92,7 @@ model Message {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   message   String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // L'utilisateur qui a envoyé le message
   UserID String @db.ObjectId
