@@ -41,6 +41,13 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   return await NextAuth(req, res, {
     providers,
     session: {strategy: 'jwt'},
+    pages: {
+      signIn: '/login',
+      signOut: '/auth/signout',
+      error: '/auth/error',
+      verifyRequest: '/auth/verify-request',
+      newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+    },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
       async session({session, token}: { session: any; token: any }) {

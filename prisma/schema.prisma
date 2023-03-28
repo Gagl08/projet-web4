@@ -90,7 +90,7 @@ model Chat {
 
 model Message {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  message   String
+  text      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
