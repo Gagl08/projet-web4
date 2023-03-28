@@ -48,7 +48,7 @@ export default function Navbar({variant = "fixed"}: Props) {
            backdropFilter={'auto'} backdropBlur={'20px'} px={10} py={2}>
         <Flex align={'center'}>
           <Box flexBasis={'100%'}>
-            <Image src={"/logo.svg"} h={"100px"} objectFit={"contain"}/>
+            <Image src={"/logo.svg"} h={"3rem"} objectFit={"contain"}/>
           </Box>
 
           <Flex gap={5} justify={'center'} flexBasis={'100%'}>

@@ -43,8 +43,8 @@ model User {
   OtherUserLikesID String[] @db.ObjectId
   OtherUserLikes   User[]   @relation("Likes", fields: [OtherUserLikesID], references: [id])
 
-  MatchId String[] @db.ObjectId
-  Match   Match[]  @relation(fields: [MatchId], references: [id])
+  MatchID String[] @db.ObjectId
+  Match   Match[]  @relation(fields: [MatchID], references: [id])
 
   Notification Notification[]
 }
@@ -55,16 +55,16 @@ model Notification {
   createdAt        DateTime         @default(now())
   hasBeenConsulted Boolean          @default(false)
 
-  UserId String @db.ObjectId
-  User   User   @relation(fields: [UserId], references: [id])
+  UserID String @db.ObjectId
+  User   User   @relation(fields: [UserID], references: [id])
 }
 
 model Match {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now())
 
-  UserId String[] @db.ObjectId
-  User   User[]   @relation(fields: [UserId], references: [id])
+  UserID String[] @db.ObjectId
+  User   User[]   @relation(fields: [UserID], references: [id])
 }
 
 model Passion {
@@ -74,8 +74,8 @@ model Passion {
   updatedAt DateTime @updatedAt
 
   // Les utilisateurs qui on en commun cette passion
-  UserId String[] @db.ObjectId
-  User   User[]   @relation(fields: [UserId], references: [id])
+  UserID String[] @db.ObjectId
+  User   User[]   @relation(fields: [UserID], references: [id])
 }
 
 model Chat {
@@ -84,8 +84,8 @@ model Chat {
   createdAt DateTime  @default(now())
 
   // Les utilisateurs qui ont un chat en commun
-  User   User[]   @relation(fields: [UserId], references: [id])
-  UserId String[] @db.ObjectId
+  User   User[]   @relation(fields: [UserID], references: [id])
+  UserID String[] @db.ObjectId
 }
 
 model Message {

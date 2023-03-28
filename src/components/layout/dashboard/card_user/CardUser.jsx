@@ -26,7 +26,7 @@ export default function CardUser(props) {
   };
 
   return (
-    <Card maxW="md" borderRadius={'1rem'} overflow={'hidden'}>
+    <Card w={"100%"} h={"100%"} borderRadius={'1rem'} overflow={'hidden'}>
       <CardHeader>
         <Carousel borderRadius={"1rem"} images={interestingUser.images}/>
       </CardHeader>
