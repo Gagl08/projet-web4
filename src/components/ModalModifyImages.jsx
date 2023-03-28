@@ -12,13 +12,17 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { RiEditBoxLine } from "react-icons/ri";
 
 export default function ModalModifyImages(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { images, userData, setUserData } = props;
+  const { images, userData, setUserData, files, setFiles } = props;
+  const [listImage, setlistImage] = useState(images);
+
   return (
     <>
       <Button
@@ -41,20 +45,21 @@ export default function ModalModifyImages(props) {
           <ModalHeader>Modification des images</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Grid templateColumns={`repeat(${images.length + 1}, 1fr)`} gap={5}>
-              {images.map((image, index) => (
+            <Grid
+              templateColumns={`repeat(${listImage.length + 1}, 1fr)`}
+              gap={5}
+            >
+              {listImage.map((image, index) => (
                 <GridItem key={index}>
+                  <Text>{image}</Text>
                   <Flex direction={"column"} gap={"1rem"}>
                     <Image src={image} />
                     <Button
                       id={"" + index}
                       colorScheme={"red"}
                       onClick={(e) => {
-                        images.splice(index, 1);
-                        setUserData({
-                          ...userData,
-                          images: [...images],
-                        });
+                        setlistImage(listImage.filter((_, i) => i !== index));
+                        setFiles(files.filter((_, i) => i !== index));
                       }}
                     >
                       Supprimer l'image
@@ -62,17 +67,16 @@ export default function ModalModifyImages(props) {
                   </Flex>
                 </GridItem>
               ))}
-              {images.length < 5 ? (
+              {listImage.length < 5 ? (
                 <GridItem width={"100%"}>
                   <Input
                     type={"file"}
                     height={"100%"}
                     accept={"image/png, image/jpeg, image/webp"}
-                    onChange={(e) => {
-                      setUserData({
-                        ...userData,
-                        images: [...images, e.target.files[0].name],
-                      });
+                    onChange={({ target }) => {
+                      const file = target.files[0];
+                      setlistImage([...listImage, URL.createObjectURL(file)]);
+                      setFiles([...files, file]);
                     }}
                   ></Input>
                 </GridItem>
@@ -83,7 +87,17 @@ export default function ModalModifyImages(props) {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="purple" mr={3} onClick={onClose}>
+            <Button
+              colorScheme="purple"
+              mr={3}
+              onClick={(e) => {
+                setUserData({
+                  ...userData,
+                  images: [...listImage],
+                });
+                onClose();
+              }}
+            >
               Save
             </Button>
           </ModalFooter>

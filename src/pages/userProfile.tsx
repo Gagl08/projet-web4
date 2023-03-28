@@ -28,13 +28,12 @@ import { useState } from "react";
 export default function UserProfile() {
   const router = useRouter();
   const toast = useToast();
-  const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // faire un model avec toutes les infos de user
   const [userData, setUserData] = useState({});
+  const [files, setFiles] = useState([]);
 
+  const { data: session, status } = useSession();
   if (status === "unauthenticated") router.push("/login");
 
   if (status === "authenticated") {
@@ -49,6 +48,37 @@ export default function UserProfile() {
 
       setIsLoading(true);
 
+      // if (files.length > 0) {
+      //   files.forEach((file) => {
+      //     const body = new FormData();
+      //     body.append("file", file);
+      //     const imagePostOptions = {
+      //       method: "POST",
+      //       headers: { "Content-Type": "application/json" },
+      //       body,
+      //     };
+
+      //     fetch(`/api/file/file`, imagePostOptions)
+      //       .then((res) => {
+      //         console.log(res);
+      //         setIsLoading(false);
+      //         toast({
+      //           title: `Ajout d'image effectué`,
+      //           status: "success",
+      //           isClosable: true,
+      //         });
+      //       })
+      //       .catch(() => {
+      //         setIsLoading(false);
+      //         toast({
+      //           title: `Erreur lors de l'envoi des images`,
+      //           status: "error",
+      //           isClosable: true,
+      //         });
+      //       });
+      //   });
+      // }
+
       fetch(`/api/users/${user.id}`, options)
         .then(() => {
           setIsLoading(false);
@@ -57,7 +87,7 @@ export default function UserProfile() {
             status: "success",
             isClosable: true,
           });
-          router.reload();
+          // router.reload();
         })
         .catch(() => {
           setIsLoading(false);
@@ -94,7 +124,14 @@ export default function UserProfile() {
         >
           <Flex flexDirection={"column"} alignItems={"center"} gap={"1rem"}>
             <Box width={"50%"}>
-              <Carousel images={user.images} borderRadius={"1rem"}></Carousel>
+              {userData.images ? (
+                <Carousel
+                  images={userData.images}
+                  borderRadius={"1rem"}
+                ></Carousel>
+              ) : (
+                <Carousel images={user.images} borderRadius={"1rem"}></Carousel>
+              )}
             </Box>
             {/* {modal} */}
             {!userData.images ? (
@@ -102,12 +139,16 @@ export default function UserProfile() {
                 setUserData={setUserData}
                 userData={userData}
                 images={user.images}
+                files={files}
+                setFiles={setFiles}
               />
             ) : (
               <ModalModifyImages
                 setUserData={setUserData}
                 userData={userData}
                 images={userData.images}
+                files={files}
+                setFiles={setFiles}
               />
             )}
             <Divider />
@@ -196,6 +237,7 @@ export default function UserProfile() {
                   <EditableTextarea />
                 </Editable>
               </Flex>
+              {/* préférences / sexe / type de relation recherchés */}
             </Box>
             <BottomBar variant={"fixed"} saveData={saveData} />
           </Flex>
