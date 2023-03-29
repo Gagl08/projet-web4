@@ -12,16 +12,70 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { RiEditBoxLine } from "react-icons/ri";
 
 export default function ModalModifyImages(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { images, userData, setUserData, files, setFiles } = props;
+  const { images, user, userData, setUserData, files, setFiles } = props;
   const [listImage, setlistImage] = useState(images);
+  const toast = useToast();
+
+  const uploadImage = async (file) => {
+    console.log(file);
+    const body = new FormData();
+    body.append("file", file);
+    const imagePostOptions = {
+      method: "POST",
+      body,
+    };
+
+    fetch(`/api/file/file`, imagePostOptions)
+      .then((res) => {
+        console.log(res);
+        toast({
+          title: `Ajout d'image effectué`,
+          status: "success",
+          isClosable: true,
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: `Erreur lors de l'ajout des images`,
+          status: "error",
+          isClosable: true,
+        });
+        console.log(err);
+      });
+  };
+
+  const deleteImage = async (fileName) => {
+    const body = new FormData();
+    body.append("fileName", fileName);
+    const imageDeleteOptions = {
+      method: "DELETE",
+    };
+
+    fetch(`/api/file/file/${fileName}`, imageDeleteOptions)
+      .then((res) => {
+        console.log(res);
+        Toast({
+          title: `Suppression d'image effectué`,
+          status: "success",
+          isClosable: true,
+        });
+      })
+      .catch(() => {
+        toast({
+          title: `Erreur lors de la suppression des images`,
+          status: "error",
+          isClosable: true,
+        });
+      });
+  };
 
   return (
     <>
@@ -51,7 +105,6 @@ export default function ModalModifyImages(props) {
             >
               {listImage.map((image, index) => (
                 <GridItem key={index}>
-                  <Text>{image}</Text>
                   <Flex direction={"column"} gap={"1rem"}>
                     <Image src={image} />
                     <Button
@@ -75,8 +128,19 @@ export default function ModalModifyImages(props) {
                     accept={"image/png, image/jpeg, image/webp"}
                     onChange={({ target }) => {
                       const file = target.files[0];
-                      setlistImage([...listImage, URL.createObjectURL(file)]);
-                      setFiles([...files, file]);
+                      const extension = file.name.split(".").pop();
+                      const newFile = new File(
+                        [file],
+                        `${user.id}_${listImage.length}.${extension}`,
+                        {
+                          type: file.type,
+                        }
+                      );
+                      uploadImage(newFile);
+                      setlistImage([
+                        ...listImage,
+                        URL.createObjectURL(newFile),
+                      ]);
                     }}
                   ></Input>
                 </GridItem>

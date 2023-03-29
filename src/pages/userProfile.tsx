@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import type { Session } from "@/models/auth/Session";
 import Carousel from "@/components/Carousel";
+import { Gender } from "@prisma/client";
 import {
   Box,
   Button,
@@ -13,22 +14,28 @@ import {
   EditablePreview,
   EditableTextarea,
   Flex,
-  Spacer,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  HStack,
+  Input,
+  Radio,
+  RadioGroup,
   Text,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 
-import { RiEditBoxLine } from "react-icons/ri";
-import BottomBar from "@/components/BottomBar";
 import ModalModifyImages from "@/components/ModalModifyImages";
 
 import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 
 export default function UserProfile() {
   const router = useRouter();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
+
+  const { handleSubmit, control } = useForm();
 
   const [userData, setUserData] = useState({});
   const [files, setFiles] = useState([]);
@@ -39,22 +46,41 @@ export default function UserProfile() {
   if (status === "authenticated") {
     const { user } = session as unknown as Session;
 
-    const saveData = () => {
-      const options = {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      };
+    const getTextGender = (gender) => {
+      switch (gender) {
+        case Gender.MALE:
+          return "Homme";
+        case Gender.FEMALE:
+          return "Femme";
+        case Gender.OTHER:
+          return "Autre";
+        case Gender.UNKNOWN:
+          return "Non renseigné";
+      }
+    };
 
-      setIsLoading(true);
+    const saveData = (values: any) => {
+      const trueValues = Object.keys(values).reduce((acc, key) => {
+        if (values[key] !== "" && values[key] !== undefined) {
+          acc[key] = values[key];
+        }
+        return acc;
+      }, {});
+
+      const options = {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(trueValues),
+      };
 
       // if (files.length > 0) {
       //   files.forEach((file) => {
+      //     console.log(file);
       //     const body = new FormData();
       //     body.append("file", file);
       //     const imagePostOptions = {
       //       method: "POST",
-      //       headers: { "Content-Type": "application/json" },
+      //       headers: { "Content-Type": "multipart/form-data" },
       //       body,
       //     };
 
@@ -79,24 +105,28 @@ export default function UserProfile() {
       //   });
       // }
 
-      fetch(`/api/users/${user.id}`, options)
-        .then(() => {
-          setIsLoading(false);
-          toast({
-            title: `Modifications effectuées`,
-            status: "success",
-            isClosable: true,
+      if (Object.keys(trueValues).length > 0) {
+        setIsLoading(true);
+        fetch(`/api/users/${user.id}`, options)
+          .then((res) => {
+            console.log(res);
+            setIsLoading(false);
+            toast({
+              title: `Modifications effectuées`,
+              status: "success",
+              isClosable: true,
+            });
+            // router.reload();
+          })
+          .catch(() => {
+            setIsLoading(false);
+            toast({
+              title: `Erreur lors de l'envoi des modifications`,
+              status: "error",
+              isClosable: true,
+            });
           });
-          // router.reload();
-        })
-        .catch(() => {
-          setIsLoading(false);
-          toast({
-            title: `Erreur lors de l'envoi des modifications`,
-            status: "error",
-            isClosable: true,
-          });
-        });
+      }
     };
 
     const formateDate = (dateString: string) => {
@@ -104,24 +134,9 @@ export default function UserProfile() {
       return new Date(dateString).toLocaleDateString([], options);
     };
 
-    // const refinedUser = {
-    //   // ...user,
-    //   firstName: "Jean",
-    //   lastName: "Dujardin",
-    //   birthdate: formateDate(new Date().toString()),
-    //   aPropos: "Je suis la personne fictive la plus fictive",
-    //   images: ["135538.webp"],
-    //   passions: ["Sport", "Voiture", "Cuisine"],
-    // };
-
     return (
       <Box bgColor={"purple.50"}>
-        <Container
-          justifyContent={"center"}
-          maxWidth={"70rem"}
-          mt={"1rem"}
-          bgColor={"purple.50"}
-        >
+        <Container justifyContent={"center"} maxWidth={"70rem"} mt={"1rem"}>
           <Flex flexDirection={"column"} alignItems={"center"} gap={"1rem"}>
             <Box width={"50%"}>
               {userData.images ? (
@@ -134,10 +149,12 @@ export default function UserProfile() {
               )}
             </Box>
             {/* {modal} */}
+
             {!userData.images ? (
               <ModalModifyImages
                 setUserData={setUserData}
                 userData={userData}
+                user={user}
                 images={user.images}
                 files={files}
                 setFiles={setFiles}
@@ -146,100 +163,235 @@ export default function UserProfile() {
               <ModalModifyImages
                 setUserData={setUserData}
                 userData={userData}
+                user={user}
                 images={userData.images}
                 files={files}
                 setFiles={setFiles}
               />
             )}
-            <Divider />
+
+            <Divider colorScheme={"purple"} />
             <Text align={"center"} as="i" color={"grey"}>
               Modifiez les champs en les selectionnants
             </Text>
-            <Box width={"100%"}>
-              <Flex justify={"space-between"} mb={"1rem"}>
-                <Flex gap={"0.5rem"}>
-                  <Text margin={"auto"}>Prénom : </Text>
-                  <Editable
-                    id={"lastName"}
+
+            <form onSubmit={handleSubmit(saveData)}>
+              <FormControl width={"100%"}>
+                <Flex justify={"space-between"} mb={"1rem"}>
+                  <Box>
+                    <FormLabel as="legend" htmlFor={"firstName"}>
+                      Prénom :
+                    </FormLabel>
+                    <Controller
+                      name={"firstName"}
+                      control={control}
+                      render={({ field }) => (
+                        <Editable
+                          {...field}
+                          id={"firstName"}
+                          placeholder={"Non renseigné"}
+                          as={"b"}
+                          defaultValue={
+                            user.firstName === null ? "" : user.firstName
+                          }
+                        >
+                          <EditablePreview />
+                          <EditableInput />
+                        </Editable>
+                      )}
+                    />
+                  </Box>
+                  <Box>
+                    <FormLabel as={"legend"} htmlFor={"lastName"}>
+                      Nom :
+                    </FormLabel>
+                    <Controller
+                      name={"lastName"}
+                      control={control}
+                      render={({ field }) => (
+                        <Editable
+                          {...field}
+                          id={"lastName"}
+                          as={"b"}
+                          placeholder={"Non renseigné"}
+                          defaultValue={
+                            user.lastName === null ? "" : user.lastName
+                          }
+                          // onSubmit={(value) => {
+                          //   setUserData({ ...userData, lastName: value });
+                          // }}
+                        >
+                          <EditablePreview />
+                          <EditableInput />
+                        </Editable>
+                      )}
+                    />
+                  </Box>
+                  <Box>
+                    <FormLabel as={"legend"} htmlFor={"birthdate"}>
+                      Date de naissance :
+                    </FormLabel>
+                    <Editable
+                      id={"birthdate"}
+                      as="b"
+                      color={"grey"}
+                      isDisabled={true}
+                      defaultValue={
+                        user.birthdate === null
+                          ? "Non renseigné"
+                          : formateDate(user.birthdate.toString())
+                      }
+                    >
+                      <EditablePreview />
+                    </Editable>
+                  </Box>
+                </Flex>
+                <Divider colorScheme={"purple"} />
+                <Flex justify={"space-between"} my={"1rem"}>
+                  <Box>
+                    <FormLabel as={"legend"} htmlFor={"location"}>
+                      Ville :
+                    </FormLabel>
+                    <Editable
+                      id={"location"}
+                      as="b"
+                      color={"grey"}
+                      isDisabled={true}
+                      defaultValue={
+                        user.location === null || user.location === ""
+                          ? "Rendez vous sur la carte"
+                          : user.location
+                      }
+                    >
+                      <EditablePreview />
+                    </Editable>
+                  </Box>
+                  <Box>
+                    <FormLabel as={"legend"} htmlFor={"email"}>
+                      Adresse mail :
+                    </FormLabel>
+                    <Editable
+                      id={"email"}
+                      as="b"
+                      color={"grey"}
+                      isDisabled={true}
+                      defaultValue={user.email}
+                    >
+                      <EditablePreview />
+                    </Editable>
+                  </Box>
+                </Flex>
+                <Divider colorScheme={"purple"} />
+                <Box my={"1rem"}>
+                  <FormLabel as={"legend"} htmlFor={"bio"}>
+                    À propos :
+                  </FormLabel>
+                  <Controller
+                    name={"bio"}
+                    control={control}
+                    render={({ field }) => (
+                      <Editable
+                        {...field}
+                        id={"bio"}
+                        as="b"
+                        width={"100%"}
+                        placeholder={"Non renseigné"}
+                        defaultValue={user.bio === null ? "" : user.bio}
+                        onSubmit={(value) => {
+                          setUserData({ ...userData, bio: value });
+                        }}
+                      >
+                        <EditablePreview />
+                        <EditableTextarea />
+                      </Editable>
+                    )}
+                  />
+                </Box>
+                <Divider colorScheme={"purple"} />
+                <Box my={"1rem"}>
+                  <Box>
+                    <FormLabel as={"legend"} htmlFor={"gender"}>
+                      Genre :
+                    </FormLabel>
+                    <Controller
+                      name={"gender"}
+                      control={control}
+                      render={({ field }) => (
+                        <RadioGroup
+                          {...field}
+                          colorScheme={"purple"}
+                          id={"gender"}
+                          as="b"
+                          defaultValue={
+                            user.gender === null ? Gender.UNKNOWN : user.gender
+                          }
+                          // onChange={(value) => {
+                          //   setUserData({ ...userData, gender: value });
+                          // }}
+                        >
+                          <HStack spacing={"0.5rem"}>
+                            <Radio value={Gender.MALE}>
+                              {getTextGender(Gender.MALE)}
+                            </Radio>
+                            <Radio value={Gender.FEMALE}>
+                              {getTextGender(Gender.FEMALE)}
+                            </Radio>
+                            <Radio value={Gender.OTHER}>
+                              {getTextGender(Gender.OTHER)}
+                            </Radio>
+                            <Radio value={Gender.UNKNOWN}>
+                              {getTextGender(Gender.UNKNOWN)}
+                            </Radio>
+                          </HStack>
+                        </RadioGroup>
+                      )}
+                    />
+                  </Box>
+                  {/* <Box>
+                 <FormLabel as={"legend"} htmlFor={"preference"}>
+                    Préference :
+                  </FormLabel>
+                  <RadioGroup
+                    id={"preference"}
                     as="b"
-                    defaultValue={
-                      user.lastName === null || user.lastName === ""
-                        ? "Non renseigné"
-                        : user.lastName
+                    value={
+                      user.preference === null
+                        ? Gender.UNKNOWN
+                        : user.preference
                     }
-                    onSubmit={(value) => {
-                      setUserData({ ...userData, lastName: value });
+                    onChange={(value) => {
+                      setUserData({ ...userData, preference: value });
                     }}
                   >
-                    <EditablePreview />
-                    <EditableInput />
-                  </Editable>
-                </Flex>
-                <Flex gap={"0.5rem"}>
-                  <Text margin={"auto"}>Nom : </Text>
-                  <Editable
-                    id={"firstName"}
-                    as="b"
-                    defaultValue={
-                      user.firstName === null || user.firstName === ""
-                        ? "Non renseigné"
-                        : user.firstName
-                    }
-                    onSubmit={(value) => {
-                      setUserData({ ...userData, firstName: value });
-                    }}
+                    <HStack spacing={"0.5rem"}>
+                      <Radio value={Gender.MALE}>
+                        {getTextGender(Gender.MALE)}
+                      </Radio>
+                      <Radio value={Gender.FEMALE}>
+                        {getTextGender(Gender.FEMALE)}
+                      </Radio>
+                      <Radio value={Gender.OTHER}>
+                        {getTextGender(Gender.OTHER)}
+                      </Radio>
+                      <Radio value={Gender.UNKNOWN}>
+                        {getTextGender(Gender.UNKNOWN)}
+                      </Radio>
+                    </HStack>
+                  </RadioGroup>
+                </Flex> */}
+                </Box>
+                <Divider colorScheme={"purple"} />
+                <Center my={"1rem"}>
+                  <Button
+                    colorScheme={"purple"}
+                    isLoading={isLoading}
+                    type="submit"
                   >
-                    <EditablePreview />
-                    <EditableInput />
-                  </Editable>
-                </Flex>
-                <Flex gap={"0.5rem"}>
-                  <Text margin={"auto"}>Date de naissance : </Text>
-                  <Text margin={"auto"} id={"birthdate"} as="b" color={"grey"}>
-                    {user.birthdate === null
-                      ? "Non renseigné"
-                      : formateDate(user.birthdate.toString())}
-                  </Text>
-                </Flex>
-                <Flex gap={"0.5rem"}>
-                  <Text>Ville : </Text>
-                  <Text id={"location"} as="b" color={"grey"}>
-                    {user.location === null || user.location === ""
-                      ? "Non renseigné"
-                      : user.location}
-                  </Text>
-                </Flex>
-                <Flex>
-                  <Text>Adresse mail : </Text>
-                  <Text id={"email"} as="b" color={"grey"}>
-                    {user.email}
-                  </Text>
-                </Flex>
-              </Flex>
-              <Flex gap={"0.5rem"}>
-                <Text width={"100%"} align={"right"} margin={"auto"}>
-                  À propos :
-                </Text>
-                <Editable
-                  id={"bio"}
-                  as="b"
-                  width={"100%"}
-                  defaultValue={
-                    user.bio === null || user.bio === ""
-                      ? "Non renseigné"
-                      : user.bio
-                  }
-                  onSubmit={(value) => {
-                    setUserData({ ...userData, bio: value });
-                  }}
-                >
-                  <EditablePreview />
-                  <EditableTextarea />
-                </Editable>
-              </Flex>
-              {/* préférences / sexe / type de relation recherchés */}
-            </Box>
-            <BottomBar variant={"fixed"} saveData={saveData} />
+                    Sauvegarder les modifications
+                  </Button>
+                </Center>
+              </FormControl>
+            </form>
           </Flex>
         </Container>
       </Box>
