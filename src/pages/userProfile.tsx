@@ -73,38 +73,6 @@ export default function UserProfile() {
         body: JSON.stringify(trueValues),
       };
 
-      // if (files.length > 0) {
-      //   files.forEach((file) => {
-      //     console.log(file);
-      //     const body = new FormData();
-      //     body.append("file", file);
-      //     const imagePostOptions = {
-      //       method: "POST",
-      //       headers: { "Content-Type": "multipart/form-data" },
-      //       body,
-      //     };
-
-      //     fetch(`/api/file/file`, imagePostOptions)
-      //       .then((res) => {
-      //         console.log(res);
-      //         setIsLoading(false);
-      //         toast({
-      //           title: `Ajout d'image effectué`,
-      //           status: "success",
-      //           isClosable: true,
-      //         });
-      //       })
-      //       .catch(() => {
-      //         setIsLoading(false);
-      //         toast({
-      //           title: `Erreur lors de l'envoi des images`,
-      //           status: "error",
-      //           isClosable: true,
-      //         });
-      //       });
-      //   });
-      // }
-
       if (Object.keys(trueValues).length > 0) {
         setIsLoading(true);
         fetch(`/api/users/${user.id}`, options)
