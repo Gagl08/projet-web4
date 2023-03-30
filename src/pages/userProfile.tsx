@@ -38,7 +38,6 @@ export default function UserProfile() {
   const { handleSubmit, control } = useForm();
 
   const [userData, setUserData] = useState({});
-  const [files, setFiles] = useState([]);
 
   const { data: session, status } = useSession();
   if (status === "unauthenticated") router.push("/login");
@@ -86,13 +85,14 @@ export default function UserProfile() {
             });
             // router.reload();
           })
-          .catch(() => {
+          .catch((err) => {
             setIsLoading(false);
             toast({
               title: `Erreur lors de l'envoi des modifications`,
               status: "error",
               isClosable: true,
             });
+            console.log(err);
           });
       }
     };
@@ -124,8 +124,6 @@ export default function UserProfile() {
                 userData={userData}
                 user={user}
                 images={user.images}
-                files={files}
-                setFiles={setFiles}
               />
             ) : (
               <ModalModifyImages
@@ -133,8 +131,6 @@ export default function UserProfile() {
                 userData={userData}
                 user={user}
                 images={userData.images}
-                files={files}
-                setFiles={setFiles}
               />
             )}
 

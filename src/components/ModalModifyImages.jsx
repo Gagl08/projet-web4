@@ -20,12 +20,11 @@ import { RiEditBoxLine } from "react-icons/ri";
 
 export default function ModalModifyImages(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { images, user, userData, setUserData, files, setFiles } = props;
+  const { images, user, userData, setUserData } = props;
   const [listImage, setlistImage] = useState(images);
   const toast = useToast();
 
   const uploadImage = async (file) => {
-    console.log(file);
     const body = new FormData();
     body.append("file", file);
     const imagePostOptions = {
@@ -33,14 +32,34 @@ export default function ModalModifyImages(props) {
       body,
     };
 
-    fetch(`/api/file/file`, imagePostOptions)
+    const imagePatchOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        images: [...listImage, `imageUsers/${file.name}`],
+      }),
+    };
+
+    fetch(`/api/file/uploadFile`, imagePostOptions)
       .then((res) => {
-        console.log(res);
-        toast({
-          title: `Ajout d'image effectué`,
-          status: "success",
-          isClosable: true,
-        });
+        fetch(`/api/users/${user.id}`, imagePatchOptions)
+          .then((res) => {
+            toast({
+              title: `Ajout d'image effectué`,
+              status: "success",
+              isClosable: true,
+            });
+            setlistImage([...listImage, `imageUsers/${file.name}`]);
+            // router.reload();
+          })
+          .catch(() => {
+            setIsLoading(false);
+            toast({
+              title: `Erreur lors de l'ajout des images`,
+              status: "error",
+              isClosable: true,
+            });
+          });
       })
       .catch((err) => {
         toast({
@@ -53,28 +72,45 @@ export default function ModalModifyImages(props) {
   };
 
   const deleteImage = async (fileName) => {
-    const body = new FormData();
-    body.append("fileName", fileName);
+    let newListImage = listImage;
+    const index = newListImage.indexOf(fileName);
+
+    if (index > -1) {
+      newListImage.splice(index, 1);
+      setlistImage(newListImage);
+    }
+
+    // setlistImage(listImage.filter((image) => image !== fileName));
+
     const imageDeleteOptions = {
       method: "DELETE",
+      body: JSON.stringify({ fileName: fileName.split("/").pop() }),
     };
 
-    fetch(`/api/file/file/${fileName}`, imageDeleteOptions)
-      .then((res) => {
-        console.log(res);
-        Toast({
-          title: `Suppression d'image effectué`,
-          status: "success",
-          isClosable: true,
+    fetch(`/api/file/deleteFile`, imageDeleteOptions).then((res) => {
+      const imagePatchOptions = {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          images: [...listImage],
+        }),
+      };
+      fetch(`/api/users/${user.id}`, imagePatchOptions)
+        .then((res) => {
+          toast({
+            title: `Suppression d'image effectué`,
+            status: "success",
+            isClosable: true,
+          });
+        })
+        .catch(() => {
+          toast({
+            title: `Erreur lors de la suppression des images`,
+            status: "error",
+            isClosable: true,
+          });
         });
-      })
-      .catch(() => {
-        toast({
-          title: `Erreur lors de la suppression des images`,
-          status: "error",
-          isClosable: true,
-        });
-      });
+    });
   };
 
   return (
@@ -107,16 +143,19 @@ export default function ModalModifyImages(props) {
                 <GridItem key={index}>
                   <Flex direction={"column"} gap={"1rem"}>
                     <Image src={image} />
-                    <Button
-                      id={"" + index}
-                      colorScheme={"red"}
-                      onClick={(e) => {
-                        setlistImage(listImage.filter((_, i) => i !== index));
-                        setFiles(files.filter((_, i) => i !== index));
-                      }}
-                    >
-                      Supprimer l'image
-                    </Button>
+                    {index === listImage.length - 1 ? (
+                      <Button
+                        id={"" + index}
+                        colorScheme={"red"}
+                        onClick={(e) => {
+                          deleteImage(`${listImage[index]}`);
+                        }}
+                      >
+                        Supprimer l'image
+                      </Button>
+                    ) : (
+                      <></>
+                    )}
                   </Flex>
                 </GridItem>
               ))}
@@ -126,7 +165,7 @@ export default function ModalModifyImages(props) {
                     type={"file"}
                     height={"100%"}
                     accept={"image/png, image/jpeg, image/webp"}
-                    onChange={({ target }) => {
+                    onInput={({ target }) => {
                       const file = target.files[0];
                       const extension = file.name.split(".").pop();
                       const newFile = new File(
@@ -137,10 +176,6 @@ export default function ModalModifyImages(props) {
                         }
                       );
                       uploadImage(newFile);
-                      setlistImage([
-                        ...listImage,
-                        URL.createObjectURL(newFile),
-                      ]);
                     }}
                   ></Input>
                 </GridItem>
