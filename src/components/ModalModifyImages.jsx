@@ -143,19 +143,15 @@ export default function ModalModifyImages(props) {
                 <GridItem key={index}>
                   <Flex direction={"column"} gap={"1rem"}>
                     <Image src={image} />
-                    {index === listImage.length - 1 ? (
-                      <Button
-                        id={"" + index}
-                        colorScheme={"red"}
-                        onClick={(e) => {
-                          deleteImage(`${listImage[index]}`);
-                        }}
-                      >
-                        Supprimer l'image
-                      </Button>
-                    ) : (
-                      <></>
-                    )}
+                    <Button
+                      id={"" + index}
+                      colorScheme={"red"}
+                      onClick={(e) => {
+                        deleteImage(`${listImage[index]}`);
+                      }}
+                    >
+                      Supprimer l'image
+                    </Button>
                   </Flex>
                 </GridItem>
               ))}
@@ -166,11 +162,14 @@ export default function ModalModifyImages(props) {
                     height={"100%"}
                     accept={"image/png, image/jpeg, image/webp"}
                     onInput={({ target }) => {
+                      const date = new Date();
+                      const time = date.getTime();
+
                       const file = target.files[0];
                       const extension = file.name.split(".").pop();
                       const newFile = new File(
                         [file],
-                        `${user.id}_${listImage.length}.${extension}`,
+                        `${user.id}_${time}.${extension}`,
                         {
                           type: file.type,
                         }
