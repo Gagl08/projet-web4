@@ -77,10 +77,8 @@ export default function ModalModifyImages(props) {
 
     if (index > -1) {
       newListImage.splice(index, 1);
-      setlistImage(newListImage);
+      setlistImage([...newListImage]);
     }
-
-    // setlistImage(listImage.filter((image) => image !== fileName));
 
     const imageDeleteOptions = {
       method: "DELETE",

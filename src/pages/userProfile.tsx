@@ -104,7 +104,7 @@ export default function UserProfile() {
 
     return (
       <Box bgColor={"purple.50"}>
-        <Container justifyContent={"center"} maxWidth={"70rem"} mt={"1rem"}>
+        <Container justifyContent={"center"} maxW={"70rem"} mt={"1rem"}>
           <Flex flexDirection={"column"} alignItems={"center"} gap={"1rem"}>
             <Box width={"50%"}>
               {userData.images ? (
@@ -139,7 +139,7 @@ export default function UserProfile() {
               Modifiez les champs en les selectionnants
             </Text>
 
-            <form onSubmit={handleSubmit(saveData)}>
+            <Box as="form" onSubmit={handleSubmit(saveData)} width={"80%"}>
               <FormControl width={"100%"}>
                 <Flex justify={"space-between"} mb={"1rem"}>
                   <Box>
@@ -355,7 +355,7 @@ export default function UserProfile() {
                   </Button>
                 </Center>
               </FormControl>
-            </form>
+            </Box>
           </Flex>
         </Container>
       </Box>
