@@ -11,7 +11,7 @@ export const config = {
 const deleteImage = async (req, res) => {
   const body = await JSON.parse(req.body);
   await fs.unlinkSync(`./public/imageUsers/${body.fileName}`);
-  res.status(200).send("image deleted");
+  res.status(204).send({ message: "File deleted", file: body.fileName });
 };
 
 export default (req, res) => {

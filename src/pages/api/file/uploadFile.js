@@ -20,7 +20,7 @@ const post = async (req, res) => {
       return;
     }
     saveFile(files.file);
-    return res.status(201).send("image saved");
+    return res.status(201).send({ message: "File uploaded", file: files.file });
   });
 };
 
