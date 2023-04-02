@@ -79,9 +79,10 @@ model Passion {
 }
 
 model Chat {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  messages  Message[]
-  createdAt DateTime  @default(now())
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  Message Message[]
+
+  createdAt DateTime @default(now())
 
   // Les utilisateurs qui ont un chat en commun
   User   User[]   @relation(fields: [UserID], references: [id])
