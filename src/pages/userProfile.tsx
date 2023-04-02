@@ -35,7 +35,11 @@ export default function UserProfile() {
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { handleSubmit, control } = useForm();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
 
   const [userData, setUserData] = useState({});
 
@@ -76,7 +80,6 @@ export default function UserProfile() {
         setIsLoading(true);
         fetch(`/api/users/${user.id}`, options)
           .then((res) => {
-            console.log(res);
             setIsLoading(false);
             toast({
               title: `Modifications effectuées`,
@@ -140,119 +143,139 @@ export default function UserProfile() {
             </Text>
 
             <Box as="form" onSubmit={handleSubmit(saveData)} width={"80%"}>
-              <FormControl width={"100%"}>
-                <Flex justify={"space-between"} mb={"1rem"}>
-                  <Box>
+              <Flex width={"100%"} justify={"space-between"} mb={"1rem"}>
+                <Box>
+                  <FormControl id="firstName" isInvalid={errors.firstName}>
                     <FormLabel as="legend" htmlFor={"firstName"}>
                       Prénom :
                     </FormLabel>
                     <Controller
                       name={"firstName"}
                       control={control}
-                      render={({ field }) => (
-                        <Editable
-                          {...field}
-                          id={"firstName"}
-                          placeholder={"Non renseigné"}
-                          as={"b"}
-                          defaultValue={
-                            user.firstName === null ? "" : user.firstName
-                          }
-                        >
-                          <EditablePreview />
-                          <EditableInput />
-                        </Editable>
-                      )}
+                      defaultValue={
+                        user.firstName === null ? "" : user.firstName
+                      }
+                      rules={{
+                        required: { value: true, message: "Prénom requis" },
+                      }}
+                      render={({ field }) => {
+                        return (
+                          <Editable
+                            {...field}
+                            id={"firstName"}
+                            as={"b"}
+                            placeholder={"Non renseigné"}
+                          >
+                            <EditablePreview />
+                            <EditableInput />
+                          </Editable>
+                        );
+                      }}
                     />
-                  </Box>
-                  <Box>
+                    <FormErrorMessage as="b">
+                      {errors.firstName?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                </Box>
+                <Box>
+                  <FormControl id="lastName" isInvalid={errors.lastName}>
                     <FormLabel as={"legend"} htmlFor={"lastName"}>
                       Nom :
                     </FormLabel>
                     <Controller
                       name={"lastName"}
                       control={control}
+                      defaultValue={user.lastName === null ? "" : user.lastName}
+                      rules={{
+                        required: { value: true, message: "Nom requis" },
+                      }}
                       render={({ field }) => (
                         <Editable
                           {...field}
                           id={"lastName"}
                           as={"b"}
                           placeholder={"Non renseigné"}
-                          defaultValue={
-                            user.lastName === null ? "" : user.lastName
-                          }
-                          // onSubmit={(value) => {
-                          //   setUserData({ ...userData, lastName: value });
-                          // }}
                         >
                           <EditablePreview />
                           <EditableInput />
                         </Editable>
                       )}
                     />
-                  </Box>
-                  <Box>
-                    <FormLabel as={"legend"} htmlFor={"birthdate"}>
-                      Date de naissance :
-                    </FormLabel>
-                    <Editable
-                      id={"birthdate"}
-                      as="b"
-                      color={"grey"}
-                      isDisabled={true}
-                      defaultValue={
-                        user.birthdate === null
-                          ? "Non renseigné"
-                          : formateDate(user.birthdate.toString())
-                      }
-                    >
-                      <EditablePreview />
-                    </Editable>
-                  </Box>
-                </Flex>
-                <Divider colorScheme={"purple"} />
-                <Flex justify={"space-between"} my={"1rem"}>
-                  <Box>
-                    <FormLabel as={"legend"} htmlFor={"location"}>
-                      Ville :
-                    </FormLabel>
-                    <Editable
-                      id={"location"}
-                      as="b"
-                      color={"grey"}
-                      isDisabled={true}
-                      defaultValue={
-                        user.location === null || user.location === ""
-                          ? "Rendez vous sur la carte"
-                          : user.location
-                      }
-                    >
-                      <EditablePreview />
-                    </Editable>
-                  </Box>
-                  <Box>
-                    <FormLabel as={"legend"} htmlFor={"email"}>
-                      Adresse mail :
-                    </FormLabel>
-                    <Editable
-                      id={"email"}
-                      as="b"
-                      color={"grey"}
-                      isDisabled={true}
-                      defaultValue={user.email}
-                    >
-                      <EditablePreview />
-                    </Editable>
-                  </Box>
-                </Flex>
-                <Divider colorScheme={"purple"} />
-                <Box my={"1rem"}>
+                    <FormErrorMessage as={"b"}>
+                      {errors.lastName?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                </Box>
+                <Box>
+                  <FormLabel as={"legend"} htmlFor={"birthdate"}>
+                    Date de naissance :
+                  </FormLabel>
+                  <Editable
+                    id={"birthdate"}
+                    as="b"
+                    color={"grey"}
+                    isDisabled={true}
+                    defaultValue={
+                      user.birthdate === null
+                        ? "Non renseigné"
+                        : formateDate(user.birthdate.toString())
+                    }
+                  >
+                    <EditablePreview />
+                  </Editable>
+                </Box>
+              </Flex>
+              <Divider colorScheme={"purple"} />
+              <Flex justify={"space-between"} my={"1rem"}>
+                <Box>
+                  <FormLabel as={"legend"} htmlFor={"location"}>
+                    Ville :
+                  </FormLabel>
+                  <Editable
+                    id={"location"}
+                    as="b"
+                    color={"grey"}
+                    isDisabled={true}
+                    defaultValue={
+                      user.location === null || user.location === ""
+                        ? "Rendez vous sur la carte"
+                        : user.location
+                    }
+                  >
+                    <EditablePreview />
+                  </Editable>
+                </Box>
+                <Box>
+                  <FormLabel as={"legend"} htmlFor={"email"}>
+                    Adresse mail :
+                  </FormLabel>
+                  <Editable
+                    id={"email"}
+                    as="b"
+                    color={"grey"}
+                    isDisabled={true}
+                    defaultValue={user.email}
+                  >
+                    <EditablePreview />
+                  </Editable>
+                </Box>
+              </Flex>
+              <Divider colorScheme={"purple"} />
+              <Box my={"1rem"}>
+                <FormControl id="lastName" isInvalid={errors.bio}>
                   <FormLabel as={"legend"} htmlFor={"bio"}>
                     À propos :
                   </FormLabel>
                   <Controller
                     name={"bio"}
                     control={control}
+                    defaultValue={user.bio === null ? "" : user.bio}
+                    rules={{
+                      maxLength: {
+                        value: 240,
+                        message: "240 caractères maximum",
+                      },
+                    }}
                     render={({ field }) => (
                       <Editable
                         {...field}
@@ -270,48 +293,52 @@ export default function UserProfile() {
                       </Editable>
                     )}
                   />
+                  <FormErrorMessage as="b">
+                    {errors.bio?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              </Box>
+              <Divider colorScheme={"purple"} />
+              <Box my={"1rem"}>
+                <Box>
+                  <FormLabel as={"legend"} htmlFor={"gender"}>
+                    Genre :
+                  </FormLabel>
+                  <Controller
+                    name={"gender"}
+                    control={control}
+                    render={({ field }) => (
+                      <RadioGroup
+                        {...field}
+                        colorScheme={"purple"}
+                        id={"gender"}
+                        as="b"
+                        defaultValue={
+                          user.gender === null ? Gender.UNKNOWN : user.gender
+                        }
+                        // onChange={(value) => {
+                        //   setUserData({ ...userData, gender: value });
+                        // }}
+                      >
+                        <HStack spacing={"0.5rem"}>
+                          <Radio value={Gender.MALE}>
+                            {getTextGender(Gender.MALE)}
+                          </Radio>
+                          <Radio value={Gender.FEMALE}>
+                            {getTextGender(Gender.FEMALE)}
+                          </Radio>
+                          <Radio value={Gender.OTHER}>
+                            {getTextGender(Gender.OTHER)}
+                          </Radio>
+                          <Radio value={Gender.UNKNOWN}>
+                            {getTextGender(Gender.UNKNOWN)}
+                          </Radio>
+                        </HStack>
+                      </RadioGroup>
+                    )}
+                  />
                 </Box>
-                <Divider colorScheme={"purple"} />
-                <Box my={"1rem"}>
-                  <Box>
-                    <FormLabel as={"legend"} htmlFor={"gender"}>
-                      Genre :
-                    </FormLabel>
-                    <Controller
-                      name={"gender"}
-                      control={control}
-                      render={({ field }) => (
-                        <RadioGroup
-                          {...field}
-                          colorScheme={"purple"}
-                          id={"gender"}
-                          as="b"
-                          defaultValue={
-                            user.gender === null ? Gender.UNKNOWN : user.gender
-                          }
-                          // onChange={(value) => {
-                          //   setUserData({ ...userData, gender: value });
-                          // }}
-                        >
-                          <HStack spacing={"0.5rem"}>
-                            <Radio value={Gender.MALE}>
-                              {getTextGender(Gender.MALE)}
-                            </Radio>
-                            <Radio value={Gender.FEMALE}>
-                              {getTextGender(Gender.FEMALE)}
-                            </Radio>
-                            <Radio value={Gender.OTHER}>
-                              {getTextGender(Gender.OTHER)}
-                            </Radio>
-                            <Radio value={Gender.UNKNOWN}>
-                              {getTextGender(Gender.UNKNOWN)}
-                            </Radio>
-                          </HStack>
-                        </RadioGroup>
-                      )}
-                    />
-                  </Box>
-                  {/* <Box>
+                {/* <Box>
                  <FormLabel as={"legend"} htmlFor={"preference"}>
                     Préference :
                   </FormLabel>
@@ -343,18 +370,17 @@ export default function UserProfile() {
                     </HStack>
                   </RadioGroup>
                 </Flex> */}
-                </Box>
-                <Divider colorScheme={"purple"} />
-                <Center my={"1rem"}>
-                  <Button
-                    colorScheme={"purple"}
-                    isLoading={isLoading}
-                    type="submit"
-                  >
-                    Sauvegarder les modifications
-                  </Button>
-                </Center>
-              </FormControl>
+              </Box>
+              <Divider colorScheme={"purple"} />
+              <Center my={"1rem"}>
+                <Button
+                  colorScheme={"purple"}
+                  isLoading={isLoading}
+                  type="submit"
+                >
+                  Sauvegarder les modifications
+                </Button>
+              </Center>
             </Box>
           </Flex>
         </Container>
