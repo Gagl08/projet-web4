@@ -10,21 +10,19 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Text,
-  useCheckbox,
   useCheckboxGroup,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { RiEditBoxLine } from "react-icons/ri";
 import CustomCheckbox from "./CustomCheckbox";
 
 export default function ModalChoosePassion(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user, passions } = props;
-  const toast = useToast();
+  const toast = useToast({ position: "top", isClosable: true });
+  const client = useQueryClient();
 
   const { value, getCheckboxProps } = useCheckboxGroup({
     defaultValue: user.PassionID,
@@ -46,8 +44,8 @@ export default function ModalChoosePassion(props) {
           title: "Centres d'intérêts mis à jour",
           status: "success",
           duration: 9000,
-          isClosable: true,
         });
+        client.invalidateQueries("user");
         onClose();
       })
       .catch((err) => {
@@ -98,7 +96,9 @@ export default function ModalChoosePassion(props) {
             <Button
               colorScheme="purple"
               mr={3}
-              onClick={() => savePassions(value)}
+              onClick={() => {
+                savePassions(value);
+              }}
             >
               Save
             </Button>

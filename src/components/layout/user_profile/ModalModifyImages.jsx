@@ -13,8 +13,10 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
+  useQuery,
   useToast,
 } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { RiEditBoxLine } from "react-icons/ri";
 
@@ -22,7 +24,9 @@ export default function ModalModifyImages(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { images, user, userData, setUserData } = props;
   const [listImage, setlistImage] = useState(images);
-  const toast = useToast();
+  const toast = useToast({ position: "top", isClosable: true });
+
+  const client = useQueryClient();
 
   const uploadImage = async (file) => {
     const body = new FormData();
@@ -187,10 +191,7 @@ export default function ModalModifyImages(props) {
               colorScheme="purple"
               mr={3}
               onClick={(e) => {
-                setUserData({
-                  ...userData,
-                  images: [...listImage],
-                });
+                client.invalidateQueries("user");
                 onClose();
               }}
             >
