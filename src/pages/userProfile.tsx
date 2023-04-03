@@ -25,7 +25,9 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-import ModalModifyImages from "@/components/ModalModifyImages";
+import ModalModifyImages from "@/components/layout/user_profile/ModalModifyImages";
+import ModalChoosePassion from "@/components/layout/user_profile/ModalChoosePassion";
+import ProfileBadgeList from "@/components/layout/user_profile/ProfileBadgeList";
 
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -33,6 +35,8 @@ import { useForm, Controller } from "react-hook-form";
 export default function UserProfile() {
   const router = useRouter();
   const toast = useToast();
+
+
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -82,6 +86,7 @@ export default function UserProfile() {
           .then((res) => {
             setIsLoading(false);
             toast({
+              position:'top',
               title: `Modifications effectuées`,
               status: "success",
               isClosable: true,
@@ -92,6 +97,7 @@ export default function UserProfile() {
             setIsLoading(false);
             toast({
               title: `Erreur lors de l'envoi des modifications`,
+              position :'top',
               status: "error",
               isClosable: true,
             });
@@ -301,6 +307,24 @@ export default function UserProfile() {
               <Divider colorScheme={"purple"} />
               <Box my={"1rem"}>
                 <Box>
+                  <FormLabel as={"legend"} htmlFor={"passion"}>
+                    Centre d'intéret :
+                  </FormLabel>
+                  <Controller
+                    name={"passion"}
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <ProfileBadgeList passions={user.passion !== undefined ? user.passion : []}/>
+                        <ModalChoosePassion user={user}/>
+                      </>
+                    )}
+                  />
+                </Box>
+              </Box>
+              <Divider colorScheme={"purple"} />
+              <Box my={"1rem"}>
+                <Box>
                   <FormLabel as={"legend"} htmlFor={"gender"}>
                     Genre :
                   </FormLabel>
@@ -316,9 +340,6 @@ export default function UserProfile() {
                         defaultValue={
                           user.gender === null ? Gender.UNKNOWN : user.gender
                         }
-                        // onChange={(value) => {
-                        //   setUserData({ ...userData, gender: value });
-                        // }}
                       >
                         <HStack spacing={"0.5rem"}>
                           <Radio value={Gender.MALE}>
@@ -372,13 +393,20 @@ export default function UserProfile() {
                 </Flex> */}
               </Box>
               <Divider colorScheme={"purple"} />
-              <Center my={"1rem"}>
+              <Center gap={"1rem"} my={"1rem"}>
                 <Button
                   colorScheme={"purple"}
                   isLoading={isLoading}
                   type="submit"
                 >
                   Sauvegarder les modifications
+                </Button>
+                <Button
+                  colorScheme={"purple"}
+                  variant='outline'
+                  onClick={() => router.push("/dashboard")}
+                >
+                  Retour
                 </Button>
               </Center>
             </Box>
