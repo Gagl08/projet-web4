@@ -1,4 +1,13 @@
-import { Card, Flex, Box, Image, Text, Spacer } from "@chakra-ui/react";
+import {
+  Card,
+  Flex,
+  Box,
+  Image,
+  Text,
+  Spacer,
+  VStack,
+  Divider,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
 import { AiFillMessage } from "react-icons/ai";
@@ -28,8 +37,8 @@ export default function LeftPanel(props) {
       <Flex direction={"column"} height={"100%"} margin={"10%"}>
         <Box>
           <Image src={user.images[0]} borderRadius={"1rem"} />
-          <Box mt={"1rem"}>
-            <Flex align={"center"} justifyContent="space-between">
+          <Box mt={"2rem"}>
+            <Flex align={"center"} justifyContent="space-between" mb={"1rem"}>
               <Text fontSize={"1.5rem"} fontWeight={"bold"}>
                 {user.firstName} {user.lastName}
               </Text>
@@ -37,7 +46,8 @@ export default function LeftPanel(props) {
                 {formateDate(user.birthdate)}
               </Text>
             </Flex>
-            <Text mt={"3rem"} as="i" fontWeight={"bold"}>
+            <Divider colorScheme={"purple"} mb={"1rem"} />
+            <Text as="i" fontWeight={"bold"}>
               &quot;{user.bio}&quot;
             </Text>
           </Box>
