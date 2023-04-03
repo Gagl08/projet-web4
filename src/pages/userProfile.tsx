@@ -23,27 +23,40 @@ import {
   RadioGroup,
   Text,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 
 import ModalModifyImages from "@/components/layout/user_profile/ModalModifyImages";
 import ModalChoosePassion from "@/components/layout/user_profile/ModalChoosePassion";
-import ProfileBadgeList from "@/components/layout/user_profile/ProfileBadgeList";
+import ProfileTagList from "@/components/layout/user_profile/ProfileTagList";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 
 export default function UserProfile() {
   const router = useRouter();
   const toast = useToast();
 
-
   const [isLoading, setIsLoading] = useState(false);
+  const [passions, setPassions] = useState(null);
 
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    fetch(`/api/passions`)
+      .then((res) => res.json())
+      .then((data) => {
+        setPassions([...data]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+  // faire un useEffect ou je fetch user
 
   const [userData, setUserData] = useState({});
 
@@ -86,7 +99,7 @@ export default function UserProfile() {
           .then((res) => {
             setIsLoading(false);
             toast({
-              position:'top',
+              position: "top",
               title: `Modifications effectuées`,
               status: "success",
               isClosable: true,
@@ -97,7 +110,7 @@ export default function UserProfile() {
             setIsLoading(false);
             toast({
               title: `Erreur lors de l'envoi des modifications`,
-              position :'top',
+              position: "top",
               status: "error",
               isClosable: true,
             });
@@ -310,16 +323,15 @@ export default function UserProfile() {
                   <FormLabel as={"legend"} htmlFor={"passion"}>
                     Centre d'intéret :
                   </FormLabel>
-                  <Controller
-                    name={"passion"}
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <ProfileBadgeList passions={user.passion !== undefined ? user.passion : []}/>
-                        <ModalChoosePassion user={user}/>
-                      </>
-                    )}
-                  />
+                  <VStack gap={"1rem"} align="start">
+                    <ProfileTagList
+                      userPassions={
+                        user.PassionID !== undefined ? user.PassionID : []
+                      }
+                      passions={passions}
+                    />
+                    <ModalChoosePassion user={user} passions={passions} />
+                  </VStack>
                 </Box>
               </Box>
               <Divider colorScheme={"purple"} />
@@ -403,7 +415,7 @@ export default function UserProfile() {
                 </Button>
                 <Button
                   colorScheme={"purple"}
-                  variant='outline'
+                  variant="outline"
                   onClick={() => router.push("/dashboard")}
                 >
                   Retour
