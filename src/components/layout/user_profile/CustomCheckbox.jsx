@@ -1,10 +1,6 @@
 import {
-  Badge,
   useCheckbox,
-  Text,
-  Flex,
   chakra,
-  Box,
   Tag,
   TagLeftIcon,
   TagLabel,
@@ -13,7 +9,7 @@ import {
 import { IoAdd, IoRemove } from "react-icons/io5";
 
 export default function CustomCheckbox(props) {
-  const { text, checked, value } = props;
+  const { text } = props;
   const { state, getInputProps, getCheckboxProps, getLabelProps, htmlProps } =
     useCheckbox(props);
 
