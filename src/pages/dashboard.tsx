@@ -41,7 +41,7 @@ export default function Dashboard() {
           minH={"100vh"}
         >
           <GridItem area={"1 / 1 / 3 / 2"}>
-            <LeftPanel user={refinedUser} />
+            <LeftPanel user={user} />
           </GridItem>
           <GridItem area={"1 / 2 / 3 / 4"}>
             <Box py={3}>

@@ -12,6 +12,11 @@ export default function LeftPanel(props) {
   const router = useRouter();
   const { user } = props;
 
+  const formateDate = (dateString) => {
+    var options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString([], options);
+  };
+
   return (
     <Card
       width={"20vw"}
@@ -23,12 +28,17 @@ export default function LeftPanel(props) {
       <Flex direction={"column"} height={"100%"} margin={"10%"}>
         <Box>
           <Image src={user.images[0]} borderRadius={"1rem"} />
-          <Box mt={"1vh"}>
-            <Text fontSize={"1.5rem"} fontWeight={"bold"}>
-              {user.firstName} {user.lastName}
-            </Text>
-            <Text as="i" fontWeight={"bold"}>
-              &quot;{user.aPropos}&quot;
+          <Box mt={"1rem"}>
+            <Flex align={"center"} justifyContent="space-between">
+              <Text fontSize={"1.5rem"} fontWeight={"bold"}>
+                {user.firstName} {user.lastName}
+              </Text>
+              <Text fontSize={"1rem"} fontWeight={"bold"}>
+                {formateDate(user.birthdate)}
+              </Text>
+            </Flex>
+            <Text mt={"3rem"} as="i" fontWeight={"bold"}>
+              &quot;{user.bio}&quot;
             </Text>
           </Box>
         </Box>
