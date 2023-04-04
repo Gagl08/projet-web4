@@ -61,10 +61,6 @@ export default function UserProfile() {
 
   const { data: session, status } = useSession();
 
-  // if (status === "unauthenticated") router.push("/login");
-
-  // if (status === "authenticated") {
-
   const {
     isLoading,
     isError,
@@ -85,10 +81,17 @@ export default function UserProfile() {
   });
 
   if (isLoading) {
+    if (status === "unauthenticated") router.push("/login");
     return <LoadingPage />;
   }
 
   if (isError) {
+    toast({
+      title: `Erreur lors de la récupération des données du profil`,
+      status: "error",
+      position: "top",
+    });
+    if (status === "unauthenticated") router.push("/");
     return <span>Error: {error.message}</span>;
   }
 
