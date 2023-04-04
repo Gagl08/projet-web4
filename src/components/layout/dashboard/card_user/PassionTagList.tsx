@@ -3,18 +3,23 @@ import { Badge, Flex, Tag } from "@chakra-ui/react";
 type Props = {
   passions: string[];
   userPassions?: string[];
+  listPassions?: Object[];
 };
 
-export default function PassionTagList({ passions, userPassions = [] }: Props) {
+export default function PassionTagList({
+  passions,
+  userPassions = [],
+  listPassions,
+}: Props) {
   return (
-    <Flex gap={"0.5rem"} mt={"1vh"}>
-      {passions.map((passion, index) => (
+    <Flex gap={"0.5rem"} mt={"1vh"} flexWrap="wrap">
+      {passions.map((passionID, index) => (
         <Tag
           key={index}
-          variant={userPassions.includes(passion) ? "subtle" : "outline"}
+          variant={userPassions.includes(passionID) ? "subtle" : "outline"}
           colorScheme={"purple"}
         >
-          {passion}
+          {listPassions?.find((passion) => passion.id === passionID)?.name}
         </Tag>
       ))}
     </Flex>

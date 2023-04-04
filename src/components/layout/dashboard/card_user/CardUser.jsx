@@ -11,41 +11,75 @@ import {
 import Carousel from "../../../Carousel";
 import { BiHeart } from "react-icons/bi";
 import { RxCross1 } from "react-icons/rx";
+import { useQuery } from "@tanstack/react-query";
 import PassionTagList from "@/components/layout/dashboard/card_user/PassionTagList";
+import { useState } from "react";
 
 export default function CardUser(props) {
-  const { user } = props;
+  const { user, loggedUser, userLiked, setLiked, userDisliked, setDisliked } =
+    props;
 
-  const interestingUser = {
-    lastName: "dujardin",
-    firstName: "jean",
-    age: 19,
-    aPropos: "Je suis une personne fictive, pas tres fictive",
-    images: ["/401446.webp", "/135538.webp"],
-    passions: ["Sport", "Piscine", "Formule1"],
+  const [hidden, setHidden] = useState(false);
+
+  const {
+    isLoading: passionLoading,
+    isError: passionIsError,
+    data: listPassions,
+    error: passionError,
+  } = useQuery({
+    queryKey: ["passions"],
+    queryFn: async () => {
+      return fetch(`/api/passions/`)
+        .then((res) => res.json())
+        .catch((err) => {
+          return err;
+        });
+    },
+  });
+
+  const formateDateToAge = (birthdate) => {
+    const date = new Date(birthdate);
+    var ageDifMs = Date.now() - date.getTime();
+    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
   };
 
   return (
-    <Card w={"100%"} h={"100%"} borderRadius={"1rem"} overflow={"hidden"}>
+    <Card
+      // position={"absolute"}
+      w={"100%"}
+      h={"100%"}
+      borderRadius={"1rem"}
+      overflow={"hidden"}
+      hidden={hidden}
+    >
       <CardHeader>
-        <Carousel borderRadius={"1rem"} images={interestingUser.images} />
+        <Carousel borderRadius={"1rem"} images={user.images} />
       </CardHeader>
 
       <CardBody>
         <Flex justify={"space-between"} mb={"20px"}>
           <Heading fontSize={"1.5rem"} fontWeight={"bold"} flexBasis={"70%"}>
-            {interestingUser.firstName} {interestingUser.lastName},{" "}
-            {interestingUser.age}ans
+            {user.firstName} {user.lastName}, {formateDateToAge(user.birthdate)}{" "}
+            ans
           </Heading>
 
           <Flex gap={1}>
-            <IconButton borderRadius={"1rem"} colorScheme={"purple"}>
+            <IconButton
+              borderRadius={"1rem"}
+              colorScheme={"purple"}
+              onClick={() => {
+                // setLiked([...userLiked, user.id]);
+                setHidden(true);
+              }}
+            >
               <BiHeart />
             </IconButton>
             <IconButton
               borderRadius={"1rem"}
               colorScheme={"purple"}
               variant={"outline"}
+              // onClick={setDisiked([...userDisliked, user.id])}
             >
               <RxCross1 />
             </IconButton>
@@ -53,20 +87,27 @@ export default function CardUser(props) {
         </Flex>
 
         <Box mb={"20px"}>
-          <Heading size={"sm"} fontWeight={"bold"}>
+          <Heading size={"sm"} fontWeight={"bold"} mb="0.5rem">
             A propos :
           </Heading>
-          <Text>{interestingUser.aPropos}</Text>
+          <Text as="i">&quot;{user.bio}&quot;</Text>
         </Box>
 
         <Box>
           <Heading size={"sm"} fontWeight={"bold"}>
             Passions :
           </Heading>
-          <PassionTagList
-            passions={interestingUser.passions}
-            userPassions={user.passions}
-          />
+          {passionLoading ? (
+            <Text>Chargement des passions...</Text>
+          ) : passionIsError ? (
+            <Text>Erreur lors du chargement des passions</Text>
+          ) : (
+            <PassionTagList
+              passions={user.PassionID}
+              userPassions={loggedUser.PassionID}
+              listPassions={listPassions}
+            />
+          )}
         </Box>
       </CardBody>
     </Card>

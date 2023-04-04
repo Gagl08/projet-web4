@@ -57,7 +57,6 @@ export default function UserProfile() {
         console.log(err);
       });
   }, []);
-  // faire un useEffect ou je fetch user
 
   const { data: session, status } = useSession();
 
@@ -170,21 +169,11 @@ export default function UserProfile() {
               ></Carousel>
             )}
           </Box>
-          {/* {modal} */}
-
-          {!userData.images ? (
-            <ModalModifyImages
-              userData={userData}
-              user={userData}
-              images={userData.images}
-            />
-          ) : (
-            <ModalModifyImages
-              userData={userData}
-              user={userData}
-              images={userData.images}
-            />
-          )}
+          <ModalModifyImages
+            userData={userData}
+            user={userData}
+            images={userData.images}
+          />
 
           <Divider colorScheme={"purple"} />
           <Text align={"center"} as="i" color={"grey"}>
@@ -267,7 +256,8 @@ export default function UserProfile() {
                   color={"grey"}
                   isDisabled={true}
                   defaultValue={
-                    userData.birthdate === undefined
+                    userData.birthdate === undefined ||
+                    userData.birthdate === null
                       ? "Non renseigné"
                       : formateDate(userData.birthdate.toString())
                   }
