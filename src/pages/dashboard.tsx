@@ -93,10 +93,11 @@ export default function Dashboard() {
           <Box py={3}>
             {isLoadingListUsers ? (
               <LoadingPage />
-            ) : listUsers.length === 0 && !isErrorListUsers ? (
+            ) : listUsers.users.length === 0 && listUsers.users === null ? (
               <SearchFailCard />
             ) : (
-              listUsers.map((user: any) => (
+              listUsers.users.map((user: any) => (
+                // dans cardUser, mettre une liste de user, utiliser le user[0] et quand like ou dislike, supprimer le user[0] de la liste
                 <CardUser
                   key={user.id}
                   user={user}
