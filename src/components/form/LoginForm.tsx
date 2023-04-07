@@ -1,91 +1,115 @@
 import {
-  Box, Button,
+  Box,
+  Button,
   Flex,
   FormControl,
   FormLabel,
   Heading,
   Input,
   Container,
-} from '@chakra-ui/react';
-import {useState} from 'react';
-import {useRouter} from 'next/router';
-import {signIn, SignInResponse} from 'next-auth/react';
+  FormErrorMessage,
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { signIn, SignInResponse } from "next-auth/react";
 
-import {LoginData} from '@/models/form/LoginData';
+import { LoginData } from "@/models/form/LoginData";
+import { useForm } from "react-hook-form";
 
 export default function LoginForm() {
   const router = useRouter();
-  const [loginData, setLoginData] = useState(new LoginData());
   const [isLoading, setIsLoading] = useState(false);
-  const [invalidInput, setInvalidInput] = useState(false);
+  const [wrongPasswordError, setWrongPasswordError] = useState(false);
 
-  const buttonWidth = {base: '100%', md: 'unset'};
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm();
 
-  const handleInput = (data: any) => {
-    setInvalidInput(false);
-    setLoginData({...loginData, ...data});
-  };
+  const buttonWidth = { base: "100%", md: "unset" };
 
-  const handleSubmit = async () => {
-    setIsLoading(true)
-    signIn('credentials', {...loginData, redirect: false})
-    .then((res: unknown) => {
-      const {ok: connexionSuccess} = res as SignInResponse;
+  const errorPassword = "Mot de passe incorrect";
 
-      if (!connexionSuccess) {
+  const loginUser = async (value: LoginData) => {
+    setIsLoading(true);
+    signIn("credentials", { ...value, redirect: false }).then(
+      (res: unknown) => {
+        const { ok: connexionSuccess } = res as SignInResponse;
         setIsLoading(false);
-        setInvalidInput(true);
+
+        if (connexionSuccess) router.push("/dashboard");
+        else setWrongPasswordError(true);
       }
-      else router.push('/dashboard');
-    });
+    );
   };
 
   return (
-      <Box flexBasis={'100%'}>
-        <Container>
-          <Heading textAlign={'center'} size={'2xl'}>Connexion</Heading>
+    <Box flexBasis={"100%"}>
+      <Container>
+        <form id="login_form" onSubmit={handleSubmit(loginUser)}>
+          <Heading textAlign={"center"} size={"2xl"}>
+            Connexion
+          </Heading>
 
-          {/* Email */}
-          <FormControl mb={'1rem'} mt={'100px'} isInvalid={invalidInput}>
-
+          {/*Email*/}
+          <FormControl mb={"1rem"} id={"email"} isInvalid={errors.email}>
             <FormLabel>Adresse email</FormLabel>
             <Input
-                isInvalid={invalidInput}
-                id={'email'}
-                type={'email'}
-                value={loginData.email}
-                onChange={(evt) => handleInput({email: evt.target.value})}
-                placeholder={'adresse@email.com'}
-                required={true}
+              type="text"
+              {...register("email", {
+                required: { value: true, message: "Adresse email requise" },
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Adresse email invalide",
+                },
+              })}
+              placeholder="adresse@email.com"
             />
+            <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
           </FormControl>
 
-          {/* Mot de passe */
-          }
-          <FormControl mb={'1rem'}>
-              <FormLabel>Mot de passe</FormLabel>
-              <Input
-                  isInvalid={invalidInput}
-                  id={'password'}
-                  type={'password'}
-                  value={loginData.password}
-                  onChange={(evt) => handleInput({password: evt.target.value})}
-                  placeholder={'Mot de passe'}
-                  required={true}
-              />
+          {/*Mot de passe*/}
+          <FormControl
+            mb={"1rem"}
+            id="password"
+            isInvalid={errors.password || wrongPasswordError}
+          >
+            <FormLabel>Mot de passe</FormLabel>
+            <Input
+              type="password"
+              placeholder="Mot de passe"
+              {...register("password", {
+                required: { value: true, message: "Mot de passe requis" },
+              })}
+            />
+            <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+            <FormErrorMessage>
+              {wrongPasswordError && errorPassword}
+            </FormErrorMessage>
           </FormControl>
 
-          {/*Boutons*/
-          }
-          <Flex justify={'center'} mt={'50px'} gap={5}
-                justifyContent={'space-between'}>
-            <Button onClick={() => router.push('/')}
-                    w={buttonWidth}>Retour</Button>
-            <Button isLoading={isLoading} onClick={handleSubmit}
-                    w={buttonWidth} colorScheme="purple">Connexion</Button>
+          {/*Boutons*/}
+          <Flex
+            justify={"center"}
+            mt={"50px"}
+            gap={5}
+            justifyContent={"space-between"}
+          >
+            <Button onClick={() => router.push("/")} w={buttonWidth}>
+              Retour
+            </Button>
+            <Button
+              isLoading={isLoading}
+              w={buttonWidth}
+              colorScheme="purple"
+              type="submit"
+            >
+              Connexion
+            </Button>
           </Flex>
+        </form>
       </Container>
-</Box>
-)
-
+    </Box>
+  );
 }
