@@ -1,7 +1,7 @@
 import { Grid, GridItem, Text, Box, useToast } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { Session } from "@/models/auth/Session";
 import CardUser from "../components/layout/dashboard/card_user/CardUser";
@@ -16,8 +16,8 @@ import LoadingPage from "@/components/LoadingPage";
 export default function Dashboard() {
   const router = useRouter();
   const toast = useToast({ position: "top", isClosable: true });
-  const [liked, setLiked] = useState(null);
-  const [disliked, setDisliked] = useState(null);
+  const [userLikes, setUserLikes] = useState();
+  const [userDislikes, setUserDislikes] = useState();
 
   const { data: session, status } = useSession();
 
@@ -32,8 +32,13 @@ export default function Dashboard() {
     queryFn: async () => {
       const { user } = session as unknown as Session;
 
+      setUserDislikes([...user.UserDislikesID]);
+      setUserLikes([...user.UserLikesID]);
+
       return fetch(`/api/users/${user.id}`)
-        .then((res) => res.json())
+        .then((res) => {
+          return res.json();
+        })
         .catch((err) => {
           return err;
         });
@@ -50,7 +55,7 @@ export default function Dashboard() {
     enabled: status === "authenticated" && !isLoading,
     queryFn: async () => {
       return fetch(
-        `/api/user/userDashboard?preference=${loggedUser.gender}&excludedId=${loggedUser.id}`
+        `/api/user/userDashboard?preference=${loggedUser.gender}&excludedId=${loggedUser.id}&userLikes=${loggedUser.UserLikesID}&userDislikes=${loggedUser.UserDislikesID}`
       ) //exclure les profils déjà like ou dislike
         .then((res) => res.json())
         .catch((err) => {
@@ -93,21 +98,20 @@ export default function Dashboard() {
           <Box py={3}>
             {isLoadingListUsers ? (
               <LoadingPage />
-            ) : listUsers.users.length === 0 && listUsers.users === null ? (
+            ) : isErrorListUsers ||
+              listUsers.users === undefined ||
+              listUsers.users.length === 0 ? (
               <SearchFailCard />
             ) : (
-              listUsers.users.map((user: any) => (
-                // dans cardUser, mettre une liste de user, utiliser le user[0] et quand like ou dislike, supprimer le user[0] de la liste
-                <CardUser
-                  key={user.id}
-                  user={user}
-                  loggedUser={loggedUser}
-                  userLiked={liked}
-                  setLiked={setLiked}
-                  userDisliked={disliked}
-                  setDisliked={setDisliked}
-                />
-              ))
+              // dans cardUser, mettre une liste de user, utiliser le user[0] et quand like ou dislike, supprimer le user[0] de la liste
+              <CardUser
+                users={listUsers.users}
+                loggedUser={loggedUser}
+                userLikes={userLikes}
+                setUserLikes={setUserLikes}
+                userDislikes={userDislikes}
+                setUserDislikes={setUserDislikes}
+              />
             )}
           </Box>
         </GridItem>
