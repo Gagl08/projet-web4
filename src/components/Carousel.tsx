@@ -27,8 +27,11 @@ const Carousel = ({ images, borderRadius: bRadius }: Props) => {
       borderRadius={bRadius}
       overflow={"hidden"}
       justify={"space-between"}
+      bgColor={"purple.50"}
       bgImage={images[currentIndex]}
-      bgSize={"cover"}
+      bgSize={"contain"}
+      bgRepeat={"no-repeat"}
+      bgPosition={"center"}
       width={"100%"}
       height={500}
     >

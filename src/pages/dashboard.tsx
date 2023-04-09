@@ -19,6 +19,8 @@ export default function Dashboard() {
   const [userLikes, setUserLikes] = useState();
   const [userDislikes, setUserDislikes] = useState();
 
+  const [preferences, setPreferences] = useState(null);
+
   const { data: session, status } = useSession();
 
   const {
@@ -35,6 +37,13 @@ export default function Dashboard() {
       setUserDislikes([...user.UserDislikesID]);
       setUserLikes([...user.UserLikesID]);
 
+      setPreferences([
+        user.prefGender,
+        user.ageMin,
+        user.ageMax,
+        user.distance,
+      ]);
+
       return fetch(`/api/users/${user.id}`)
         .then((res) => {
           return res.json();
@@ -44,6 +53,10 @@ export default function Dashboard() {
         });
     },
   });
+
+  /* 
+    Erreur quand je retourn de userProfile à dashboard
+    */
 
   const {
     data: listUsers,
@@ -55,7 +68,7 @@ export default function Dashboard() {
     enabled: status === "authenticated" && !isLoading,
     queryFn: async () => {
       return fetch(
-        `/api/user/userDashboard?preference=${loggedUser.gender}&excludedId=${loggedUser.id}&userLikes=${loggedUser.UserLikesID}&userDislikes=${loggedUser.UserDislikesID}`
+        `/api/user/userDashboard?preferences=${preferences}&excludedId=${loggedUser.id}&userLikes=${loggedUser.UserLikesID}&userDislikes=${loggedUser.UserDislikesID}`
       ) //exclure les profils déjà like ou dislike
         .then((res) => res.json())
         .catch((err) => {
@@ -99,6 +112,7 @@ export default function Dashboard() {
             {isLoadingListUsers ? (
               <LoadingPage />
             ) : isErrorListUsers ||
+              listUsers === undefined ||
               listUsers.users === undefined ||
               listUsers.users.length === 0 ? (
               <SearchFailCard />

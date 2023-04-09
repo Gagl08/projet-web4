@@ -1,9 +1,26 @@
-import { error } from "console";
-
 const { PrismaClient } = require("@prisma/client");
 
+const birthDateFromAge = (age) => {
+  const ageMillis = age * 365 * 24 * 60 * 60 * 1000;
+  return new Date(new Date().getTime() - ageMillis);
+};
+
 const get = async (req, res) => {
-  const { preference, excludedId, userLikes, userDislikes } = req.query;
+  const {
+    preferences: preferencesList,
+    excludedId,
+    userLikes,
+    userDislikes,
+  } = req.query;
+
+  const preferences = preferencesList.split(",");
+
+  const prefGender = preferences[0];
+  const dateAgeMin = birthDateFromAge(preferences[1]);
+  const dateAgeMax = birthDateFromAge(preferences[2]);
+
+  // pas utilisé pour le moment
+  const distance = preferences[3];
 
   let userLikesList = userLikes.split(",");
   let userDislikesList = userDislikes.split(",");
@@ -21,16 +38,22 @@ const get = async (req, res) => {
     .findMany({
       where: {
         AND: [
-          { gender: { equals: preference } },
+          { gender: { equals: prefGender } },
+          {
+            birthdate: {
+              lte: dateAgeMin.toISOString(),
+              gte: dateAgeMax.toISOString(),
+            },
+          },
           { images: { isEmpty: false } },
           { id: { notIn: excludedIdArray } },
         ],
       },
     })
     .catch((e) => {
-      return e;
+      return [];
     });
-  if (!users) {
+  if (users.length === 0 || users === undefined || users === null) {
     return res.status(500).send({ error: "Aucun profil trouvé" });
   }
   return res.status(200).send({ users });

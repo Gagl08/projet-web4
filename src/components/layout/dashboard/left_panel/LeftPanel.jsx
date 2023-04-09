@@ -39,7 +39,12 @@ export default function LeftPanel(props) {
           {user.images.length === 0 ? (
             <Image src={"/blank_profile_picture.webp"} borderRadius={"1rem"} />
           ) : (
-            <Image src={user.images[0]} borderRadius={"1rem"} />
+            <Image
+              src={user.images[0]}
+              borderRadius={"1rem"}
+              objectFit={"contain"}
+              width={"100%"}
+            />
           )}
           <Box mt={"2rem"}>
             <Flex align={"center"} justifyContent="space-between" mb={"1rem"}>

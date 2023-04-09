@@ -24,6 +24,13 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
+  // Les préférences de l'utilisateur
+  distance  Int  @default(100)
+  ageMax    Int  @default(99)
+  ageMin    Int  @default(18)
+  prefGender  Gender   @default(UNKNOWN)  
+
+
   // Liste des chats de l'utilisateur
   ChatID String[] @db.ObjectId
   Chat   Chat[]   @relation(fields: [ChatID], references: [id])

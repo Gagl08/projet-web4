@@ -20,7 +20,16 @@ import {
   HStack,
   Radio,
   RadioGroup,
+  RangeSlider,
+  RangeSliderFilledTrack,
+  RangeSliderThumb,
+  RangeSliderTrack,
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
   Text,
+  Tooltip,
   useToast,
   VStack,
 } from "@chakra-ui/react";
@@ -29,6 +38,8 @@ import ModalModifyImages from "@/components/layout/user_profile/ModalModifyImage
 import ModalChoosePassion from "@/components/layout/user_profile/ModalChoosePassion";
 import ProfileTagList from "@/components/layout/user_profile/ProfileTagList";
 import LoadingPage from "@/components/LoadingPage";
+
+import { FaGreaterThan, FaLessThan, FaWalking } from "react-icons/fa";
 
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -40,6 +51,11 @@ export default function UserProfile() {
 
   const [currentlyLoading, setCurrentlyLoading] = useState(false);
   const [passions, setPassions] = useState(null);
+
+  const [showTooltipAge, setShowTooltipAge] = useState(true);
+  const [sliderAgeValue, setSliderAgeValue] = useState([]);
+  const [showTooltipDistance, setShowTooltipDistance] = useState(true);
+  const [sliderDistanceValue, setSliderDistanceValue] = useState([]);
 
   const {
     handleSubmit,
@@ -70,6 +86,9 @@ export default function UserProfile() {
     enabled: status === "authenticated",
     queryFn: async () => {
       const { user } = session as unknown as Session;
+
+      setSliderAgeValue([user.ageMin, user.ageMax]);
+      setSliderDistanceValue(user.distance);
 
       return fetch(`/api/users/${user.id}`)
         .then((res) => res.json())
@@ -108,12 +127,19 @@ export default function UserProfile() {
   };
 
   const saveData = (values: any) => {
-    const trueValues = Object.keys(values).reduce((acc, key) => {
-      if (values[key] !== "" && values[key] !== undefined) {
-        acc[key] = values[key];
+    let trueValues = {};
+    console.log(values);
+
+    for (const [key, value] of Object.entries(values)) {
+      if (value !== "" && value !== undefined) {
+        if (key === "age") {
+          trueValues["ageMin"] = value[0];
+          trueValues["ageMax"] = value[1];
+        } else {
+          trueValues[key] = value;
+        }
       }
-      return acc;
-    }, {});
+    }
 
     const options = {
       method: "PATCH",
@@ -392,35 +418,148 @@ export default function UserProfile() {
                   )}
                 />
               </Box>
+            </Box>
+            <Divider colorScheme={"purple"} />
+            <Box my={"1rem"}>
+              <Center>
+                <Text as={"b"} fontSize={"1.5rem"} my={"1rem"}>
+                  Préférences
+                </Text>
+              </Center>
+              <Box my={"1rem"}>
+                <FormLabel as={"legend"} htmlFor={"prefGender"}>
+                  Genre :
+                </FormLabel>
+                <Controller
+                  name={"prefGender"}
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup
+                      {...field}
+                      colorScheme={"purple"}
+                      id={"prefGender"}
+                      as="b"
+                      defaultValue={
+                        userData.prefGender === null
+                          ? Gender.UNKNOWN
+                          : userData.gender
+                      }
+                    >
+                      <HStack spacing={"0.5rem"}>
+                        <Radio value={Gender.MALE}>
+                          {getTextGender(Gender.MALE)}
+                        </Radio>
+                        <Radio value={Gender.FEMALE}>
+                          {getTextGender(Gender.FEMALE)}
+                        </Radio>
+                        <Radio value={Gender.OTHER}>
+                          {getTextGender(Gender.OTHER)}
+                        </Radio>
+                        <Radio value={Gender.UNKNOWN}>
+                          {getTextGender(Gender.UNKNOWN)}
+                        </Radio>
+                      </HStack>
+                    </RadioGroup>
+                  )}
+                />
+              </Box>
+              <Box>
+                <FormLabel as={"legend"} htmlFor={"prefGender"}>
+                  Age :
+                </FormLabel>
+                <Controller
+                  name={"age"}
+                  control={control}
+                  render={({ field: { onChange } }) => (
+                    <RangeSlider
+                      aria-label={["min", "max"]}
+                      colorScheme={"purple"}
+                      min={18}
+                      max={99}
+                      id={"age"}
+                      color={"pink.500"}
+                      defaultValue={[userData.ageMin, userData.ageMax]}
+                      onChange={(v) => {
+                        setSliderAgeValue(v);
+                        onChange(v);
+                      }}
+                      onMouseEnter={() => setShowTooltipAge(true)}
+                      onMouseLeave={() => setShowTooltipAge(false)}
+                    >
+                      <RangeSliderTrack>
+                        <RangeSliderFilledTrack bgColor={"purple.500"} />
+                      </RangeSliderTrack>
+                      <Tooltip
+                        hasArrow
+                        bg="purple.500"
+                        color="white"
+                        placement="top"
+                        isOpen={showTooltipAge}
+                        label={`${sliderAgeValue[0]}`}
+                      >
+                        <RangeSliderThumb boxSize={6} index={0}>
+                          <Box color={"purple.500"} as={FaLessThan} />
+                        </RangeSliderThumb>
+                      </Tooltip>
+
+                      <Tooltip
+                        hasArrow
+                        bg="purple.500"
+                        color="white"
+                        placement="top"
+                        isOpen={showTooltipAge}
+                        label={`${sliderAgeValue[1]}`}
+                      >
+                        <RangeSliderThumb boxSize={6} index={1}>
+                          <Box color={"purple.500"} as={FaGreaterThan} />
+                        </RangeSliderThumb>
+                      </Tooltip>
+                    </RangeSlider>
+                  )}
+                />
+              </Box>
               {/* <Box>
-                 <FormLabel as={"legend"} htmlFor={"preference"}>
-                    Préference :
-                  </FormLabel>
-                  <RadioGroup
-                    id={"preference"}
-                    as="b"
-                    value={
-                      userData.preference === null
-                        ? Gender.UNKNOWN
-                        : userData.preference
-                    }
-                  >
-                    <HStack spacing={"0.5rem"}>
-                      <Radio value={Gender.MALE}>
-                        {getTextGender(Gender.MALE)}
-                      </Radio>
-                      <Radio value={Gender.FEMALE}>
-                        {getTextGender(Gender.FEMALE)}
-                      </Radio>
-                      <Radio value={Gender.OTHER}>
-                        {getTextGender(Gender.OTHER)}
-                      </Radio>
-                      <Radio value={Gender.UNKNOWN}>
-                        {getTextGender(Gender.UNKNOWN)}
-                      </Radio>
-                    </HStack>
-                  </RadioGroup>
-                </Flex> */}
+                <FormLabel as={"legend"} htmlFor={"distance"}>
+                  Distance :
+                </FormLabel>
+                <Controller
+                  name={"distance"}
+                  control={control}
+                  render={({ field: { onChange } }) => (
+                    <Slider
+                      aria-label={"distance"}
+                      colorScheme={"purple"}
+                      min={20}
+                      max={250}
+                      id={"distance"}
+                      color={"pink.500"}
+                      defaultValue={userData.distance}
+                      onChange={(v) => {
+                        setSliderDistanceValue(v);
+                        onChange(v);
+                      }}
+                      onMouseEnter={() => setShowTooltipDistance(true)}
+                      onMouseLeave={() => setShowTooltipDistance(false)}
+                    >
+                      <SliderTrack>
+                        <SliderFilledTrack bgColor={"purple.500"} />
+                      </SliderTrack>
+                      <Tooltip
+                        hasArrow
+                        bg="purple.500"
+                        color="white"
+                        placement="top"
+                        isOpen={showTooltipDistance}
+                        label={`${sliderDistanceValue} km`}
+                      >
+                        <SliderThumb boxSize={6}>
+                          <Box color={"purple.500"} as={FaWalking} />
+                        </SliderThumb>
+                      </Tooltip>
+                    </Slider>
+                  )}
+                />
+              </Box> */}
             </Box>
             <Divider colorScheme={"purple"} />
             <Center gap={"1rem"} my={"1rem"}>
@@ -434,7 +573,9 @@ export default function UserProfile() {
               <Button
                 colorScheme={"purple"}
                 variant="outline"
-                onClick={() => router.push("/dashboard")}
+                onClick={() => {
+                  router.push("/dashboard");
+                }}
               >
                 Retour
               </Button>

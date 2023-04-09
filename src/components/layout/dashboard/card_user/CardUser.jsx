@@ -28,12 +28,9 @@ export default function CardUser(props) {
     setUserDislikes,
   } = props;
 
-  console.log(userLikes);
-  console.log(userDislikes);
-
   const toast = useToast({
     position: "top",
-    duration: 3000,
+    duration: 2000,
     isClosable: true,
   });
   const [listUsers, setListUsers] = useState(users);
@@ -66,7 +63,6 @@ export default function CardUser(props) {
         title: "Erreur",
         description: "Une erreur est survenue",
         status: "error",
-        duration: 2000,
       });
     },
     onSuccess: (data) => {
@@ -74,7 +70,6 @@ export default function CardUser(props) {
         title: "J'aime",
         description: "Votre action a bien été prise en compte",
         status: "success",
-        duration: 2000,
       });
     },
   });
@@ -154,7 +149,7 @@ export default function CardUser(props) {
   return (
     <Card w={"100%"} h={"100%"} borderRadius={"1rem"} overflow={"hidden"}>
       <CardHeader>
-        <Carousel borderRadius={"1rem"} images={listUsers[0].images} />
+        <Carousel borderRadius={"1rem"} images={listUsers?.[0].images} />
       </CardHeader>
 
       <CardBody>
