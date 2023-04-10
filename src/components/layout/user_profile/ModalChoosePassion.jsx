@@ -28,13 +28,19 @@ export default function ModalChoosePassion(props) {
     defaultValue: user.PassionID,
   });
 
-  const savePassions = (PassionID) => {
+  const savePassions = (idPassionList) => {
+    let jsonPassions = { Passion: { connect: [] } };
+
+    idPassionList.forEach((id) => {
+      jsonPassions.Passion.connect.push({ id: id });
+    });
+
     const options = {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ PassionID }),
+      body: JSON.stringify(jsonPassions),
     };
 
     fetch(`/api/users/${user.id}`, options)

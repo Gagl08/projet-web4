@@ -38,14 +38,23 @@ export default function CardUser(props) {
   const likeMutation = useMutation({
     mutationKey: "like",
     mutationFn: async (id) => {
+      let jsonLikes = { UserLikes: { connect: [] } };
+
+      let newUserLikesList = [...userLikes, id];
+
+      newUserLikesList.forEach((id) => {
+        jsonLikes.UserLikes.connect.push({ id: id });
+      });
+
       return fetch(`/api/users/${loggedUser.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ UserLikesID: [...userLikes, id] }),
+        body: JSON.stringify(jsonLikes),
       })
         .then((res) => {
+          setListUsers(listUsers.slice(1));
           setUserLikes([...userLikes, user.id]);
           toast({
             title: "J'aime",
@@ -77,14 +86,23 @@ export default function CardUser(props) {
   const dislikeMutation = useMutation({
     mutationKey: "dislike",
     mutationFn: async (id) => {
+      let jsonDislikes = { UserDislikes: { connect: [] } };
+
+      let newUserDislikesList = [...userDislikes, id];
+
+      newUserDislikesList.forEach((id) => {
+        jsonDislikes.UserDislikes.connect.push({ id: id });
+      });
+
       return fetch(`/api/users/${loggedUser.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ UserDislikesID: [...userDislikes, id] }),
+        body: JSON.stringify(jsonDislikes),
       })
         .then((res) => {
+          setListUsers(listUsers.slice(1));
           setUserDislikes([...userDislikes, user.id]);
           toast({
             title: "J'aime pas",
@@ -165,7 +183,6 @@ export default function CardUser(props) {
               colorScheme={"purple"}
               onClick={() => {
                 likeMutation.mutate(listUsers[0].id);
-                setListUsers(listUsers.slice(1));
               }}
             >
               <BiHeart />
@@ -176,7 +193,6 @@ export default function CardUser(props) {
               variant={"outline"}
               onClick={() => {
                 dislikeMutation.mutate(listUsers[0].id);
-                setListUsers(listUsers.slice(1));
               }}
             >
               <RxCross1 />
