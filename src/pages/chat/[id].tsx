@@ -3,12 +3,12 @@ import Head from 'next/head';
 import {websiteName} from '@/lib/constants';
 import {useSession} from 'next-auth/react';
 import {useRouter} from 'next/router';
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import MessageList from '@/components/chat/MessageList';
 
 import {io, Socket} from 'socket.io-client';
-import {Message} from '@prisma/client';
+import {Message, User} from '@prisma/client';
 
 export default function ChatId() {
   const router = useRouter();
@@ -26,22 +26,13 @@ export default function ChatId() {
 
   const socketInitializer = async () => {
     await fetch(`/api/socket/chat/${chatId}`)
-    const soc = io()
+    const soc = io();
 
-    soc.on('connect', () => {
-      console.log('connected')
-    })
-
-    soc.on("allOldMessages", (allOldMessages: Message[]) => {
-      console.log("allOldMessages", allOldMessages);
-      setMessages(allOldMessages);
-    })
-
-    soc.on("newIncomingMessage", (newIncomingMessage: Message) => {
-      console.log("newIncomingMessage", newIncomingMessage);
-      console.log("messages", messages);
-      setMessages(messages => ([...messages, newIncomingMessage]));
-    });
+    soc.on('connect', () => console.log('connected'))
+    soc.on("allOldMessages", (allOldMessages: Message[]) => setMessages(allOldMessages))
+    soc.on("newIncomingMessage", (newIncomingMessage: Message) =>
+        setMessages(messages => [...messages, newIncomingMessage])
+    );
 
     setSocket(soc);
   }
@@ -50,7 +41,6 @@ export default function ChatId() {
 
   const handleSubmit = () => {
     if (text !== "" && socket) {
-      // @ts-ignore
       socket.emit("createdMessage", {text, sender: session.user.id})
       setText("");
     }
@@ -62,7 +52,7 @@ export default function ChatId() {
         <Head><title>{websiteName}</title></Head>
 
         <Container>
-          <MessageList user={session.user} messages={messages}/>
+          <MessageList user={session.user as User} messages={messages}/>
 
           <Flex gap={5} mt={5}>
             <Input type={"text"} colorScheme={'purple'} onChange={(evt) => setText(evt.target.value) } value={text} />
