@@ -5,6 +5,6 @@ export const config = {
     '/dashboard',
     '/userProfile',
     '/chat',
-    '/chat/*',
+    '/chat/:path*',
   ],
 };
