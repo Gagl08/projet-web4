@@ -41,3 +41,6 @@ next-env.d.ts
 # Webstorm files
 .idea/
 .env
+
+# vscode files
+.vscode/
