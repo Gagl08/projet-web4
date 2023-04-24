@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { AiFillMessage } from "react-icons/ai";
 import { BsFillPersonFill } from "react-icons/bs";
 import { BiLogOut } from "react-icons/bi";
+import { FaMapMarkedAlt } from "react-icons/fa";
 
 import LeftPanelButton from "@/components/layout/dashboard/left_panel/LeftPanelButton";
 import { signOut } from "next-auth/react";
@@ -69,6 +70,12 @@ export default function LeftPanel(props) {
           spacing={3.5}
           alignContent={"bottom"}
         >
+          <LeftPanelButton
+            leftIcon={<FaMapMarkedAlt />}
+            onClickHandler={() => router.push("/map")}
+          >
+            Carte
+          </LeftPanelButton>
           <LeftPanelButton
             leftIcon={<AiFillMessage />}
             onClickHandler={() => router.push("/dashboard")}

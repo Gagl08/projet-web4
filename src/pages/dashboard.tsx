@@ -1,7 +1,7 @@
 import { Grid, GridItem, Text, Box, useToast } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import type { Session } from "@/models/auth/Session";
 import CardUser from "../components/layout/dashboard/card_user/CardUser";
@@ -16,10 +16,8 @@ import LoadingPage from "@/components/LoadingPage";
 export default function Dashboard() {
   const router = useRouter();
   const toast = useToast({ position: "top", isClosable: true });
-  const [userLikes, setUserLikes] = useState();
-  const [userDislikes, setUserDislikes] = useState();
-
-  const [preferences, setPreferences] = useState(null);
+  const [userLikes, setUserLikes] = useState([] as string[]);
+  const [userDislikes, setUserDislikes] = useState([] as string[]);
 
   const { data: session, status } = useSession();
 
@@ -36,13 +34,6 @@ export default function Dashboard() {
 
       setUserDislikes([...user.UserDislikesID]);
       setUserLikes([...user.UserLikesID]);
-
-      setPreferences([
-        user.prefGender,
-        user.ageMin,
-        user.ageMax,
-        user.distance,
-      ]);
 
       return fetch(`/api/users/${user.id}`)
         .then((res) => {
@@ -68,7 +59,14 @@ export default function Dashboard() {
     enabled: status === "authenticated" && !isLoading,
     queryFn: async () => {
       return fetch(
-        `/api/user/userDashboard?preferences=${preferences}&excludedId=${loggedUser.id}&userLikes=${loggedUser.UserLikesID}&userDislikes=${loggedUser.UserDislikesID}`
+        `/api/user/userDashboard?preferences=${[
+          loggedUser.prefGender,
+          loggedUser.ageMin,
+          loggedUser.ageMax,
+          loggedUser.distance,
+        ]}&excludedId=${loggedUser.id}&userLikes=${
+          loggedUser.UserLikesID
+        }&userDislikes=${loggedUser.UserDislikesID}`
       ) //exclure les profils déjà like ou dislike
         .then((res) => res.json())
         .catch((err) => {
@@ -89,7 +87,6 @@ export default function Dashboard() {
       position: "top",
     });
     if (status === "unauthenticated") router.push("/");
-    return <span>Error: {error.message}</span>;
   }
 
   return (

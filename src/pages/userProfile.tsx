@@ -53,9 +53,9 @@ export default function UserProfile() {
   const [passions, setPassions] = useState(null);
 
   const [showTooltipAge, setShowTooltipAge] = useState(true);
-  const [sliderAgeValue, setSliderAgeValue] = useState([]);
-  const [showTooltipDistance, setShowTooltipDistance] = useState(true);
-  const [sliderDistanceValue, setSliderDistanceValue] = useState([]);
+  const [sliderAgeValue, setSliderAgeValue] = useState([] as number[]);
+  // const [showTooltipDistance, setShowTooltipDistance] = useState(true);
+  // const [sliderDistanceValue, setSliderDistanceValue] = useState([]);
 
   const {
     handleSubmit,
@@ -88,7 +88,7 @@ export default function UserProfile() {
       const { user } = session as unknown as Session;
 
       setSliderAgeValue([user.ageMin, user.ageMax]);
-      setSliderDistanceValue(user.distance);
+      // setSliderDistanceValue(user.distance);
 
       return fetch(`/api/users/${user.id}`)
         .then((res) => res.json())
@@ -110,10 +110,9 @@ export default function UserProfile() {
       position: "top",
     });
     if (status === "unauthenticated") router.push("/");
-    return <span>Error: {error.message}</span>;
   }
 
-  const getTextGender = (gender) => {
+  const getTextGender = (gender: string) => {
     switch (gender) {
       case Gender.MALE:
         return "Homme";

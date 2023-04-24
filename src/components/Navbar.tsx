@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
-import Nextlink from "next/link";
 
 type Props = {
   variant: "static" | "fixed";
@@ -72,6 +71,9 @@ export default function Navbar({ variant = "fixed" }: Props) {
               </Link>
               <Link href={"/userProfile"} color={"purple.500"}>
                 Profile
+              </Link>
+              <Link href={"/map"} color={"purple.500"}>
+                Carte
               </Link>
             </>
           ) : (
