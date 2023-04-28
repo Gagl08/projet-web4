@@ -7,7 +7,7 @@ import "@christopherpickering/react-leaflet-markercluster/dist/styles.min.css";
 import MarkerBar from "./MarkerBar";
 import "leaflet/dist/leaflet.css";
 
-export default function MapComponent(props) {
+export default function MapComponent(props: any) {
   const { location, listBars } = props;
 
   const toast = useToast({ position: "top" });

@@ -364,23 +364,6 @@ export default function UserProfile() {
             <Divider colorScheme={"purple"} />
             <Box my={"1rem"}>
               <Box>
-                <FormLabel as={"legend"} htmlFor={"passion"}>
-                  Centre d'intéret :
-                </FormLabel>
-                <VStack gap={"1rem"} align="start">
-                  <ProfileTagList
-                    userPassions={
-                      userData.PassionID !== undefined ? userData.PassionID : []
-                    }
-                    passions={passions}
-                  />
-                  <ModalChoosePassion user={userData} passions={passions} />
-                </VStack>
-              </Box>
-            </Box>
-            <Divider colorScheme={"purple"} />
-            <Box my={"1rem"}>
-              <Box>
                 <FormLabel as={"legend"} htmlFor={"gender"}>
                   Genre :
                 </FormLabel>
@@ -416,6 +399,23 @@ export default function UserProfile() {
                     </RadioGroup>
                   )}
                 />
+              </Box>
+            </Box>
+            <Divider colorScheme={"purple"} />
+            <Box my={"1rem"}>
+              <Box>
+                <FormLabel as={"legend"} htmlFor={"passion"}>
+                  Centre d'intéret :
+                </FormLabel>
+                <VStack gap={"1rem"} align="start">
+                  <ProfileTagList
+                    userPassions={
+                      userData.PassionID !== undefined ? userData.PassionID : []
+                    }
+                    passions={passions}
+                  />
+                  <ModalChoosePassion user={userData} passions={passions} />
+                </VStack>
               </Box>
             </Box>
             <Divider colorScheme={"purple"} />

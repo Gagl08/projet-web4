@@ -18,13 +18,6 @@ export default function Map() {
   const idSaveToast = "saved_location";
   const { data: session, status } = useSession();
 
-  //faire un useQuery pour récupérer les bars et restaurants et en meme temps regarder si l'user a une location
-  //Si oui, faire une mutation avec navigator.geolocation.getCurrentPosition pour mettre à jour la location de l'user dans la bdd
-
-  // cet url  : https://data.opendatasoft.com/api/v2/catalog/datasets/osm-fr-bars%40babel/records?limit=100&offset=0&lang=fr&timezone=UTC
-
-  // ou : https://data.opendatasoft.com/api/v2/catalog/datasets/osm-fr-bars%40babel/exports/json?limit=-1&offset=0&lang=fr&timezone=UTC  MAIS RENVOI UN file
-
   const {
     isLoading,
     isError,
@@ -79,7 +72,6 @@ export default function Map() {
 
   const userSetLocation = useMutation({
     mutationKey: "userSetLocation",
-    enabled: !isLoading && !loggedUser,
     mutationFn: async (position: string) => {
       const pos = {
         location: position,
@@ -112,11 +104,12 @@ export default function Map() {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       setLocation([position.coords.latitude, position.coords.longitude]);
+      if (!loggedUser) return;
       userSetLocation.mutate(
         `${position.coords.latitude},${position.coords.longitude}`
       );
     });
-  }, []);
+  }, [loggedUser]);
 
   const MapWithNoSSR = dynamic(
     () => import("../components/layout/map/MapComponent"),
