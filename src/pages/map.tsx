@@ -7,6 +7,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import LoadingPage from "@/components/LoadingPage";
 import ErrorPage from "@/components/ErrorPage";
+import ErrorGeolocation from "@/components/ErrorGeolocation";
 import Navbar from "@/components/Navbar";
 
 export default function Map() {
@@ -14,6 +15,8 @@ export default function Map() {
     null as unknown as number,
     null as unknown as number,
   ]);
+
+  const [geolocationError, setGeolocationError] = useState(false);
   const toast = useToast({ position: "bottom" });
   const idSaveToast = "saved_location";
   const { data: session, status } = useSession();
@@ -101,15 +104,33 @@ export default function Map() {
     },
   });
 
+  const geolocationOptions = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0,
+  };
+
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setLocation([position.coords.latitude, position.coords.longitude]);
-      if (!loggedUser) return;
-      userSetLocation.mutate(
-        `${position.coords.latitude},${position.coords.longitude}`
-      );
-    });
+    navigator.geolocation.getCurrentPosition(
+      successPosition,
+      errorPosition,
+      geolocationOptions
+    );
   }, [loggedUser]);
+
+  function successPosition(position: GeolocationPosition) {
+    setLocation([position.coords.latitude, position.coords.longitude]);
+    setGeolocationError(false);
+
+    if (!loggedUser) return;
+    userSetLocation.mutate(
+      `${position.coords.latitude},${position.coords.longitude}`
+    );
+  }
+
+  function errorPosition(error: GeolocationPositionError) {
+    setGeolocationError(true);
+  }
 
   const MapWithNoSSR = dynamic(
     () => import("../components/layout/map/MapComponent"),
@@ -120,10 +141,12 @@ export default function Map() {
 
   return (
     <>
-      {isLoading || isLoadingListBars ? (
-        <LoadingPage />
+      {geolocationError ? (
+        <ErrorGeolocation />
       ) : isError || isErrorListBars ? (
         <ErrorPage />
+      ) : isLoading || isLoadingListBars ? (
+        <LoadingPage />
       ) : (
         <>
           <Navbar />

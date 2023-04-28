@@ -10,7 +10,7 @@ import "leaflet/dist/leaflet.css";
 export default function MapComponent(props: any) {
   const { location, listBars } = props;
 
-  const toast = useToast({ position: "top" });
+  const toast = useToast({ position: "bottom" });
 
   const idToastError = "error_location";
 
@@ -43,6 +43,7 @@ export default function MapComponent(props: any) {
             center={location}
             zoom={13}
             minZoom={8}
+            zoomControl={false}
             style={{
               width: "100vw",
               height: "100vw",
