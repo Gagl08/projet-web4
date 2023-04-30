@@ -9,27 +9,9 @@ import {
   Center,
   Container,
   Divider,
-  Editable,
-  EditableInput,
-  EditablePreview,
-  EditableTextarea,
   Flex,
-  FormControl,
-  FormErrorMessage,
   FormLabel,
-  HStack,
-  Radio,
-  RadioGroup,
-  RangeSlider,
-  RangeSliderFilledTrack,
-  RangeSliderThumb,
-  RangeSliderTrack,
-  Slider,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderTrack,
   Text,
-  Tooltip,
   useToast,
   VStack,
 } from "@chakra-ui/react";
@@ -38,11 +20,14 @@ import ModalModifyImages from "@/components/layout/user_profile/ModalModifyImage
 import ModalChoosePassion from "@/components/layout/user_profile/ModalChoosePassion";
 import ProfileTagList from "@/components/layout/user_profile/ProfileTagList";
 import LoadingPage from "@/components/LoadingPage";
-
-import { FaGreaterThan, FaLessThan, FaWalking } from "react-icons/fa";
+import CustomEditable from "@/components/layout/user_profile/CustomEditable";
+import CustomEditableArea from "@/components/layout/user_profile/CustomEditableArea";
+import CustomRadioGender from "@/components/layout/user_profile/CustomRadioGender";
+import CustomRangeSlider from "@/components/layout/user_profile/CustomRangeSlider";
+import CustomSlider from "@/components/layout/user_profile/CustomSlider";
 
 import { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 
 export default function UserProfile() {
@@ -50,18 +35,18 @@ export default function UserProfile() {
   const toast = useToast({ position: "top", isClosable: true });
 
   const [currentlyLoading, setCurrentlyLoading] = useState(false);
-  const [passions, setPassions] = useState(null);
+  const [passions, setPassions] = useState([] as any[]);
 
-  const [showTooltipAge, setShowTooltipAge] = useState(true);
-  const [sliderAgeValue, setSliderAgeValue] = useState([] as number[]);
-  // const [showTooltipDistance, setShowTooltipDistance] = useState(true);
-  // const [sliderDistanceValue, setSliderDistanceValue] = useState([]);
+  const [showTooltipAge, setShowTooltipAge] = useState(false);
+  const [sliderAgeValue, setSliderAgeValue] = useState([[] as number[]]);
+  const [showTooltipDistance, setShowTooltipDistance] = useState(false);
+  const [sliderDistanceValue, setSliderDistanceValue] = useState<number>(0);
 
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm();
+  } = useForm({ mode: "onBlur" });
 
   useEffect(() => {
     fetch(`/api/passions`)
@@ -88,7 +73,7 @@ export default function UserProfile() {
       const { user } = session as unknown as Session;
 
       setSliderAgeValue([user.ageMin, user.ageMax]);
-      // setSliderDistanceValue(user.distance);
+      setSliderDistanceValue(user.distance);
 
       return fetch(`/api/users/${user.id}`)
         .then((res) => res.json())
@@ -111,19 +96,6 @@ export default function UserProfile() {
     });
     if (status === "unauthenticated") router.push("/");
   }
-
-  const getTextGender = (gender: string) => {
-    switch (gender) {
-      case Gender.MALE:
-        return "Homme";
-      case Gender.FEMALE:
-        return "Femme";
-      case Gender.OTHER:
-        return "Autre";
-      case Gender.UNKNOWN:
-        return "Non renseigné";
-    }
-  };
 
   const saveData = (values: any) => {
     let trueValues = {};
@@ -208,77 +180,34 @@ export default function UserProfile() {
           <Box as="form" onSubmit={handleSubmit(saveData)} width={"80%"}>
             <Flex width={"100%"} justify={"space-between"} mb={"1rem"}>
               <Box>
-                <FormControl id="firstName" isInvalid={errors.firstName}>
-                  <FormLabel as="legend" htmlFor={"firstName"}>
-                    Prénom :
-                  </FormLabel>
-                  <Controller
-                    name={"firstName"}
-                    control={control}
-                    defaultValue={
-                      userData.firstName === null ? "" : userData.firstName
-                    }
-                    rules={{
-                      required: { value: true, message: "Prénom requis" },
-                    }}
-                    render={({ field }) => {
-                      return (
-                        <Editable
-                          {...field}
-                          id={"firstName"}
-                          as={"b"}
-                          placeholder={"Non renseigné"}
-                        >
-                          <EditablePreview />
-                          <EditableInput />
-                        </Editable>
-                      );
-                    }}
-                  />
-                  <FormErrorMessage as="b">
-                    {errors.firstName?.message}
-                  </FormErrorMessage>
-                </FormControl>
+                <CustomEditable
+                  name="firstName"
+                  defaultValue={
+                    userData.firstName === null ? "" : userData.firstName
+                  }
+                  control={control}
+                  rules={{
+                    required: { value: true, message: "Prénom requis" },
+                  }}
+                  label={"Prénom :"}
+                />
               </Box>
               <Box>
-                <FormControl id="lastName" isInvalid={errors.lastName}>
-                  <FormLabel as={"legend"} htmlFor={"lastName"}>
-                    Nom :
-                  </FormLabel>
-                  <Controller
-                    name={"lastName"}
-                    control={control}
-                    defaultValue={
-                      userData.lastName === null ? "" : userData.lastName
-                    }
-                    rules={{
-                      required: { value: true, message: "Nom requis" },
-                    }}
-                    render={({ field }) => (
-                      <Editable
-                        {...field}
-                        id={"lastName"}
-                        as={"b"}
-                        placeholder={"Non renseigné"}
-                      >
-                        <EditablePreview />
-                        <EditableInput />
-                      </Editable>
-                    )}
-                  />
-                  <FormErrorMessage as={"b"}>
-                    {errors.lastName?.message}
-                  </FormErrorMessage>
-                </FormControl>
+                <CustomEditable
+                  name="lastName"
+                  defaultValue={
+                    userData.lastName === null ? "" : userData.lastName
+                  }
+                  control={control}
+                  rules={{
+                    required: { value: true, message: "Nom requis" },
+                  }}
+                  label={"Nom :"}
+                />
               </Box>
               <Box>
-                <FormLabel as={"legend"} htmlFor={"birthdate"}>
-                  Date de naissance :
-                </FormLabel>
-                <Editable
-                  id={"birthdate"}
-                  as="b"
-                  color={"grey"}
+                <CustomEditable
+                  name="birthdate"
                   isDisabled={true}
                   defaultValue={
                     userData.birthdate === undefined ||
@@ -286,118 +215,61 @@ export default function UserProfile() {
                       ? "Non renseigné"
                       : formateDate(userData.birthdate.toString())
                   }
-                >
-                  <EditablePreview />
-                </Editable>
+                  control={control}
+                  label={"Date de naissance :"}
+                />
               </Box>
             </Flex>
             <Divider colorScheme={"purple"} />
             <Flex justify={"space-between"} my={"1rem"}>
               <Box>
-                <FormLabel as={"legend"} htmlFor={"location"}>
-                  Ville :
-                </FormLabel>
-                <Editable
-                  id={"location"}
-                  as="b"
-                  color={"grey"}
+                <CustomEditable
+                  name="location"
                   isDisabled={true}
                   defaultValue={
                     userData.location === null || userData.location === ""
                       ? "Rendez vous sur la carte"
                       : userData.location
                   }
-                >
-                  <EditablePreview />
-                </Editable>
+                  control={control}
+                  label={"Ville :"}
+                />
               </Box>
               <Box>
-                <FormLabel as={"legend"} htmlFor={"email"}>
-                  Adresse mail :
-                </FormLabel>
-                <Editable
-                  id={"email"}
-                  as="b"
-                  color={"grey"}
+                <CustomEditable
+                  name="email"
                   isDisabled={true}
                   defaultValue={userData.email}
-                >
-                  <EditablePreview />
-                </Editable>
+                  control={control}
+                  label={"Adresse mail :"}
+                />
               </Box>
             </Flex>
             <Divider colorScheme={"purple"} />
             <Box my={"1rem"}>
-              <FormControl id="lastName" isInvalid={errors.bio}>
-                <FormLabel as={"legend"} htmlFor={"bio"}>
-                  À propos :
-                </FormLabel>
-                <Controller
-                  name={"bio"}
-                  control={control}
-                  defaultValue={userData.bio === null ? "" : userData.bio}
-                  rules={{
-                    maxLength: {
-                      value: 240,
-                      message: "240 caractères maximum",
-                    },
-                  }}
-                  render={({ field }) => (
-                    <Editable
-                      {...field}
-                      id={"bio"}
-                      as="b"
-                      width={"100%"}
-                      placeholder={"Non renseigné"}
-                      defaultValue={userData.bio === null ? "" : userData.bio}
-                    >
-                      <EditablePreview />
-                      <EditableTextarea />
-                    </Editable>
-                  )}
-                />
-                <FormErrorMessage as="b">
-                  {errors?.bio?.message ?? ""}
-                </FormErrorMessage>
-              </FormControl>
+              <CustomEditableArea
+                name="bio"
+                defaultValue={userData.bio === null ? "" : userData.bio}
+                control={control}
+                rules={{
+                  maxLength: {
+                    value: 240,
+                    message: "240 caractères maximum",
+                  },
+                }}
+                label={"À propos :"}
+              />
             </Box>
             <Divider colorScheme={"purple"} />
             <Box my={"1rem"}>
               <Box>
-                <FormLabel as={"legend"} htmlFor={"gender"}>
-                  Genre :
-                </FormLabel>
-                <Controller
+                <CustomRadioGender
                   name={"gender"}
+                  label={"Genre :"}
                   control={control}
-                  render={({ field }) => (
-                    <RadioGroup
-                      {...field}
-                      colorScheme={"purple"}
-                      id={"gender"}
-                      as="b"
-                      defaultValue={
-                        userData.gender === null
-                          ? Gender.UNKNOWN
-                          : userData.gender
-                      }
-                    >
-                      <HStack spacing={"0.5rem"}>
-                        <Radio value={Gender.MALE}>
-                          {getTextGender(Gender.MALE)}
-                        </Radio>
-                        <Radio value={Gender.FEMALE}>
-                          {getTextGender(Gender.FEMALE)}
-                        </Radio>
-                        <Radio value={Gender.OTHER}>
-                          {getTextGender(Gender.OTHER)}
-                        </Radio>
-                        <Radio value={Gender.UNKNOWN}>
-                          {getTextGender(Gender.UNKNOWN)}
-                        </Radio>
-                      </HStack>
-                    </RadioGroup>
-                  )}
+                  defaultValue={
+                    userData.gender === null ? Gender.UNKNOWN : userData.gender
+                  }
                 />
               </Box>
             </Box>
@@ -426,139 +298,39 @@ export default function UserProfile() {
                 </Text>
               </Center>
               <Box my={"1rem"}>
-                <FormLabel as={"legend"} htmlFor={"prefGender"}>
-                  Genre :
-                </FormLabel>
-                <Controller
+                <CustomRadioGender
                   name={"prefGender"}
+                  label={"Genre :"}
                   control={control}
-                  render={({ field }) => (
-                    <RadioGroup
-                      {...field}
-                      colorScheme={"purple"}
-                      id={"prefGender"}
-                      as="b"
-                      defaultValue={
-                        userData.prefGender === null
-                          ? Gender.UNKNOWN
-                          : userData.gender
-                      }
-                    >
-                      <HStack spacing={"0.5rem"}>
-                        <Radio value={Gender.MALE}>
-                          {getTextGender(Gender.MALE)}
-                        </Radio>
-                        <Radio value={Gender.FEMALE}>
-                          {getTextGender(Gender.FEMALE)}
-                        </Radio>
-                        <Radio value={Gender.OTHER}>
-                          {getTextGender(Gender.OTHER)}
-                        </Radio>
-                        <Radio value={Gender.UNKNOWN}>
-                          {getTextGender(Gender.UNKNOWN)}
-                        </Radio>
-                      </HStack>
-                    </RadioGroup>
-                  )}
+                  defaultValue={
+                    userData.prefGender === null
+                      ? Gender.UNKNOWN
+                      : userData.gender
+                  }
                 />
               </Box>
               <Box>
-                <FormLabel as={"legend"} htmlFor={"prefGender"}>
-                  Age :
-                </FormLabel>
-                <Controller
-                  name={"age"}
+                <CustomRangeSlider
                   control={control}
-                  render={({ field: { onChange } }) => (
-                    <RangeSlider
-                      aria-label={["min", "max"]}
-                      colorScheme={"purple"}
-                      min={18}
-                      max={99}
-                      id={"age"}
-                      color={"pink.500"}
-                      defaultValue={[userData.ageMin, userData.ageMax]}
-                      onChange={(v) => {
-                        setSliderAgeValue(v);
-                        onChange(v);
-                      }}
-                      onMouseEnter={() => setShowTooltipAge(true)}
-                      onMouseLeave={() => setShowTooltipAge(false)}
-                    >
-                      <RangeSliderTrack>
-                        <RangeSliderFilledTrack bgColor={"purple.500"} />
-                      </RangeSliderTrack>
-                      <Tooltip
-                        hasArrow
-                        bg="purple.500"
-                        color="white"
-                        placement="top"
-                        isOpen={showTooltipAge}
-                        label={`${sliderAgeValue[0]}`}
-                      >
-                        <RangeSliderThumb boxSize={6} index={0}>
-                          <Box color={"purple.500"} as={FaLessThan} />
-                        </RangeSliderThumb>
-                      </Tooltip>
-
-                      <Tooltip
-                        hasArrow
-                        bg="purple.500"
-                        color="white"
-                        placement="top"
-                        isOpen={showTooltipAge}
-                        label={`${sliderAgeValue[1]}`}
-                      >
-                        <RangeSliderThumb boxSize={6} index={1}>
-                          <Box color={"purple.500"} as={FaGreaterThan} />
-                        </RangeSliderThumb>
-                      </Tooltip>
-                    </RangeSlider>
-                  )}
+                  label={"Age :"}
+                  name={"age"}
+                  defaultValue={[userData.ageMin, userData.ageMax]}
+                  setSliderAgeValue={setSliderAgeValue}
+                  setShowTooltipAge={setShowTooltipAge}
+                  showTooltipAge={showTooltipAge}
+                  sliderAgeValue={sliderAgeValue}
                 />
               </Box>
-              {/* <Box>
-                <FormLabel as={"legend"} htmlFor={"distance"}>
-                  Distance :
-                </FormLabel>
-                <Controller
-                  name={"distance"}
-                  control={control}
-                  render={({ field: { onChange } }) => (
-                    <Slider
-                      aria-label={"distance"}
-                      colorScheme={"purple"}
-                      min={20}
-                      max={250}
-                      id={"distance"}
-                      color={"pink.500"}
-                      defaultValue={userData.distance}
-                      onChange={(v) => {
-                        setSliderDistanceValue(v);
-                        onChange(v);
-                      }}
-                      onMouseEnter={() => setShowTooltipDistance(true)}
-                      onMouseLeave={() => setShowTooltipDistance(false)}
-                    >
-                      <SliderTrack>
-                        <SliderFilledTrack bgColor={"purple.500"} />
-                      </SliderTrack>
-                      <Tooltip
-                        hasArrow
-                        bg="purple.500"
-                        color="white"
-                        placement="top"
-                        isOpen={showTooltipDistance}
-                        label={`${sliderDistanceValue} km`}
-                      >
-                        <SliderThumb boxSize={6}>
-                          <Box color={"purple.500"} as={FaWalking} />
-                        </SliderThumb>
-                      </Tooltip>
-                    </Slider>
-                  )}
-                />
-              </Box> */}
+              <CustomSlider
+                control={control}
+                label={"Distance :"}
+                name={"distance"}
+                defaultValue={userData.distance}
+                setSliderDistanceValue={setSliderDistanceValue}
+                setShowTooltipDistance={setShowTooltipDistance}
+                showTooltipDistance={showTooltipDistance}
+                sliderDistanceValue={sliderDistanceValue}
+              />
             </Box>
             <Divider colorScheme={"purple"} />
             <Center gap={"1rem"} my={"1rem"}>
@@ -584,5 +356,4 @@ export default function UserProfile() {
       </Container>
     </Box>
   );
-  // }
 }
