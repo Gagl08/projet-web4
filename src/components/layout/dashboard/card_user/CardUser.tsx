@@ -18,16 +18,14 @@ import { useState } from "react";
 import SearchFailCard from "./SearchFailCard";
 import LoadingPage from "@/components/LoadingPage";
 
-export default function CardUser(props) {
-  const {
-    users,
-    loggedUser,
-    userLikes,
-    setUserLikes,
-    userDislikes,
-    setUserDislikes,
-  } = props;
-
+export default function CardUser({
+  users,
+  loggedUser,
+  userLikes,
+  setUserLikes,
+  userDislikes,
+  setUserDislikes,
+}) {
   const toast = useToast({
     position: "top",
     duration: 2000,
