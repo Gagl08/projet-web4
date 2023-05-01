@@ -24,7 +24,7 @@ import CustomEditable from "@/components/layout/user_profile/CustomEditable";
 import CustomEditableArea from "@/components/layout/user_profile/CustomEditableArea";
 import CustomRadioGender from "@/components/layout/user_profile/CustomRadioGender";
 import CustomRangeSlider from "@/components/layout/user_profile/CustomRangeSlider";
-import CustomSlider from "@/components/layout/user_profile/CustomSlider";
+// import CustomSlider from "@/components/layout/user_profile/CustomSlider";
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -39,8 +39,8 @@ export default function UserProfile() {
 
   const [showTooltipAge, setShowTooltipAge] = useState(false);
   const [sliderAgeValue, setSliderAgeValue] = useState([[] as number[]]);
-  const [showTooltipDistance, setShowTooltipDistance] = useState(false);
-  const [sliderDistanceValue, setSliderDistanceValue] = useState<number>(0);
+  // const [showTooltipDistance, setShowTooltipDistance] = useState(false);
+  // const [sliderDistanceValue, setSliderDistanceValue] = useState<number>(0);
 
   const {
     handleSubmit,
@@ -73,7 +73,7 @@ export default function UserProfile() {
       const { user } = session as unknown as Session;
 
       setSliderAgeValue([user.ageMin, user.ageMax]);
-      setSliderDistanceValue(user.distance);
+      // setSliderDistanceValue(user.distance);
 
       return fetch(`/api/users/${user.id}`)
         .then((res) => res.json())
@@ -99,7 +99,6 @@ export default function UserProfile() {
 
   const saveData = (values: any) => {
     let trueValues = {};
-    console.log(values);
 
     for (const [key, value] of Object.entries(values)) {
       if (value !== "" && value !== undefined) {
@@ -321,7 +320,7 @@ export default function UserProfile() {
                   sliderAgeValue={sliderAgeValue}
                 />
               </Box>
-              <CustomSlider
+              {/* <CustomSlider
                 control={control}
                 label={"Distance :"}
                 name={"distance"}
@@ -330,7 +329,7 @@ export default function UserProfile() {
                 setShowTooltipDistance={setShowTooltipDistance}
                 showTooltipDistance={showTooltipDistance}
                 sliderDistanceValue={sliderDistanceValue}
-              />
+              /> */}
             </Box>
             <Divider colorScheme={"purple"} />
             <Center gap={"1rem"} my={"1rem"}>
