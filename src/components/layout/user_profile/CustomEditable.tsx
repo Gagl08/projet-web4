@@ -4,6 +4,7 @@ import {
   EditablePreview,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
 } from "@chakra-ui/react";
 import { Controller, ControllerProps } from "react-hook-form";
@@ -11,6 +12,7 @@ import { Controller, ControllerProps } from "react-hook-form";
 type CustomEditableProps = {
   label: string;
   isDisabled?: boolean;
+  helperText?: string;
 } & Omit<ControllerProps, "render">;
 
 export default function CustomEditable(props: CustomEditableProps) {
@@ -18,6 +20,7 @@ export default function CustomEditable(props: CustomEditableProps) {
     defaultValue,
     label,
     name,
+    helperText = "",
     isDisabled = false,
     ...controllerProps
   } = props;
@@ -44,6 +47,7 @@ export default function CustomEditable(props: CustomEditableProps) {
               <EditablePreview />
               <EditableInput />
             </Editable>
+            <FormHelperText>{helperText}</FormHelperText>
             <FormErrorMessage as="b">{error?.message}</FormErrorMessage>
           </FormControl>
         );

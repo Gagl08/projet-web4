@@ -10,6 +10,7 @@ import {
   Container,
   Divider,
   Flex,
+  FormHelperText,
   FormLabel,
   Text,
   useToast,
@@ -232,6 +233,9 @@ export default function UserProfile() {
                   }
                   control={control}
                   label={"Ville :"}
+                  helperText={
+                    "Ce champ est modifié automatiquement depuis la carte"
+                  }
                 />
               </Box>
               <Box>

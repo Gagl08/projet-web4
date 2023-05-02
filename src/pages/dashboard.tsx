@@ -58,16 +58,7 @@ export default function Dashboard() {
     queryKey: ["ListUsers"],
     enabled: status === "authenticated" && !isLoading,
     queryFn: async () => {
-      return fetch(
-        `/api/user/userDashboard?preferences=${[
-          loggedUser.prefGender,
-          loggedUser.ageMin,
-          loggedUser.ageMax,
-          loggedUser.distance,
-        ]}&excludedId=${loggedUser.id}&userLikes=${
-          loggedUser.UserLikesID
-        }&userDislikes=${loggedUser.UserDislikesID}`
-      ) //exclure les profils déjà like ou dislike
+      return fetch(`/api/user/userDashboard?userID=${loggedUser.id}`) //exclure les profils déjà like ou dislike
         .then((res) => res.json())
         .catch((err) => {
           return err;

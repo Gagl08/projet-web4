@@ -6,39 +6,43 @@ const birthDateFromAge = (age) => {
 };
 
 const get = async (req, res) => {
-  const {
-    preferences: preferencesList,
-    excludedId,
-    userLikes,
-    userDislikes,
-  } = req.query;
+  const { userID } = req.query;
 
-  const preferences = preferencesList.split(",");
-
-  const prefGender = preferences[0];
-  const dateAgeMin = birthDateFromAge(preferences[1]);
-  const dateAgeMax = birthDateFromAge(preferences[2]);
-
-  // pas utilisé pour le moment
-  const distance = preferences[3];
-
-  let userLikesList = userLikes.split(",");
-  let userDislikesList = userDislikes.split(",");
-  if (userLikesList[0] === "") {
-    userLikesList = [];
-  }
-  if (userDislikesList[0] === "") {
-    userDislikesList = [];
-  }
-
-  const excludedIdArray = [excludedId, ...userLikesList, ...userDislikesList];
   const prisma = new PrismaClient();
+
+  const userInfo = await prisma.user
+    .findUnique({
+      where: {
+        id: userID,
+      },
+      select: {
+        UserLikesID: true,
+        UserDislikesID: true,
+        distance: true,
+        ageMax: true,
+        ageMin: true,
+        prefGender: true,
+      },
+    })
+    .catch((e) => {
+      return [];
+    });
+
+  const dateAgeMin = birthDateFromAge(userInfo.ageMin);
+  const dateAgeMax = birthDateFromAge(userInfo.ageMax);
+
+  const excludedIdArray = [
+    userID,
+    ...userInfo.UserDislikesID,
+    ...userInfo.UserLikesID,
+  ];
+
   // a terme mettre l'age, la distance
   const users = await prisma.user
     .findMany({
       where: {
         AND: [
-          { gender: { equals: prefGender } },
+          { gender: { equals: userInfo.prefGender } },
           {
             birthdate: {
               lte: dateAgeMin.toISOString(),
@@ -51,7 +55,7 @@ const get = async (req, res) => {
       },
     })
     .catch((e) => {
-      return [];
+      return null;
     });
   if (users.length === 0 || users === undefined || users === null) {
     return res.status(500).send({ error: "Aucun profil trouvé" });
