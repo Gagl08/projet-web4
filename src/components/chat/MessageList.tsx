@@ -1,4 +1,4 @@
-import type {Message as MessageType, User} from "@prisma/client";
+import type {Message as MessageType, User} from '@prisma/client';
 import Message from '@/components/chat/Message';
 import {Box, Flex} from '@chakra-ui/react';
 
@@ -7,12 +7,14 @@ type Props = {
   messages: MessageType[]
 }
 
-export default function MessageList(props: Props) {
-  const {messages, user} = props;
+const MessageList = ({messages, user}: Props) => (
+    <Flex direction={'column'} gap={1}>
+      {messages.map((message, index) =>
+          <Message key={index}
+                   align={user.id === message.UserID ? 'right' : 'left'}
+                   message={message}/>
+      )}
+    </Flex>
+);
 
-  return (
-      <Flex direction={'column'} gap={1}>
-        {messages.map((message, index) => <Message key={index} user={user} message={message}/>)}
-      </Flex>
-  );
-}
+export default MessageList;

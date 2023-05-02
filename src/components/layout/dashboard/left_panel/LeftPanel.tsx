@@ -1,13 +1,4 @@
-import {
-  Card,
-  Flex,
-  Box,
-  Image,
-  Text,
-  Spacer,
-  VStack,
-  Divider,
-} from "@chakra-ui/react";
+import {Card, Flex, Box, Image, Text, Spacer, Divider} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
 import { AiFillMessage } from "react-icons/ai";
