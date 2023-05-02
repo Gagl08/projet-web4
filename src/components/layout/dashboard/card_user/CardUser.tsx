@@ -34,94 +34,76 @@ export default function CardUser({
   const [listUsers, setListUsers] = useState(users);
 
   const likeMutation = useMutation({
-    mutationKey: "like",
     mutationFn: async (id) => {
-      let jsonLikes = { UserLikes: { connect: [] } };
+      const likePostOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          idUser: loggedUser.id,
+          idUserLiked: id,
+        }),
+      };
 
-      let newUserLikesList = [...userLikes, id];
-
-      newUserLikesList.forEach((id) => {
-        jsonLikes.UserLikes.connect.push({ id: id });
-      });
-
-      return fetch(`/api/users/${loggedUser.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(jsonLikes),
-      })
-        .then((res) => {
-          setListUsers(listUsers.slice(1));
-          setUserLikes([...userLikes, user.id]);
-          toast({
-            title: "J'aime",
-            description: "Votre action a bien été prise en compte",
-            status: "success",
-          });
-          res.json();
-        })
-        .catch((err) => {
-          return err;
-        });
-    },
-    onError: (err) => {
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue",
-        status: "error",
-      });
+      try {
+        const res = await fetch(`/api/user/like`, likePostOptions);
+        const response = await res.json();
+        return response;
+      } catch (err) {
+        return err;
+      }
     },
     onSuccess: (data) => {
+      if (data.error) {
+        toast({
+          title: "Erreur",
+          description: "Une erreur est survenue",
+          status: "error",
+        });
+        return;
+      }
+      setListUsers(listUsers.slice(1));
+      setUserLikes([...userLikes, data.userLiked]);
       toast({
         title: "J'aime",
         description: "Votre action a bien été prise en compte",
         status: "success",
       });
+
+      //tester si match et afficher un truc
     },
   });
 
   const dislikeMutation = useMutation({
-    mutationKey: "dislike",
     mutationFn: async (id) => {
-      let jsonDislikes = { UserDislikes: { connect: [] } };
+      const dislikePostOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          idUser: loggedUser.id,
+          idUserDisliked: id,
+        }),
+      };
 
-      let newUserDislikesList = [...userDislikes, id];
-
-      newUserDislikesList.forEach((id) => {
-        jsonDislikes.UserDislikes.connect.push({ id: id });
-      });
-
-      return fetch(`/api/users/${loggedUser.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(jsonDislikes),
-      })
-        .then((res) => {
-          setListUsers(listUsers.slice(1));
-          setUserDislikes([...userDislikes, user.id]);
-          toast({
-            title: "J'aime pas",
-            description: "Votre action a bien été prise en compte",
-            status: "success",
-          });
-          res.json();
-        })
-        .catch((err) => {
-          return err;
-        });
-    },
-    onError: (err) => {
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue",
-        status: "error",
-        duration: 2000,
-      });
+      try {
+        const res = await fetch(`/api/user/dislike`, dislikePostOptions);
+        const response = await res.json();
+        return response;
+      } catch (err) {
+        return err;
+      }
     },
     onSuccess: (data) => {
+      if (data.error) {
+        toast({
+          title: "Erreur",
+          description: "Une erreur est survenue",
+          status: "error",
+          duration: 2000,
+        });
+        return;
+      }
+      setListUsers(listUsers.slice(1));
+      setUserDislikes([...userDislikes, data.userDisliked]);
       toast({
         title: "J'aime pas",
         description: "Votre action a bien été prise en compte",
@@ -147,7 +129,7 @@ export default function CardUser({
     },
   });
 
-  const formateDateToAge = (birthdate) => {
+  const formateDateToAge = (birthdate: Date) => {
     const date = new Date(birthdate);
     var ageDifMs = Date.now() - date.getTime();
     var ageDate = new Date(ageDifMs); // miliseconds from epoch
@@ -177,6 +159,7 @@ export default function CardUser({
 
           <Flex gap={1}>
             <IconButton
+              aria-label="like"
               borderRadius={"1rem"}
               colorScheme={"purple"}
               onClick={() => {
@@ -186,6 +169,7 @@ export default function CardUser({
               <BiHeart />
             </IconButton>
             <IconButton
+              aria-label="dislike"
               borderRadius={"1rem"}
               colorScheme={"purple"}
               variant={"outline"}

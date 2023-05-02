@@ -9,6 +9,7 @@ import {
   Center,
   Container,
   Divider,
+  Editable,
   Flex,
   FormHelperText,
   FormLabel,
@@ -22,6 +23,7 @@ import ModalChoosePassion from "@/components/layout/user_profile/ModalChoosePass
 import ProfileTagList from "@/components/layout/user_profile/ProfileTagList";
 import LoadingPage from "@/components/LoadingPage";
 import CustomEditable from "@/components/layout/user_profile/CustomEditable";
+import CustomFalseEditable from "@/components/layout/user_profile/CustomFalseEditable";
 import CustomEditableArea from "@/components/layout/user_profile/CustomEditableArea";
 import CustomRadioGender from "@/components/layout/user_profile/CustomRadioGender";
 import CustomRangeSlider from "@/components/layout/user_profile/CustomRangeSlider";
@@ -206,16 +208,14 @@ export default function UserProfile() {
                 />
               </Box>
               <Box>
-                <CustomEditable
-                  name="birthdate"
-                  isDisabled={true}
+                <CustomFalseEditable
+                  id="birthdate"
                   defaultValue={
                     userData.birthdate === undefined ||
                     userData.birthdate === null
                       ? "Non renseigné"
                       : formateDate(userData.birthdate.toString())
                   }
-                  control={control}
                   label={"Date de naissance :"}
                 />
               </Box>
@@ -223,15 +223,14 @@ export default function UserProfile() {
             <Divider colorScheme={"purple"} />
             <Flex justify={"space-between"} my={"1rem"}>
               <Box>
-                <CustomEditable
-                  name="location"
+                <CustomFalseEditable
+                  id="location"
                   isDisabled={true}
                   defaultValue={
                     userData.location === null || userData.location === ""
                       ? "Rendez vous sur la carte"
                       : userData.location
                   }
-                  control={control}
                   label={"Ville :"}
                   helperText={
                     "Ce champ est modifié automatiquement depuis la carte"
@@ -239,11 +238,10 @@ export default function UserProfile() {
                 />
               </Box>
               <Box>
-                <CustomEditable
-                  name="email"
+                <CustomFalseEditable
+                  id="email"
                   isDisabled={true}
                   defaultValue={userData.email}
-                  control={control}
                   label={"Adresse mail :"}
                 />
               </Box>
