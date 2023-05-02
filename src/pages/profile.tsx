@@ -18,15 +18,15 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import ModalModifyImages from "@/components/layout/user_profile/ModalModifyImages";
-import ModalChoosePassion from "@/components/layout/user_profile/ModalChoosePassion";
-import ProfileTagList from "@/components/layout/user_profile/ProfileTagList";
+import ModalModifyImages from "@/components/layout/profile/ModalModifyImages";
+import ModalChoosePassion from "@/components/layout/profile/ModalChoosePassion";
+import ProfileTagList from "@/components/layout/profile/ProfileTagList";
 import LoadingPage from "@/components/LoadingPage";
-import CustomEditable from "@/components/layout/user_profile/CustomEditable";
-import CustomFalseEditable from "@/components/layout/user_profile/CustomFalseEditable";
-import CustomEditableArea from "@/components/layout/user_profile/CustomEditableArea";
-import CustomRadioGender from "@/components/layout/user_profile/CustomRadioGender";
-import CustomRangeSlider from "@/components/layout/user_profile/CustomRangeSlider";
+import CustomEditable from "@/components/layout/profile/CustomEditable";
+import CustomFalseEditable from "@/components/layout/profile/CustomFalseEditable";
+import CustomEditableArea from "@/components/layout/profile/CustomEditableArea";
+import CustomRadioGender from "@/components/layout/profile/CustomRadioGender";
+import CustomRangeSlider from "@/components/layout/profile/CustomRangeSlider";
 // import CustomSlider from "@/components/layout/user_profile/CustomSlider";
 
 import { useEffect, useState } from "react";

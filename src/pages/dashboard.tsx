@@ -45,10 +45,6 @@ export default function Dashboard() {
     },
   });
 
-  /* 
-    Erreur quand je retourn de userProfile à dashboard
-    */
-
   const {
     data: listUsers,
     isError: isErrorListUsers,

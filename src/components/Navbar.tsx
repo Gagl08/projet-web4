@@ -69,7 +69,7 @@ export default function Navbar({ variant = "fixed" }: Props) {
               <Link href={"/dashboard"} color={"purple.500"}>
                 Tableau de bord
               </Link>
-              <Link href={"/userProfile"} color={"purple.500"}>
+              <Link href={"/profile"} color={"purple.500"}>
                 Profile
               </Link>
               <Link href={"/map"} color={"purple.500"}>

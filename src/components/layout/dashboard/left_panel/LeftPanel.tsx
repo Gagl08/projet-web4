@@ -84,7 +84,7 @@ export default function LeftPanel(props) {
           </LeftPanelButton>
           <LeftPanelButton
             leftIcon={<BsFillPersonFill />}
-            onClickHandler={() => router.push("/userProfile")}
+            onClickHandler={() => router.push("/profile")}
           >
             Profile
           </LeftPanelButton>
