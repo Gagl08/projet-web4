@@ -16,8 +16,7 @@ import LoadingPage from "@/components/LoadingPage";
 export default function Dashboard() {
   const router = useRouter();
   const toast = useToast({ position: "top", isClosable: true });
-  const [userLikes, setUserLikes] = useState([] as string[]);
-  const [userDislikes, setUserDislikes] = useState([] as string[]);
+  const [newMatch, setNewMatch] = useState(false);
 
   const { data: session, status } = useSession();
 
@@ -31,9 +30,6 @@ export default function Dashboard() {
     enabled: status === "authenticated",
     queryFn: async () => {
       const { user } = session as unknown as Session;
-
-      setUserDislikes([...user.UserDislikesID]);
-      setUserLikes([...user.UserLikesID]);
 
       return fetch(`/api/users/${user.id}`)
         .then((res) => {
@@ -76,6 +72,20 @@ export default function Dashboard() {
     if (status === "unauthenticated") router.push("/");
   }
 
+  /**
+   *
+   * Avec newMatch, faire une fonction qui refetch le user et qui affiche
+   *  un modal avec les infos du user matché
+   *
+   *  (peut etre invalidateQueries mais apres je sais pas comment on la relance)
+   *
+   * Si j'arrive à faire le invalidateQueries, je met dans le useQuery
+   *  onSuccess: (loggedUser) => {
+   *   if (loggedUser.match.length > 0)
+   *    afficher le modal
+   *
+   */
+
   return (
     <>
       <Head>
@@ -105,10 +115,7 @@ export default function Dashboard() {
               <CardUser
                 users={listUsers.users}
                 loggedUser={loggedUser}
-                userLikes={userLikes}
-                setUserLikes={setUserLikes}
-                userDislikes={userDislikes}
-                setUserDislikes={setUserDislikes}
+                setMatch={setNewMatch}
               />
             )}
           </Box>

@@ -18,14 +18,7 @@ import { useState } from "react";
 import SearchFailCard from "./SearchFailCard";
 import LoadingPage from "@/components/LoadingPage";
 
-export default function CardUser({
-  users,
-  loggedUser,
-  userLikes,
-  setUserLikes,
-  userDislikes,
-  setUserDislikes,
-}) {
+export default function CardUser({ users, loggedUser, setMatch }) {
   const toast = useToast({
     position: "top",
     duration: 2000,
@@ -61,8 +54,10 @@ export default function CardUser({
         });
         return;
       }
+      if (data.match) {
+        setMatch(true);
+      }
       setListUsers(listUsers.slice(1));
-      setUserLikes([...userLikes, data.userLiked]);
       toast({
         title: "J'aime",
         description: "Votre action a bien été prise en compte",
@@ -103,7 +98,6 @@ export default function CardUser({
         return;
       }
       setListUsers(listUsers.slice(1));
-      setUserDislikes([...userDislikes, data.userDisliked]);
       toast({
         title: "J'aime pas",
         description: "Votre action a bien été prise en compte",

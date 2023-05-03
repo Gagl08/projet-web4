@@ -18,6 +18,30 @@ const post = async (req, res) => {
 
     const match = likedByList.OtherUserLikesID.includes(idUserLiked);
 
+    if (match) {
+      await prisma.notification.create({
+        data: {
+          type: NotificationType.MATCH,
+          user: {
+            connect: {
+              id: idUser,
+            },
+          },
+        },
+      });
+
+      await prisma.notification.create({
+        data: {
+          type: NotificationType.MATCH,
+          user: {
+            connect: {
+              id: idUserLiked,
+            },
+          },
+        },
+      });
+    }
+
     //faire une notification mais faut qu'on regarde un meilleur moyen dans la BD
 
     await prisma.user.update({
