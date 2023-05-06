@@ -1,6 +1,6 @@
 import { Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { Box, Button, Card, CardBody, Text } from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 
 export default function MarkerBar(props) {
   const { bar } = props;
@@ -23,9 +23,7 @@ export default function MarkerBar(props) {
           <Text fontSize={"1rem"} fontWeight={"bold"} align={"center"}>
             {bar.name || '"Nom du bar"'}
           </Text>
-          <Button colorScheme={"purple"} variant={"outline"}>
-            Inviter un match
-          </Button>
+          <Button variant={"outline"}>Inviter un match</Button>
         </Box>
       </Popup>
     </Marker>

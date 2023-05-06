@@ -4,8 +4,7 @@ export default function PresentationSection() {
   return (
       <Flex justify={{base: 'center', md: 'right'}} alignItems={'center'}
             bg={{base: '#805AD5'}} bgImage={'/couple_funny.png'}
-            bgSize={'cover'}
-            bgPos={'center'}
+            bgSize={'cover'} bgPos={'center'}
             bgAttachment={'fixed'} minH={{base: 'initial', md: '80vh'}}>
 
         <Box p={50} width={{base: '100%', md: '50%'}} maxW={{md: "500px"}} bg={'#805AD5'}>

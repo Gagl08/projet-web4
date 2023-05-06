@@ -55,7 +55,7 @@ export default function ChatId() {
           <MessageList user={session.user as User} messages={messages}/>
 
           <Flex gap={5} mt={5}>
-            <Input type={"text"} colorScheme={'purple'} onChange={(evt) => setText(evt.target.value) } value={text} />
+            <Input type={"text"} colorScheme={'purple'} onChange={evt => setText(evt.target.value)} value={text} />
             <Button colorScheme={'purple'} onClick={handleSubmit}>Envoyer</Button>
           </Flex>
         </Container>

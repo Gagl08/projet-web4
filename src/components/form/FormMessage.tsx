@@ -32,8 +32,8 @@ export default function FormMessage(props: Props) {
 
   return (
       <Flex gap={5} mt={5}>
-        <Input type={text} colorScheme={'purple'} onChange={(evt) => setText(evt.target.value) } value={text} />
-        <Button colorScheme={'purple'} onClick={handleSubmit} >Envoyer</Button>
+        <Input type={text} onChange={evt => setText(evt.target.value) } value={text}/>
+        <Button onClick={handleSubmit}>Envoyer</Button>
       </Flex>
   )
 }

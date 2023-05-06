@@ -1,4 +1,4 @@
-import { Badge, Flex, Tag } from "@chakra-ui/react";
+import {Flex, Tag} from '@chakra-ui/react';
 
 type Props = {
   passions: string[];
@@ -6,22 +6,15 @@ type Props = {
   listPassions?: Object[];
 };
 
-export default function PassionTagList({
-  passions,
-  userPassions = [],
-  listPassions,
-}: Props) {
-  return (
-    <Flex gap={"0.5rem"} mt={"1vh"} flexWrap="wrap">
+const PassionTagList = ({passions, userPassions = [], listPassions}: Props) => (
+    <Flex gap={'0.5rem'} mt={'1vh'} flexWrap="wrap">
       {passions.map((passionID, index) => (
-        <Tag
-          key={index}
-          variant={userPassions.includes(passionID) ? "subtle" : "outline"}
-          colorScheme={"purple"}
-        >
-          {listPassions?.find((passion) => passion.id === passionID)?.name}
-        </Tag>
+          <Tag variant={userPassions.includes(passionID) ? 'subtle' : 'outline'}
+               key={index}>
+            {listPassions?.find((passion) => passion.id === passionID)?.name}
+          </Tag>
       ))}
     </Flex>
-  );
-}
+);
+
+export default PassionTagList;

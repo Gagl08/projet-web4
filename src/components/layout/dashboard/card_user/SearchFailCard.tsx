@@ -1,8 +1,7 @@
-import { Card, Text, CardBody, CardHeader } from "@chakra-ui/react";
+import {Card, Text, CardBody, CardHeader} from '@chakra-ui/react';
 
-export default function SearchFailCard(props) {
-  return (
-    <Card w={"100%"} h={"100%"} borderRadius={"1rem"} overflow={"hidden"}>
+const SearchFailCard = () => (
+    <Card w={'100%'} h={'100%'} borderRadius={'1rem'} overflow={'hidden'}>
       <CardHeader> Aucun profil correspondant à vos critères </CardHeader>
       <CardBody>
         <Text as="b">
@@ -10,5 +9,6 @@ export default function SearchFailCard(props) {
         </Text>
       </CardBody>
     </Card>
-  );
-}
+);
+
+export default SearchFailCard;
