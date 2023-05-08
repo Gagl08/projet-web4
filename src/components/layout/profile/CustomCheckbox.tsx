@@ -4,43 +4,27 @@ import {
   Tag,
   TagLeftIcon,
   TagLabel,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import { IoAdd, IoRemove } from "react-icons/io5";
+import {IoAdd, IoRemove} from 'react-icons/io5';
 
 export default function CustomCheckbox(props) {
-  const { text } = props;
-  const { state, getInputProps, getCheckboxProps, getLabelProps, htmlProps } =
-    useCheckbox(props);
+  const {text} = props;
+  const {state, getInputProps, getCheckboxProps, getLabelProps, htmlProps} =
+      useCheckbox(props);
 
   return (
-    <chakra.label
-      //   colorScheme={"purple"}
-      variant={state.isChecked ? "solid" : "outline"}
-      cursor="pointer"
-      {...htmlProps}
-    >
-      <input {...getInputProps()} hidden />
-      {state.isChecked ? (
-        <Tag
-          {...getCheckboxProps()}
-          colorScheme={"purple"}
-          {...getLabelProps()}
-        >
-          <TagLeftIcon as={IoRemove} />
+      <chakra.label variant={state.isChecked ? 'solid' : 'outline'}
+                    cursor="pointer" {...htmlProps}>
+        <input {...getInputProps()} hidden/>
+
+        <Tag {...getCheckboxProps()} variant={state.isChecked ? "solid" : "outline"} {...getLabelProps()}>
+          {state.isChecked
+           ? <TagLeftIcon as={IoRemove}/>
+           : <TagLeftIcon as={IoAdd}/>
+          }
           <TagLabel>{text}</TagLabel>
         </Tag>
-      ) : (
-        <Tag
-          {...getCheckboxProps()}
-          colorScheme={"purple"}
-          variant={"outline"}
-          {...getLabelProps()}
-        >
-          <TagLeftIcon as={IoAdd} />
-          <TagLabel>{text}</TagLabel>
-        </Tag>
-      )}
-    </chakra.label>
+      </chakra.label>
   );
 }

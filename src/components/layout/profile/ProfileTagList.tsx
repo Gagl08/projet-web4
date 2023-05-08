@@ -5,7 +5,7 @@ export default function ProfileBadgeList(props) {
   return (
     <Flex gap={"0.5rem"} mt={"1vh"} flexWrap="wrap">
       {userPassions.map((idPassion, index) => (
-        <Tag key={index} colorScheme={"purple"}>
+        <Tag key={index}>
           {passions !== null && passions !== undefined && passions.length > 0
             ? passions.find((element) => element.id === idPassion).name
             : ""}

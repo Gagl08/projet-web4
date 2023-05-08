@@ -8,7 +8,7 @@ type Props = {
 
 const Message = ({message, align}: Props) => (
     <Flex justifyContent={align}>
-      <Text w={'fit-content'} bg={'purple.500'} borderRadius={'full'}
+      <Text maxW={"70%"} w={'fit-content'} bg={'purple.500'} borderRadius={10}
             color={'white'} px={'10px'} py={'5px'}>
         {message.text}
       </Text>

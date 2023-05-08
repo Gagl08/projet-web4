@@ -18,18 +18,17 @@ model User {
   bio       String?
   location  String?
   images    String[]
-  birthdate DateTime?
+  birthdate DateTime? @db.Date
   gender    Gender    @default(UNKNOWN)
   role      Role      @default(USER)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
   // Les préférences de l'utilisateur
-  distance  Int  @default(100)
-  ageMax    Int  @default(99)
-  ageMin    Int  @default(18)
-  prefGender  Gender   @default(UNKNOWN)  
-
+  distance   Int    @default(100)
+  ageMax     Int    @default(99)
+  ageMin     Int    @default(18)
+  prefGender Gender @default(UNKNOWN)
 
   // Liste des chats de l'utilisateur
   ChatID String[] @db.ObjectId
@@ -47,15 +46,15 @@ model User {
   UserLikes   User[]   @relation("Likes", fields: [UserLikesID], references: [id])
 
   // Les personnes qui aiment l'utilisateur
-  OtherUserLikesID String[] @db.ObjectId 
+  OtherUserLikesID String[] @db.ObjectId
   OtherUserLikes   User[]   @relation("Likes", fields: [OtherUserLikesID], references: [id])
 
   // Les personnes que l'utilisateur a dislike
-  UserDislikesID String[] @db.ObjectId 
+  UserDislikesID String[] @db.ObjectId
   UserDislikes   User[]   @relation("Dislikes", fields: [UserDislikesID], references: [id])
 
   // Les personnes qui aiment l'utilisateur
-  OtherUserDislikesID String[] @db.ObjectId 
+  OtherUserDislikesID String[] @db.ObjectId
   OtherUserDislikes   User[]   @relation("Dislikes", fields: [OtherUserDislikesID], references: [id])
 
   MatchID String[] @db.ObjectId
