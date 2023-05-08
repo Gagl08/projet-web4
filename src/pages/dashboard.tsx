@@ -73,16 +73,15 @@ export default function Dashboard() {
   }
 
   /**
+   * UTILISER refetch (image sur discord)
+   * https://tanstack.com/query/v3/docs/react/reference/useQuery  ---> tout en bas
    *
-   * Avec newMatch, faire une fonction qui refetch le user et qui affiche
-   *  un modal avec les infos du user matché
+   * dans onSuccess de useQuery
+   * on filtre l'objet Notification de loggedUser par le type (match)
+   * setMatchNotification = [...filteredNotification],
    *
-   *  (peut etre invalidateQueries mais apres je sais pas comment on la relance)
-   *
-   * Si j'arrive à faire le invalidateQueries, je met dans le useQuery
-   *  onSuccess: (loggedUser) => {
-   *   if (loggedUser.match.length > 0)
-   *    afficher le modal
+   * et on passe dans le modal la premiere notif de type match
+   * et on enleve au fur et a mesure (sur la BD aussi)
    *
    */
 

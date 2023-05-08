@@ -20,6 +20,7 @@ export default function Map() {
   const toast = useToast({ position: "bottom" });
   const idSaveToast = "saved_location";
   const { data: session, status } = useSession();
+  const [listBars, setListBars] = useState({} as unknown as any);
 
   const {
     isLoading,
@@ -43,7 +44,7 @@ export default function Map() {
   });
 
   const {
-    data: listBars,
+    data,
     isError: isErrorListBars,
     isLoading: isLoadingListBars,
     error: errorListBars,
@@ -70,6 +71,11 @@ export default function Map() {
         .catch((err) => {
           return err;
         });
+    },
+    onSuccess: (data) => {
+      // filter data where name is not null
+      const filteredData = data.filter((bar: any) => bar.name !== null);
+      setListBars(filteredData);
     },
   });
 

@@ -306,7 +306,7 @@ export default function UserProfile() {
                   defaultValue={
                     userData.prefGender === null
                       ? Gender.UNKNOWN
-                      : userData.gender
+                      : userData.prefGender
                   }
                 />
               </Box>
