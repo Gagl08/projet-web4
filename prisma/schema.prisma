@@ -22,7 +22,7 @@ model User {
   gender    Gender    @default(UNKNOWN)
   role      Role      @default(USER)
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime? @updatedAt
 
   // Les préférences de l'utilisateur
   distance   Int    @default(100)
