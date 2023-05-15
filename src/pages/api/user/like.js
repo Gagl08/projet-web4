@@ -21,10 +21,15 @@ const post = async (req, res) => {
     if (match) {
       await prisma.notification.create({
         data: {
-          type: NotificationType.MATCH,
-          user: {
+          type: NotificationType.NEW_MATCH,
+          User: {
             connect: {
               id: idUser,
+            },
+          },
+          MatchedUser: {
+            connect: {
+              id: idUserLiked,
             },
           },
         },
@@ -32,10 +37,15 @@ const post = async (req, res) => {
 
       await prisma.notification.create({
         data: {
-          type: NotificationType.MATCH,
-          user: {
+          type: NotificationType.NEW_MATCH,
+          User: {
             connect: {
               id: idUserLiked,
+            },
+          },
+          MatchedUser: {
+            connect: {
+              id: idUser,
             },
           },
         },
