@@ -1,4 +1,4 @@
-import { Grid, GridItem, Text, Box, useToast } from "@chakra-ui/react";
+import { Grid, GridItem, Box, useToast, useDisclosure } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -8,15 +8,16 @@ import CardUser from "../components/layout/dashboard/card_user/CardUser";
 import SearchFailCard from "../components/layout/dashboard/card_user/SearchFailCard";
 
 import LeftPanel from "../components/layout/dashboard/left_panel/LeftPanel";
+import ModalMatch from "@/components/layout/dashboard/match_notification/ModalMatch";
 import Head from "next/head";
 import { websiteName } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import LoadingPage from "@/components/LoadingPage";
+import { Notification, NotificationType } from "@prisma/client";
 
 export default function Dashboard() {
   const router = useRouter();
   const toast = useToast({ position: "top", isClosable: true });
-  const [newMatch, setNewMatch] = useState(false);
 
   const { data: session, status } = useSession();
 
@@ -25,13 +26,14 @@ export default function Dashboard() {
     isError,
     data: loggedUser,
     error,
+    refetch: refetchLoggedUser,
   } = useQuery({
     queryKey: ["LoggedUser"],
     enabled: status === "authenticated",
     queryFn: async () => {
       const { user } = session as unknown as Session;
 
-      return fetch(`/api/users/${user.id}`)
+      return fetch(`/api/users/${user.id}?include=Notification`)
         .then((res) => {
           return res.json();
         })
@@ -72,21 +74,25 @@ export default function Dashboard() {
     if (status === "unauthenticated") router.push("/");
   }
 
-  /**
-   * UTILISER refetch (image sur discord)
-   * https://tanstack.com/query/v3/docs/react/reference/useQuery  ---> tout en bas
-   *
-   * dans onSuccess de useQuery
-   * on filtre l'objet Notification de loggedUser par le type (match)
-   * setMatchNotification = [...filteredNotification],
-   *
-   * et on passe dans le modal la premiere notif de type match
-   * et on enleve au fur et a mesure (sur la BD aussi)
-   *
-   */
+  let modal;
+
+  if (loggedUser?.Notification?.length > 0) {
+    const matchNotification = loggedUser.Notification.filter(
+      (notif: Notification) =>
+        notif.type === NotificationType.NEW_MATCH &&
+        notif.hasBeenConsulted === false
+    );
+    modal = matchNotification.map((notif: Notification) => {
+      return (
+        <ModalMatch notif={notif} key={notif.id} loggedUser={loggedUser} />
+      );
+    });
+  }
 
   return (
     <>
+      {modal}
+
       <Head>
         <title>{websiteName} | Dashboard</title>
       </Head>
@@ -110,11 +116,10 @@ export default function Dashboard() {
               listUsers.users.length === 0 ? (
               <SearchFailCard />
             ) : (
-              // dans cardUser, mettre une liste de user, utiliser le user[0] et quand like ou dislike, supprimer le user[0] de la liste
               <CardUser
                 users={listUsers.users}
                 loggedUser={loggedUser}
-                setMatch={setNewMatch}
+                refetchLoggedUser={refetchLoggedUser}
               />
             )}
           </Box>

@@ -61,6 +61,8 @@ model User {
   Match   Match[]  @relation(fields: [MatchID], references: [id])
 
   Notification Notification[]
+  
+  NotificationMatchedUser Notification[] @relation("matchedUser")
 }
 
 model Notification {
@@ -71,6 +73,9 @@ model Notification {
 
   UserID String @db.ObjectId
   User   User   @relation(fields: [UserID], references: [id])
+
+  MatchedUserID String? @db.ObjectId
+  MatchedUser   User?   @relation("matchedUser",  fields: [MatchedUserID], references: [id])
 }
 
 model Match {
