@@ -89,11 +89,7 @@ export default function ModalMatch({ notif, loggedUser }: modalMatchProps) {
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay backdropBlur="2px" />
           <ModalContent>
-            <ModalHeader align="center">
-              <Text color={"purple.500"} fontWeight={"bold"}>
-                Vous avez un nouveau match
-              </Text>
-            </ModalHeader>
+            <ModalHeader>Vous avez un nouveau match</ModalHeader>
             <ModalBody>
               <Carousel borderRadius={"1rem"} images={matchedUser.images} />
               <Box mt={"2rem"}>
