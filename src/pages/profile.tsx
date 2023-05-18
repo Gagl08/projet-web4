@@ -244,7 +244,7 @@ export default function UserProfile() {
                   }
                   label={"Adresse :"}
                   helperText={
-                    "Ce champ est modifié automatiquement depuis la carte"
+                    "Ce champ est automatiquement modifié depuis la carte"
                   }
                 />
               </Box>

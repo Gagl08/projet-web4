@@ -23,7 +23,7 @@ export default function Map() {
   ]);
 
   const [geolocationError, setGeolocationError] = useState(false);
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession({ required: true });
   const [listBars, setListBars] = useState({} as unknown as any);
 
   const {

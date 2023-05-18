@@ -6,70 +6,76 @@ import {
   Button,
   Image,
   Link,
-} from '@chakra-ui/react';
-import {useRouter} from 'next/router';
-import {signOut, useSession} from 'next-auth/react';
+} from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { signOut, useSession } from "next-auth/react";
 
 type Props = {
-  variant: 'static' | 'fixed';
+  variant: "static" | "fixed";
 };
 
-export default function Navbar({variant = 'fixed'}: Props) {
+export default function Navbar({ variant = "fixed" }: Props) {
   const router = useRouter();
-  const {data: session, status} = useSession();
+  const { data: session, status } = useSession();
 
   const MiddleSection = () => {
     const authenticatedLinks = (
-        <>
-          <Link href={'/dashboard'}>Tableau de bord</Link>
-          <Link href={'/profile'}>Profile</Link>
-          <Link href={'/map'}>Carte</Link>
-        </>
+      <>
+        <Link href={"/dashboard"}>Tableau de bord</Link>
+        <Link href={"/profile"}>Profile</Link>
+        <Link href={"/map"}>Carte</Link>
+      </>
     );
 
     return (
-        <Flex gap={5} justify={'center'} flexBasis={'100%'}>
-          {status === 'authenticated' && authenticatedLinks}
-        </Flex>
+      <Flex gap={5} justify={"center"} flexBasis={"100%"}>
+        {status === "authenticated" && authenticatedLinks}
+      </Flex>
     );
   };
 
   const RightSection = () => {
-
     const authenticatedButtons = (
-        <Button onClick={() => signOut()}>Déconnexion</Button>
+      <Button onClick={() => signOut()}>Déconnexion</Button>
     );
 
     const unauthenticatedButtons = (
-        <>
-          <Button onClick={() => router.push('/register')}>Inscription</Button>
-          <Button onClick={() => router.push('/login')}>Connexion</Button>
-        </>
+      <>
+        <Button onClick={() => router.push("/register")}>Inscription</Button>
+        <Button onClick={() => router.push("/login")}>Connexion</Button>
+      </>
     );
 
     return (
-        <Flex justify={'right'} flexBasis={'100%'}>
-          <ButtonGroup>
-            {status === 'authenticated'
-             ? authenticatedButtons
-             : unauthenticatedButtons
-            }
-          </ButtonGroup>
-        </Flex>
+      <Flex justify={"right"} flexBasis={"100%"}>
+        <ButtonGroup>
+          {status === "authenticated"
+            ? authenticatedButtons
+            : unauthenticatedButtons}
+        </ButtonGroup>
+      </Flex>
     );
   };
 
   return (
-      <Box position={variant} zIndex={9999} top={0} width={'100vw'}
-           backdropFilter={'auto'} backdropBlur={'20px'} px={10} py={2}>
-        <Flex align={'center'}>
-          <Box flexBasis={'100%'}>
-            <Image src={'/logo.svg'} h={'3rem'} objectFit={'contain'}/>
-          </Box>
+    <Box
+      position={variant}
+      zIndex={9999}
+      top={0}
+      width={"100vw"}
+      backdropFilter={"auto"}
+      backdropBlur={"20px"}
+      px={10}
+      py={2}
+    >
+      <Flex align={"center"}>
+        <Box flexBasis={"100%"}>
+          <Image src={"/logo.svg"} h={"3rem"} objectFit={"contain"} />
+        </Box>
 
-          <MiddleSection/>
-          <RightSection/>
-        </Flex>
-      </Box>
+        <MiddleSection />
+        <RightSection />
+      </Flex>
+    </Box>
   );
 }
