@@ -2,7 +2,7 @@ import { MdError } from "react-icons/md";
 import { Button, Text, VStack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
-export default function LoadingPage() {
+export default function ErrorPage() {
   const router = useRouter();
 
   return (
