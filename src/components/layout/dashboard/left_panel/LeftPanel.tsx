@@ -49,7 +49,7 @@ export default function LeftPanel(props) {
             </Flex>
             <Divider mb={"1rem"} />
             <Text as="i" fontWeight={"bold"}>
-              &quot;{user.bio}&quot;
+              {user.bio && `"${user.bio}"`}
             </Text>
           </Box>
         </Box>

@@ -9,15 +9,14 @@ import {
   Center,
   Container,
   Divider,
-  Editable,
   Flex,
-  FormHelperText,
   FormLabel,
   Text,
   useToast,
   VStack,
 } from "@chakra-ui/react";
 
+import { formateDate } from "@/lib/formateDate";
 import ModalModifyImages from "@/components/layout/profile/ModalModifyImages";
 import ModalChoosePassion from "@/components/layout/profile/ModalChoosePassion";
 import ProfileTagList from "@/components/layout/profile/ProfileTagList";
@@ -39,6 +38,7 @@ export default function UserProfile() {
 
   const [currentlyLoading, setCurrentlyLoading] = useState(false);
   const [passions, setPassions] = useState([] as any[]);
+  const [address, setAddress] = useState({} as any);
 
   const [showTooltipAge, setShowTooltipAge] = useState(false);
   const [sliderAgeValue, setSliderAgeValue] = useState([[] as number[]]);
@@ -79,6 +79,22 @@ export default function UserProfile() {
       // setSliderDistanceValue(user.distance);
 
       return fetch(`/api/users/${user.id}`)
+        .then((res) => res.json())
+        .catch((err) => {
+          return err;
+        });
+    },
+  });
+
+  const { data: addressData, isSuccess: addressIsSuccess } = useQuery({
+    queryKey: ["address"],
+    enabled: Boolean(userData?.location),
+    queryFn: async () => {
+      const [lat, long] = userData.location.split(",");
+
+      return fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
+      )
         .then((res) => res.json())
         .catch((err) => {
           return err;
@@ -131,7 +147,6 @@ export default function UserProfile() {
             status: "success",
             isClosable: true,
           });
-          // router.reload();
         })
         .catch((err) => {
           setCurrentlyLoading(false);
@@ -146,27 +161,19 @@ export default function UserProfile() {
     }
   };
 
-  const formateDate = (dateString: string) => {
-    var options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString([], options);
-  };
-
   return (
     <Box bgColor={"purple.50"}>
       <Container justifyContent={"center"} maxW={"70rem"} mt={"1rem"}>
         <Flex flexDirection={"column"} alignItems={"center"} gap={"1rem"}>
           <Box width={"50%"}>
-            {userData.images ? (
-              <Carousel
-                images={userData.images}
-                borderRadius={"1rem"}
-              ></Carousel>
-            ) : (
-              <Carousel
-                images={userData.images}
-                borderRadius={"1rem"}
-              ></Carousel>
-            )}
+            <Carousel
+              images={
+                userData.images
+                  ? userData.images
+                  : ["blank_profile_picture.webp"]
+              }
+              borderRadius={"1rem"}
+            ></Carousel>
           </Box>
           <ModalModifyImages
             userData={userData}
@@ -179,7 +186,12 @@ export default function UserProfile() {
             Modifiez les champs en les selectionnants
           </Text>
 
-          <Box as="form" onSubmit={handleSubmit(saveData)} width={"80%"}>
+          <Box
+            position={"relative"}
+            as="form"
+            onSubmit={handleSubmit(saveData)}
+            width={"80%"}
+          >
             <Flex width={"100%"} justify={"space-between"} mb={"1rem"}>
               <Box>
                 <CustomEditable
@@ -210,7 +222,7 @@ export default function UserProfile() {
               <Box>
                 <CustomFalseEditable
                   id="birthdate"
-                  defaultValue={
+                  value={
                     userData.birthdate === undefined ||
                     userData.birthdate === null
                       ? "Non renseigné"
@@ -225,13 +237,12 @@ export default function UserProfile() {
               <Box>
                 <CustomFalseEditable
                   id="location"
-                  isDisabled={true}
-                  defaultValue={
-                    userData.location === null || userData.location === ""
-                      ? "Rendez vous sur la carte"
-                      : userData.location
+                  value={
+                    !addressIsSuccess || addressData === undefined
+                      ? "Rendez vous sur la carte !"
+                      : `${addressData.address.town}, ${addressData.address.county}, ${addressData.address.state}`
                   }
-                  label={"Ville :"}
+                  label={"Adresse :"}
                   helperText={
                     "Ce champ est modifié automatiquement depuis la carte"
                   }
@@ -240,8 +251,7 @@ export default function UserProfile() {
               <Box>
                 <CustomFalseEditable
                   id="email"
-                  isDisabled={true}
-                  defaultValue={userData.email}
+                  value={userData.email}
                   label={"Adresse mail :"}
                 />
               </Box>
@@ -334,7 +344,7 @@ export default function UserProfile() {
               /> */}
             </Box>
             <Divider colorScheme={"purple"} />
-            <Center gap={"1rem"} my={"1rem"}>
+            <Center position={"sticky"} bottom={0} gap={"1rem"} my={"1rem"}>
               <Button
                 colorScheme={"purple"}
                 isLoading={currentlyLoading}

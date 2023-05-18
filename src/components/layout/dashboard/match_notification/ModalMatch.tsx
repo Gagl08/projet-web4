@@ -14,7 +14,6 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { SetStateAction } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { User } from "@prisma/client";
 import Carousel from "@/components/Carousel";
@@ -111,7 +110,7 @@ export default function ModalMatch({ notif, loggedUser }: modalMatchProps) {
                 </Text>
               </Box>
               <Box>
-                <Heading size={"sm"} fontWeight={"bold"}>
+                <Heading size={"sm"} mt={4} fontWeight={"bold"}>
                   Passions :
                 </Heading>
                 {passionLoading ? (

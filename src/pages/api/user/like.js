@@ -50,9 +50,15 @@ const post = async (req, res) => {
           },
         },
       });
-    }
 
-    //faire une notification mais faut qu'on regarde un meilleur moyen dans la BD
+      await prisma.chat.create({
+        data: {
+          User: {
+            connect: [{ id: idUserLiked }, { id: idUser }],
+          },
+        },
+      });
+    }
 
     await prisma.user.update({
       where: {

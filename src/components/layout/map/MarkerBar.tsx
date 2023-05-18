@@ -1,11 +1,14 @@
 import { Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button, Text, useDisclosure } from "@chakra-ui/react";
+import ModalInviteBar from "./ModalInviteBar";
+import L, { LatLngTuple } from "leaflet";
 
-export default function MarkerBar(props) {
+export default function MarkerBar(props: any) {
   const { bar } = props;
 
-  //changer l'icon
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
   const barIcon = new L.Icon({
     iconUrl: "drink_cocktail.png",
     iconSize: [35, 35],
@@ -13,17 +16,19 @@ export default function MarkerBar(props) {
     backgroundColor: "purple",
   });
 
-  const location = [bar.geo_point_2d.lat, bar.geo_point_2d.lon];
+  const location = [bar.geo_point_2d.lat, bar.geo_point_2d.lon] as LatLngTuple;
 
-  //mettre un tooltip...
   return (
     <Marker icon={barIcon} position={location}>
       <Popup>
-        <Box alignItems={"center"}>
+        <Box align={"center"}>
           <Text fontSize={"1rem"} fontWeight={"bold"} align={"center"}>
-            {bar.name || '"Nom du bar"'}
+            {bar.name}
           </Text>
-          <Button variant={"outline"}>Inviter un match</Button>
+          <Button variant={"outline"} onClick={onOpen}>
+            Inviter un match
+          </Button>
+          <ModalInviteBar bar={bar} isOpen={isOpen} onClose={onClose} />
         </Box>
       </Popup>
     </Marker>

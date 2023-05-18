@@ -1,14 +1,20 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { useToast } from "@chakra-ui/react";
-import "leaflet/dist/leaflet.css";
 import { useSession } from "next-auth/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import type { Session } from "@/models/auth/Session";
 
 import LoadingPage from "@/components/LoadingPage";
 import ErrorPage from "@/components/ErrorPage";
-import ErrorGeolocation from "@/components/ErrorGeolocation";
 import Navbar from "@/components/Navbar";
+import ErrorGeolocation from "@/components/ErrorGeoLocation";
+
+const MapWithNoSSR = dynamic(
+  () => import("../components/layout/map/MapComponent"),
+  {
+    ssr: false,
+  }
+);
 
 export default function Map() {
   const [location, setLocation] = useState([
@@ -17,8 +23,6 @@ export default function Map() {
   ]);
 
   const [geolocationError, setGeolocationError] = useState(false);
-  const toast = useToast({ position: "bottom" });
-  const idSaveToast = "saved_location";
   const { data: session, status } = useSession();
   const [listBars, setListBars] = useState({} as unknown as any);
 
@@ -29,6 +33,7 @@ export default function Map() {
     error,
   } = useQuery({
     queryKey: ["LoggedUser"],
+    refetchOnWindowFocus: false,
     enabled: status === "authenticated",
     queryFn: async () => {
       const { user } = session as unknown as Session;
@@ -50,8 +55,11 @@ export default function Map() {
     error: errorListBars,
   } = useQuery({
     queryKey: ["listBars"],
+    refetchOnWindowFocus: false,
     enabled: !isLoading && location[0] !== null,
     queryFn: async () => {
+      ///Utiliser api de noratim
+
       let urlBars = new URL(
         "https://data.opendatasoft.com/api/v2/catalog/datasets/osm-fr-bars%40babel/exports/json?"
       );
@@ -80,7 +88,6 @@ export default function Map() {
   });
 
   const userSetLocation = useMutation({
-    mutationKey: "userSetLocation",
     mutationFn: async (position: string) => {
       const pos = {
         location: position,
@@ -94,14 +101,6 @@ export default function Map() {
         body: JSON.stringify(pos),
       })
         .then((res) => {
-          // if (!toast.isActive(idSaveToast)) {
-          //   toast({
-          //     id: idSaveToast,
-          //     title: "Position enregistrée",
-          //     description: "Votre position a bien été enregistrée",
-          //     status: "success",
-          //   });
-          // }
           res.json();
         })
         .catch((err) => {
@@ -125,6 +124,13 @@ export default function Map() {
   }, [loggedUser]);
 
   function successPosition(position: GeolocationPosition) {
+    if (
+      position.coords.latitude === location[0] &&
+      position.coords.longitude === location[1]
+    ) {
+      return;
+    }
+
     setLocation([position.coords.latitude, position.coords.longitude]);
     setGeolocationError(false);
 
@@ -138,29 +144,21 @@ export default function Map() {
     setGeolocationError(true);
   }
 
-  const MapWithNoSSR = dynamic(
-    () => import("../components/layout/map/MapComponent"),
-    {
-      ssr: false,
-    }
-  );
-
   return (
     <>
       {geolocationError ? (
         <ErrorGeolocation />
       ) : isError || isErrorListBars ? (
         <ErrorPage />
-      ) : isLoading || isLoadingListBars ? (
+      ) : isLoading ||
+        isLoadingListBars ||
+        location[0] === null ||
+        location[1] === null ? (
         <LoadingPage />
       ) : (
         <>
-          <Navbar />
-          <MapWithNoSSR
-            location={location}
-            loggedUser={loggedUser}
-            listBars={listBars}
-          />
+          <Navbar variant={"fixed"} />
+          <MapWithNoSSR location={location} listBars={listBars} />
         </>
       )}
     </>
