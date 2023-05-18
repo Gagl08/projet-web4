@@ -17,11 +17,7 @@ const MapWithNoSSR = dynamic(
 );
 
 export default function Map() {
-  const [location, setLocation] = useState([
-    null as unknown as number,
-    null as unknown as number,
-  ]);
-
+  const [location, setLocation] = useState<number[]>([]);
   const [geolocationError, setGeolocationError] = useState(false);
   const { data: session, status } = useSession();
   const [listBars, setListBars] = useState({} as unknown as any);
@@ -116,10 +112,19 @@ export default function Map() {
   };
 
   useEffect(() => {
+    if (!session?.user) return;
+
     navigator.geolocation.getCurrentPosition(
-      successPosition,
-      errorPosition,
-      geolocationOptions
+        (position: GeolocationPosition) => {
+          setLocation([position.coords.latitude, position.coords.longitude]);
+          setGeolocationError(false);
+        },
+        () => setGeolocationError(true),
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        },
     );
   }, [loggedUser]);
 
@@ -134,15 +139,22 @@ export default function Map() {
     setLocation([position.coords.latitude, position.coords.longitude]);
     setGeolocationError(false);
 
-    if (!loggedUser) return;
-    userSetLocation.mutate(
-      `${position.coords.latitude},${position.coords.longitude}`
-    );
-  }
+      for (const [key, val] of Object.entries(params)) {
+        urlBars.searchParams.append(key, val);
+      }
 
-  function errorPosition(error: GeolocationPositionError) {
-    setGeolocationError(true);
-  }
+      fetch(urlBars)
+          .then(res => res.json())
+          .then(data => {
+            const filteredBars = data.filter((bar: any) => bar.name !== null);
+            setListBars(filteredBars);
+          })
+          .catch(err => console.error(err));
+    }
+  }, [session?.user]);
+
+  if (status === 'loading') return <LoadingPage/>;
+  const {user} = session as unknown as Session;
 
   return (
     <>

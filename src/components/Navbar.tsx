@@ -29,10 +29,7 @@ export default function Navbar({variant = 'fixed'}: Props) {
 
     return (
         <Flex gap={5} justify={'center'} flexBasis={'100%'}>
-          {status === 'authenticated'
-           ? authenticatedLinks
-           : <></>
-          }
+          {status === 'authenticated' && authenticatedLinks}
         </Flex>
     );
   };

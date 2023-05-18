@@ -55,7 +55,5 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function getUserByEmail(email: string): Promise<null | User> {
-  return prismaClient.user.findUnique({
-    where: {email},
-  });
+  return prismaClient.user.findUnique({where: {email}});
 }
