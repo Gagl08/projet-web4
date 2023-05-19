@@ -53,7 +53,7 @@ model User {
   UserDislikesID String[] @db.ObjectId
   UserDislikes   User[]   @relation("Dislikes", fields: [UserDislikesID], references: [id])
 
-  // Les personnes qui aiment l'utilisateur
+  // Les personnes qui aiment pas l'utilisateur
   OtherUserDislikesID String[] @db.ObjectId
   OtherUserDislikes   User[]   @relation("Dislikes", fields: [OtherUserDislikesID], references: [id])
 
