@@ -3,7 +3,7 @@ const { PrismaClient } = require("@prisma/client");
 const patch = async (req: any, res: any) => {
   const prisma = new PrismaClient();
 
-  const { notificationId } = req.body;
+  const { notificationId, salute } = req.body;
 
   try {
     const notification = await prisma.notification.update({
@@ -15,7 +15,31 @@ const patch = async (req: any, res: any) => {
       },
     });
 
-    res.status(200).json(notification);
+    let chat = null;
+    if (!salute) {
+      res.status(200).json({
+        message: "notification has been consulted",
+        notification: notification,
+      });
+    } else {
+      chat = await prisma.chat.findFirst({
+        where: {
+          AND: [
+            { User: { some: { id: notification.MatchedUserID } } },
+            { User: { some: { id: notification.UserID } } },
+          ],
+        },
+        include: {
+          User: true,
+        },
+      });
+
+      res.status(200).json({
+        message: "notification has been consulted",
+        notification: notification,
+        chat: chat,
+      });
+    }
   } catch (error) {
     res.status(400).json({ message: "Something went wrong" });
   } finally {

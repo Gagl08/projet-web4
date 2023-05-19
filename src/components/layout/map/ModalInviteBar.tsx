@@ -22,8 +22,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import type { Session } from "@/models/auth/Session";
 import CardMatchedUser from "./CardMatchedUser";
-import { Router } from "next/router";
-import { log } from "console";
+import { useRouter } from "next/router";
 
 type ModalInviteBarProps = {
   isOpen: boolean;
@@ -38,6 +37,7 @@ export default function ModalInviteBar({
 }: ModalInviteBarProps) {
   const { data: session, status } = useSession();
   const toast = useToast();
+  const router = useRouter();
 
   const { value, getRadioProps, getRootProps } = useRadioGroup({
     defaultValue: "-1",
@@ -73,7 +73,7 @@ export default function ModalInviteBar({
         });
         return;
       }
-      console.log(data);
+      router.push(`/chat/${data.message_sent.ChatID}`);
     },
   });
 
@@ -99,8 +99,6 @@ export default function ModalInviteBar({
         });
     },
   });
-
-  console.log(bar);
 
   return (
     <>
@@ -145,7 +143,6 @@ export default function ModalInviteBar({
                 const { user } = session as unknown as Session;
                 inviteToBar.mutate(user.id);
                 onClose();
-                // Router.push("/chat");
               }}
             >
               Inviter

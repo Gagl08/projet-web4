@@ -22,6 +22,9 @@ import { formateDate } from "@/lib/formateDate";
 import { Notification } from "@prisma/client";
 import PassionTagList from "../card_user/PassionTagList";
 
+import { useRef } from "react";
+import { useRouter } from "next/router";
+
 type modalMatchProps = {
   key: string;
   loggedUser: User;
@@ -29,16 +32,25 @@ type modalMatchProps = {
 };
 
 export default function ModalMatch({ notif, loggedUser }: modalMatchProps) {
+  const salute = useRef(false);
+  const router = useRouter();
+
   const handleClose = () => {
     const options = {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ notificationId: notif.id }),
+      body: JSON.stringify({
+        notificationId: notif.id,
+        salute: salute.current,
+      }),
     };
     fetch(`/api/user/consultNotification`, options)
       .then((res) => res.json())
+      .then((data) => {
+        router.push(`chat/${data.chat.id}`);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -85,7 +97,7 @@ export default function ModalMatch({ notif, loggedUser }: modalMatchProps) {
   return (
     <>
       {matchedUser && (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
           <ModalOverlay backdropBlur="2px" />
           <ModalContent>
             <ModalHeader>Vous avez un nouveau match</ModalHeader>
@@ -132,7 +144,10 @@ export default function ModalMatch({ notif, loggedUser }: modalMatchProps) {
                 <Button
                   leftIcon={<MdWavingHand />}
                   variant={"ghost"}
-                  onClick={onClose}
+                  onClick={() => {
+                    salute.current = !salute.current;
+                    onClose();
+                  }}
                 >
                   Saluer
                 </Button>
