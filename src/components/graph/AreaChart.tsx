@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Line } from 'react-chartjs-2';
+import React, { useEffect, useState } from "react";
+import { Line } from "react-chartjs-2";
 
 const AreaChart = ({ userId }) => {
   const [likeData, setLikeData] = useState([]);
@@ -8,12 +8,11 @@ const AreaChart = ({ userId }) => {
     // Fonction pour récupérer les données des likes depuis le backend pour un utilisateur spécifique
     const fetchLikeData = async () => {
       try {
-
         const response = await fetch(`/api/likes?userId=${userId}`);
         const data = await response.json();
         setLikeData(data);
       } catch (error) {
-        console.error('Failed to fetch like data:', error);
+        console.error("Failed to fetch like data:", error);
       }
     };
 
@@ -36,18 +35,18 @@ const AreaChart = ({ userId }) => {
   // Obtenir les étiquettes des mois de l'année
   const getMonthLabels = () => {
     const monthLabels = [
-      'Janvier',
-      'Février',
-      'Mars',
-      'Avril',
-      'Mai',
-      'Juin',
-      'Juillet',
-      'Août',
-      'Septembre',
-      'Octobre',
-      'Novembre',
-      'Décembre',
+      "Janvier",
+      "Février",
+      "Mars",
+      "Avril",
+      "Mai",
+      "Juin",
+      "Juillet",
+      "Août",
+      "Septembre",
+      "Octobre",
+      "Novembre",
+      "Décembre",
     ];
 
     return monthLabels;
@@ -58,12 +57,12 @@ const AreaChart = ({ userId }) => {
     labels: getMonthLabels(),
     datasets: [
       {
-        label: 'Nombre de likes',
+        label: "Nombre de likes",
         data: countLikesByMonth(),
-        fill: true,
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1,
+        // fill: true,
+        // backgroundColor: "rgba(75, 192, 192, 0.6)",
+        // borderColor: "rgba(75, 192, 192, 1)",
+        // borderWidth: 1,
       },
     ],
   };

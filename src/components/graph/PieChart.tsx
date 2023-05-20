@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Pie } from 'react-chartjs-2';
+import React, { useEffect, useState } from "react";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 const PieChart = () => {
   const [userData, setUserData] = useState([]);
+  ChartJS.register(ArcElement, Tooltip, Legend);
 
   useEffect(() => {
     // Fonction pour récupérer les données des utilisateurs depuis le backend
     const fetchUserData = async () => {
       try {
-        const response = await fetch('/api/users');
+        const response = await fetch("/api/users");
         const data = await response.json();
         setUserData(data);
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
+        console.error("Failed to fetch user data:", error);
       }
     };
 
@@ -39,12 +41,12 @@ const PieChart = () => {
 
   // Préparer les données pour le chart
   const data = {
-    labels: ['MALE', 'FEMALE', 'OTHER', 'UNKNOWN'],
+    labels: ["MALE", "FEMALE", "OTHER", "UNKNOWN"],
     datasets: [
       {
         data: countGenders(),
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#C0C0C0'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#C0C0C0'],
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#C0C0C0"],
+        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#C0C0C0"],
       },
     ],
   };
