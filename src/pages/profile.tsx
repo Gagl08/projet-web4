@@ -162,7 +162,7 @@ export default function UserProfile() {
   };
 
   return (
-    <Box bgColor={"purple.50"}>
+    <Box height={"100%"}>
       <Container justifyContent={"center"} maxW={"70rem"} mt={"1rem"}>
         <Flex flexDirection={"column"} alignItems={"center"} gap={"1rem"}>
           <Box width={"50%"}>
