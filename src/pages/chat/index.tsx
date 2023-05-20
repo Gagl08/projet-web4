@@ -7,8 +7,5 @@ export default function Chat() {
   const {data: session, status} = useSession({required: true});
 
   if (status === 'loading') return <LoadingPage/>;
-  if (session)
-    return (
-        <ChatList user={session.user as User}/>
-    );
+  return <ChatList user={session.user as User}/>;
 }
