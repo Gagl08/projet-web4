@@ -26,7 +26,7 @@ import CustomFalseEditable from "@/components/layout/profile/CustomFalseEditable
 import CustomEditableArea from "@/components/layout/profile/CustomEditableArea";
 import CustomRadioGender from "@/components/layout/profile/CustomRadioGender";
 import CustomRangeSlider from "@/components/layout/profile/CustomRangeSlider";
-// import CustomSlider from "@/components/layout/user_profile/CustomSlider";
+import CustomSlider from "@/components/layout/profile/CustomSlider";
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -42,8 +42,8 @@ export default function UserProfile() {
 
   const [showTooltipAge, setShowTooltipAge] = useState(false);
   const [sliderAgeValue, setSliderAgeValue] = useState([[] as number[]]);
-  // const [showTooltipDistance, setShowTooltipDistance] = useState(false);
-  // const [sliderDistanceValue, setSliderDistanceValue] = useState<number>(0);
+  const [showTooltipDistance, setShowTooltipDistance] = useState(false);
+  const [sliderDistanceValue, setSliderDistanceValue] = useState<number>(0);
 
   const {
     handleSubmit,
@@ -76,7 +76,7 @@ export default function UserProfile() {
       const { user } = session as unknown as Session;
 
       setSliderAgeValue([user.ageMin, user.ageMax]);
-      // setSliderDistanceValue(user.distance);
+      setSliderDistanceValue(user.distance);
 
       return fetch(`/api/users/${user.id}`)
         .then((res) => res.json())
@@ -332,16 +332,16 @@ export default function UserProfile() {
                   sliderAgeValue={sliderAgeValue}
                 />
               </Box>
-              {/* <CustomSlider
+              <CustomSlider
                 control={control}
-                label={"Distance :"}
+                label={"Distance des bars :"}
                 name={"distance"}
                 defaultValue={userData.distance}
                 setSliderDistanceValue={setSliderDistanceValue}
                 setShowTooltipDistance={setShowTooltipDistance}
                 showTooltipDistance={showTooltipDistance}
                 sliderDistanceValue={sliderDistanceValue}
-              /> */}
+              />
             </Box>
             <Divider colorScheme={"purple"} />
             <Center position={"sticky"} bottom={0} gap={"1rem"} my={"1rem"}>

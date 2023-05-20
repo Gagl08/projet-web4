@@ -56,7 +56,7 @@ export default function Map() {
   } = useQuery({
     queryKey: ["listBars"],
     refetchOnWindowFocus: false,
-    enabled: !isLoading && location[0] !== null,
+    enabled: Boolean(loggedUser),
     queryFn: async () => {
       ///Utiliser api de noratim
 
@@ -64,11 +64,17 @@ export default function Map() {
         "https://data.opendatasoft.com/api/v2/catalog/datasets/osm-fr-bars%40babel/exports/json?"
       );
 
-      const coordinates = location[1].toString() + " " + location[0].toString();
+      let coordinates;
+      if (location[0] === null || location[1] === null)
+        coordinates =
+          loggedUser.location[1].toString() +
+          " " +
+          loggedUser.location[0].toString();
+      else coordinates = location[1].toString() + " " + location[0].toString();
 
       urlBars.searchParams.append(
         "where",
-        `distance(geo_point_2d,geom'POINT(${coordinates})',75km)`
+        `distance(geo_point_2d,geom'POINT(${coordinates})',${loggedUser.distance}km)`
       );
       urlBars.searchParams.append("limit", "-1");
       urlBars.searchParams.append("offset", "0");
