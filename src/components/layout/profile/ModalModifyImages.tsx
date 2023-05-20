@@ -155,6 +155,7 @@ export default function ModalModifyImages(props) {
                     height={"100%"}
                     accept={"image/png, image/jpeg, image/webp"}
                     onInput={({ target }) => {
+                      if (target.files[0]) return;
                       const date = new Date();
                       const time = date.getTime();
 

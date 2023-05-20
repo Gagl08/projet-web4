@@ -1,12 +1,11 @@
 import {
-  Box,
   Card,
   CardBody,
   chakra,
+  Divider,
   Flex,
   GridItem,
   Image,
-  Spacer,
   Text,
   useRadio,
 } from "@chakra-ui/react";
@@ -21,12 +20,7 @@ export default function CardMatchedUser({
   notif,
   ...radioProps
 }: CardMatchedUserProps) {
-  const {
-    isLoading,
-    isError,
-    data: matchedUser,
-    error,
-  } = useQuery({
+  const { isLoading, data: matchedUser } = useQuery({
     refetchOnWindowFocus: false,
     queryKey: ["matchUser", notif.MatchedUserID],
     queryFn: async () => {
@@ -54,7 +48,7 @@ export default function CardMatchedUser({
               height={"100%"}
               outline={state.isChecked ? "3px solid" : "none"}
               outlineColor={state.isChecked ? "purple.500" : "none"}
-              bg={state.isChecked ? "purple.50" : "white"}
+              bg={state.isChecked ? "purple.100" : "purple.50"}
             >
               <CardBody>
                 <Flex
@@ -64,12 +58,16 @@ export default function CardMatchedUser({
                   justifyContent={"space-between"}
                   {...getLabelProps()}
                 >
-                  <Image src={matchedUser.images[0]}></Image>
+                  <Image
+                    src={matchedUser.images[0]}
+                    borderRadius={"0.5rem"}
+                  ></Image>
                   <Text
                     align={"center"}
                     fontSize={"1.5rem"}
                     fontWeight={"bold"}
                   >
+                    <Divider />
                     {matchedUser.firstName} {matchedUser.lastName}
                   </Text>
                 </Flex>

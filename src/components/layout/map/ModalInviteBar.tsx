@@ -104,7 +104,7 @@ export default function ModalInviteBar({
     <>
       <Modal
         blockScrollOnMount={false}
-        size={"2xl"}
+        size={"3xl"}
         isOpen={isOpen}
         onClose={onClose}
         scrollBehavior={"inside"}
@@ -119,7 +119,10 @@ export default function ModalInviteBar({
           <ModalBody>
             <Grid
               {...getRootProps()}
-              templateColumns={`repeat(${notificationMatch?.length}, 1fr)`}
+              templateColumns={`repeat(${notificationMatch?.length}, 50%)`}
+              // templateColumns={`repeat(auto-fill, ${notificationMatch?.length})`}
+              // make all items be in the same line and make it scrollable horizontally
+
               gap={6}
             >
               {!isError && !error

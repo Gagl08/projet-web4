@@ -34,7 +34,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function UserProfile() {
   const router = useRouter();
-  const toast = useToast({ position: "top", isClosable: true });
+  const toast = useToast({ position: "top", isClosable: true, duration: 2000 });
 
   const [currentlyLoading, setCurrentlyLoading] = useState(false);
   const [passions, setPassions] = useState([] as any[]);
