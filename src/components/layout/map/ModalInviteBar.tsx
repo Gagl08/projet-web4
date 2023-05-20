@@ -122,8 +122,9 @@ export default function ModalInviteBar({
               templateColumns={`repeat(${notificationMatch?.length}, 50%)`}
               gap={6}
             >
-              {!isError && !error
-                ? notificationMatch?.map((notif: Notification) => {
+              {!isError && !error ? (
+                notificationMatch?.length > 0 ? (
+                  notificationMatch?.map((notif: Notification) => {
                     return (
                       <CardMatchedUser
                         key={notif.MatchedUserID}
@@ -132,7 +133,10 @@ export default function ModalInviteBar({
                       />
                     );
                   })
-                : null}
+                ) : (
+                  <Text fontSize={"xl"}>Aucun match</Text>
+                )
+              ) : null}
             </Grid>
           </ModalBody>
           <ModalFooter>

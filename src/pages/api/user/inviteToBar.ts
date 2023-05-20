@@ -22,7 +22,7 @@ const post = async (req: any, res: any) => {
 
     const message = await prisma.message.create({
       data: {
-        text: `<!lon=${bar.geo_point_2d.lon},lat=${bar.geo_point_2d.lat},name=${bar.name}>`,
+        text: `<!lon=${bar.geo_point_2d.lon},lat=${bar.geo_point_2d.lat},name=${bar.name}!>`,
         Chat: {
           connect: {
             id: chat.id,
