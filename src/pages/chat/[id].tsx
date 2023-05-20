@@ -61,7 +61,7 @@ export default function ChatId() {
 
         <Navbar/>
 
-        <Container>
+        <Container pt={20}>
           <MessageList user={session.user as User} messages={messages}/>
 
 
