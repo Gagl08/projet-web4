@@ -17,13 +17,16 @@ import PassionTagList from "@/components/layout/dashboard/card_user/PassionTagLi
 import { useState } from "react";
 import SearchFailCard from "./SearchFailCard";
 import LoadingPage from "@/components/LoadingPage";
+import {User} from '@prisma/client';
 
-export default function CardUser({
-  users,
-  loggedUser,
-  setMatch,
-  refetchLoggedUser,
-}) {
+type Props = {
+  users: User[]
+  loggedUser: User
+  setMatch: any
+  refetchLoggedUser: any
+}
+
+export default function CardUser({users, loggedUser, setMatch, refetchLoggedUser}: Props) {
   const toast = useToast({
     position: "top",
     duration: 2000,

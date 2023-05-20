@@ -69,13 +69,6 @@ export default function LeftPanel(props) {
           </LeftPanelButton>
 
           <LeftPanelButton
-            leftIcon={<AiFillMessage />}
-            onClickHandler={() => router.push("/chat")}
-          >
-            Messages
-          </LeftPanelButton>
-
-          <LeftPanelButton
             leftIcon={<BsFillPersonFill />}
             onClickHandler={() => router.push("/profile")}
           >

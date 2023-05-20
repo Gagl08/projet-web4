@@ -1,6 +1,7 @@
 import {Chat, User} from '@prisma/client';
 import ChatListItem from '@/components/chat/ChatListItem';
 import {useEffect, useState} from 'react';
+import {Stack, StackDivider} from '@chakra-ui/react';
 
 type Props = {
   user: User
@@ -18,11 +19,11 @@ export default function ChatList({user}: Props) {
   }, []);
 
   return (
-      <>
+      <Stack divider={<StackDivider/>} spacing={2}>
         {chats.map(
             (chat: Chat & { User: User[] }, index: number) =>
                 <ChatListItem key={index} chat={chat} user={user}/>)
         }
-      </>
+      </Stack>
   );
 }

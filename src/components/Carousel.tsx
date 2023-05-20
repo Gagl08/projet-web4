@@ -23,7 +23,7 @@ const Carousel = ({images, borderRadius: bRadius}: Props) => {
   return (
       <Flex px={2} align="center" borderRadius={bRadius} overflow={'hidden'}
             justify={'space-between'} bgColor={'purple.50'} height={500}
-            bgImage={images[currentIndex]} bgSize={'contain'}
+            bgImage={images[currentIndex]} bgSize={'cover'}
             bgRepeat={'no-repeat'} bgPosition={'center'} width={'100%'}>
         <IconButton aria-label="left-arrow" borderRadius="full"
                     onClick={handleClickPrevious}>

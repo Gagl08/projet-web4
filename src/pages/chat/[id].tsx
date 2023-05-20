@@ -1,15 +1,16 @@
-import {Button, Container, Flex, Input} from '@chakra-ui/react';
+import {Button, Container, Flex, FormControl, Input} from '@chakra-ui/react';
 import Head from 'next/head';
 import {websiteName} from '@/lib/constants';
 import {useSession} from 'next-auth/react';
 import {useRouter} from 'next/router';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 import MessageList from '@/components/chat/MessageList';
 
 import {io, Socket} from 'socket.io-client';
 import {Message, User} from '@prisma/client';
 import LoadingPage from '@/components/LoadingPage';
+import Navbar from '@/components/Navbar';
 
 export default function ChatId() {
   const router = useRouter();
@@ -30,17 +31,27 @@ export default function ChatId() {
           const soc = io();
 
           soc.on('connect', () => console.log('connected'));
-          soc.on('allOldMessages', (allOldMessages: Message[]) => setMessages(allOldMessages));
-          soc.on('newIncomingMessage', (newIncomingMessage: Message) => setMessages(messages => [...messages, newIncomingMessage]));
+          soc.on('allOldMessages',
+              (allOldMessages: Message[]) => setMessages(allOldMessages));
+          soc.on('newIncomingMessage',
+              (newIncomingMessage: Message) => setMessages(
+                  messages => [...messages, newIncomingMessage]));
           setSocket(soc);
         });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (evt) => {
+    evt.preventDefault()
     if (text !== '' && socket && session?.user) {
       socket.emit('createdMessage', {text, sender: session.user.id});
       setText('');
     }
+  };
+
+  const AlwaysScrollToBottom = () => {
+    const elementRef = useRef();
+    useEffect(() => elementRef.current.scrollIntoView());
+    return <div ref={elementRef}/>;
   };
 
   if (status === 'loading') return <LoadingPage/>;
@@ -48,15 +59,23 @@ export default function ChatId() {
       <>
         <Head><title>{websiteName}</title></Head>
 
+        <Navbar/>
+
         <Container>
           <MessageList user={session.user as User} messages={messages}/>
 
-          <Flex gap={5} mt={5}>
-            <Input type={'text'} colorScheme={'purple'}
-                   onChange={evt => setText(evt.target.value)} value={text}/>
-            <Button colorScheme={'purple'}
-                    onClick={handleSubmit}>Envoyer</Button>
-          </Flex>
+
+          <form onSubmit={handleSubmit}>
+            <FormControl>
+              <Flex gap={5} py={5}>
+                <Input type={'text'}
+                       onChange={evt => setText(evt.target.value)}
+                       value={text}/>
+                <Button type={'submit'} colorScheme={'purple'}>Envoyer</Button>
+              </Flex>
+            </FormControl>
+          </form>
+          <AlwaysScrollToBottom/>
         </Container>
       </>
   );
