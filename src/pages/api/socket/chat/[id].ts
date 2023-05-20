@@ -3,7 +3,7 @@ import prismaClient from '@/lib/prismaClient';
 import type {Chat, Message as Message} from '@prisma/client';
 
 export default async function SocketHandler(req: any, res: any) {
-  const {id: chatId} = req.query;
+  const {id} = req.query;
 
   if (res.socket.server.io) {
     console.log('Already set up');
@@ -16,8 +16,9 @@ export default async function SocketHandler(req: any, res: any) {
 
   io.on('connection', async (socket): Promise<void> => {
 
-    await prismaClient.chat.findFirst({
-      where: {id: chatId}, include: {Message: true},
+    prismaClient.chat.findFirst({
+      where: {id},
+      include: {Message: true, User: true}
     }).then((chat: (Chat & { Message: Message[] }) | null) =>
         {if (chat) socket.emit('allOldMessages', chat.Message)}
     );
@@ -27,7 +28,7 @@ export default async function SocketHandler(req: any, res: any) {
         data: {
           text: msgInput.text,
           User: {connect: {id: msgInput.sender}},
-          Chat: {connect: {id: chatId}},
+          Chat: {connect: {id}},
         },
       }).then((newMessage: Message) => socket.emit('newIncomingMessage', newMessage));
     });
