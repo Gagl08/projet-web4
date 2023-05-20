@@ -10,13 +10,7 @@ export default function SubmitGettingStartForm({user}: { user: User }) {
       (state: RootState) => state.gettingStartForm);
 
   const handleSubmit = () => {
-    const {
-      ownGender,
-      researchGender,
-      ages,
-      birth,
-      passions,
-    } = gettingStartForm.inputs;
+    const {ownGender, researchGender, ages, passions} = gettingStartForm.inputs;
 
     const options = {
       method: 'PUT',
@@ -26,11 +20,8 @@ export default function SubmitGettingStartForm({user}: { user: User }) {
         prefGender: researchGender,
         ageMin: ages[0],
         ageMax: ages[1],
-        birthdate: new Date(birth),
         Passion: {
-          connect: passions.map((p: Passion) => {
-            return {id: p.id};
-          }),
+          connect: passions.map((p: Passion) => ({id: p.id})),
         },
       }),
     };

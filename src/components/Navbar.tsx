@@ -11,18 +11,18 @@ import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 
 type Props = {
-  variant: "static" | "fixed";
+  variant?: "static" | "fixed";
 };
 
 export default function Navbar({ variant = "fixed" }: Props) {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   const MiddleSection = () => {
     const authenticatedLinks = (
       <>
         <Link href={"/dashboard"}>Tableau de bord</Link>
-        <Link href={"/profile"}>Profile</Link>
+        <Link href={"/profile"}>Profil</Link>
         <Link href={"/map"}>Carte</Link>
       </>
     );
@@ -66,8 +66,7 @@ export default function Navbar({ variant = "fixed" }: Props) {
       backdropFilter={"auto"}
       backdropBlur={"20px"}
       px={10}
-      py={2}
-    >
+      py={2}>
       <Flex align={"center"}>
         <Box flexBasis={"100%"}>
           <Image src={"/logo.svg"} h={"3rem"} objectFit={"contain"} />
