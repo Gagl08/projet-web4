@@ -8,19 +8,29 @@ import LineChart from "@/components/graph/LineChart";
 import { Box } from "@chakra-ui/react";
 import { websiteName } from "@/lib/constants";
 import { useRef, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import type { Session } from "@/models/auth/Session";
+import { Role } from "@prisma/client";
 
 export default function Graphique() {
+  const { data: session, status } = useSession({ required: true });
+  const { user } = session as unknown as Session;
   return (
     <>
       <Head>
         <title>{websiteName}</title>
       </Head>
-
-      <Box>
-        {/* <PieChart /> */}
-        {/* <BarChart /> */}
-        <LineChart />
-      </Box>
+      {user.role === Role.ADMIN ? (
+        <Box>
+          <PieChart />
+          <BarChart />
+          <LineChart />
+        </Box>
+      ) : (
+        // pour récupérer les notifs d'un user
+        //fetch(`/api/users/${user.id}?include=Notification`)
+        <></>
+      )}
     </>
   );
 }
