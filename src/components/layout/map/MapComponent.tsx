@@ -54,7 +54,7 @@ export default function MapComponent(props: any) {
           <Marker icon={userIcon} position={location}></Marker>
 
           <MarkerClusterGroup chunkedLoading showCoverageOnHover={false}>
-            {listBars.map((bar: any, index: number) => (
+            {listBars?.map?.((bar: any, index: number) => (
               <MarkerBar key={index} bar={bar} />
             ))}
           </MarkerClusterGroup>
