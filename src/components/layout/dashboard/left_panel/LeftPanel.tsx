@@ -70,7 +70,7 @@ export default function LeftPanel(props) {
 
           <LeftPanelButton
             leftIcon={<AiFillMessage />}
-            onClickHandler={() => router.push("/dashboard")}
+            onClickHandler={() => router.push("/chat")}
           >
             Messages
           </LeftPanelButton>
