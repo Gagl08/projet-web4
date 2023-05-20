@@ -10,6 +10,7 @@ import MessageList from '@/components/chat/MessageList';
 import {io, Socket} from 'socket.io-client';
 import {Message, User} from '@prisma/client';
 import LoadingPage from '@/components/LoadingPage';
+import Navbar from '@/components/Navbar';
 
 export default function ChatId() {
   const router = useRouter();
@@ -57,6 +58,8 @@ export default function ChatId() {
   return (
       <>
         <Head><title>{websiteName}</title></Head>
+
+        <Navbar/>
 
         <Container>
           <MessageList user={session.user as User} messages={messages}/>
