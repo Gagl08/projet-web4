@@ -41,9 +41,8 @@ export default function MapComponent(props: any) {
       ) : (
         <MapContainer
           center={location}
-          maxZoom={18}
           zoom={13}
-          minZoom={8}
+          minZoom={6}
           zoomControl={false}
           style={{ width: "100vw", height: "100vw" }}
         >

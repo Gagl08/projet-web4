@@ -56,7 +56,7 @@ export default function Map() {
   } = useQuery({
     queryKey: ["listBars"],
     refetchOnWindowFocus: false,
-    enabled: Boolean(loggedUser),
+    enabled: Boolean(loggedUser) && loggedUser.location.length > 0,
     queryFn: async () => {
       ///Utiliser api de noratim
 
@@ -65,12 +65,11 @@ export default function Map() {
       );
 
       let coordinates;
-      if (location[0] === null || location[1] === null)
-        coordinates =
-          loggedUser.location[1].toString() +
-          " " +
-          loggedUser.location[0].toString();
-      else coordinates = location[1].toString() + " " + location[0].toString();
+      if (location[0] === null || location[1] === null) {
+        const co = loggedUser.location.split(",");
+        coordinates = co[1].toString() + " " + co[0].toString();
+      } else
+        coordinates = location[1].toString() + " " + location[0].toString();
 
       urlBars.searchParams.append(
         "where",
