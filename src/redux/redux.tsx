@@ -6,7 +6,6 @@ const questions: string[] = [
   'Salut, je suis Cupibot. Il me manque quelques détails avant de terminer ton inscription. C\'est quoi ton sexe ?',
   'Ok et tu es attiré par quel genre ?',
   'Ça marche, c\'est quoi la tranche d\'âge que tu recherche ?',
-  'D\'ailleurs je ne t\'ai pas demandé, quand est-ce que tu est né ?',
   'T\'as des passions dans la vie ? (Choisis-en 3 minimum)',
   'Ok j\'ai toutes les infos d\'on j\'ai besoin, je vais tout faire pour te faire trouver la personne qui te correspond!',
 ];
@@ -19,7 +18,6 @@ const gettingStartFormSlice = createSlice({
       ownGender: Gender.UNKNOWN,
       researchGender: Gender.UNKNOWN,
       ages: [18, 25],
-      birth: "",
       passions: [],
     },
     messages: [

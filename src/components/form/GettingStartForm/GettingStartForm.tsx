@@ -4,12 +4,11 @@ import {useSelector} from 'react-redux';
 import {RootState} from '@/redux/redux';
 import Message from '@/components/chat/Message';
 import {Message as MessageType} from '@prisma/client';
+
 import GenderInput from '@/components/form/GettingStartForm/GenderInput';
 import AgeInput from '@/components/form/GettingStartForm/AgeInput';
-import BirthInput from '@/components/form/GettingStartForm/BirthInput';
 import PassionsInput from '@/components/form/GettingStartForm/PassionsInput';
-import SubmitGettingStartForm
-  from '@/components/form/GettingStartForm/SubmitGettingStartForm';
+import SubmitGettingStartForm from '@/components/form/GettingStartForm/SubmitGettingStartForm';
 
 type Props = {
   user: UserType
@@ -19,7 +18,6 @@ type FormInputs = {
   ownGender?: Gender
   researchGender?: Gender,
   ages?: [number, number],
-  birth?: Date,
   passions?: Passion[]
 }
 
@@ -31,9 +29,8 @@ export default function GettingStartForm({user}: Props) {
     <GenderInput key={0} field={'ownGender'}/>,
     <GenderInput key={1} field={'researchGender'}/>,
     <AgeInput key={2}/>,
-    <BirthInput key={3}/>,
-    <PassionsInput key={4}/>,
-    <SubmitGettingStartForm user={user} key={5}/>,
+    <PassionsInput key={3}/>,
+    <SubmitGettingStartForm user={user} key={4}/>,
   ];
 
   return (
