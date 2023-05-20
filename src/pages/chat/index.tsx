@@ -1,20 +1,14 @@
-import {Button} from '@chakra-ui/react';
 import {useSession} from 'next-auth/react';
-import {useRouter} from 'next/router';
+import ChatList from '@/components/chat/ChatList';
+import LoadingPage from '@/components/LoadingPage';
+import {User} from '@prisma/client';
 
 export default function Chat() {
-  const router = useRouter();
-  const {data: session, status} = useSession();
+  const {data: session, status} = useSession({required: true});
 
+  if (status === 'loading') return <LoadingPage/>;
   if (session)
     return (
-        <>
-          {session.user.ChatID.map(
-              (id: string, index: number) => (
-                  <Button key={index} onClick={() =>
-                      router.push(`/chat/${id}`)}>{id}</Button>
-              ),
-          )}
-        </>
+        <ChatList user={session.user as User}/>
     );
 }
