@@ -120,9 +120,6 @@ export default function ModalInviteBar({
             <Grid
               {...getRootProps()}
               templateColumns={`repeat(${notificationMatch?.length}, 50%)`}
-              // templateColumns={`repeat(auto-fill, ${notificationMatch?.length})`}
-              // make all items be in the same line and make it scrollable horizontally
-
               gap={6}
             >
               {!isError && !error

@@ -131,13 +131,20 @@ export default function ModalModifyImages(props) {
           <ModalCloseButton />
           <ModalBody>
             <Grid
-              templateColumns={`repeat(${listImage.length + 1}, 1fr)`}
+              templateColumns={`repeat(${listImage.length + 1}, 50%)`}
               gap={5}
             >
               {listImage.map((image, index) => (
                 <GridItem key={index}>
-                  <Flex direction={"column"} gap={"1rem"}>
-                    <Image src={image} />
+                  <Flex
+                    bg={"purple.100"}
+                    height={"100%"}
+                    direction={"column"}
+                    gap={"1rem"}
+                    justifyContent={"space-between"}
+                    borderRadius={"0.5rem"}
+                  >
+                    <Image src={image} borderRadius={"0.5rem"} />
                     <Button
                       id={index.toString()}
                       colorScheme={"red"}
@@ -151,11 +158,12 @@ export default function ModalModifyImages(props) {
               {listImage.length < 5 && (
                 <GridItem width={"100%"}>
                   <Input
+                    bg={"purple.100"}
                     type={"file"}
-                    height={"100%"}
                     accept={"image/png, image/jpeg, image/webp"}
                     onInput={({ target }) => {
-                      if (target.files[0]) return;
+                      if (target.files[0] === undefined) return;
+
                       const date = new Date();
                       const time = date.getTime();
 
