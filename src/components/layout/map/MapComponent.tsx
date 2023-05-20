@@ -1,8 +1,7 @@
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import { Flex, Text, useToast } from "@chakra-ui/react";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { Text, useToast } from "@chakra-ui/react";
 import MarkerClusterGroup from "@christopherpickering/react-leaflet-markercluster";
 import L from "leaflet";
-import { memo, useState } from "react";
 
 import "@christopherpickering/react-leaflet-markercluster/dist/styles.min.css";
 
