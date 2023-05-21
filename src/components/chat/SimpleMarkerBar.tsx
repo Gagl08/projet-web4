@@ -8,13 +8,9 @@ type SimpleMarkerBarProps = {
   name: string;
 };
 
-export default function SimpleMarkerBar({
-  lat,
-  lon,
-  name,
-}: SimpleMarkerBarProps) {
+export default function SimpleMarkerBar({lat, lon, name}: SimpleMarkerBarProps) {
   const barIcon = new L.Icon({
-    iconUrl: "drink_cocktail.png",
+    iconUrl: "/drink_cocktail.png",
     iconSize: [35, 35],
     popupAnchor: [0, -5],
     backgroundColor: "purple",
