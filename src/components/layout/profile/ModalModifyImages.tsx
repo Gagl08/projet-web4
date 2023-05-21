@@ -138,13 +138,17 @@ export default function ModalModifyImages(props) {
                 <GridItem key={index}>
                   <Flex
                     bg={"purple.100"}
-                    height={"100%"}
+                    height={"95%"}
                     direction={"column"}
                     gap={"1rem"}
                     justifyContent={"space-between"}
                     borderRadius={"0.5rem"}
                   >
-                    <Image src={image} borderRadius={"0.5rem"} />
+                    <Image
+                      src={image}
+                      borderRadius={"0.5rem"}
+                      maxHeight={"90%"}
+                    />
                     <Button
                       id={index.toString()}
                       colorScheme={"red"}
