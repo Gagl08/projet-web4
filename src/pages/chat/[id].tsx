@@ -1,4 +1,11 @@
-import {Button, Container, Flex, FormControl, Input} from '@chakra-ui/react';
+import {
+  Box,
+  Container,
+  Flex,
+  FormControl,
+  IconButton,
+  Input,
+} from '@chakra-ui/react';
 import Head from 'next/head';
 import {websiteName} from '@/lib/constants';
 import {useSession} from 'next-auth/react';
@@ -11,6 +18,7 @@ import {io, Socket} from 'socket.io-client';
 import {Message, User} from '@prisma/client';
 import LoadingPage from '@/components/LoadingPage';
 import Navbar from '@/components/Navbar';
+import {ArrowForwardIcon, CalendarIcon} from '@chakra-ui/icons';
 
 export default function ChatId() {
   const router = useRouter();
@@ -56,27 +64,29 @@ export default function ChatId() {
 
   if (status === 'loading') return <LoadingPage/>;
   return (
-      <>
+      <Box bgColor={'gray.50'}>
         <Head><title>{websiteName}</title></Head>
 
         <Navbar/>
 
-        <Container pt={20}>
+        <Container pt={20} bgColor={"white"}>
           <MessageList user={session.user as User} messages={messages}/>
-
 
           <form onSubmit={handleSubmit}>
             <FormControl>
-              <Flex gap={5} py={5}>
-                <Input type={'text'}
-                       onChange={evt => setText(evt.target.value)}
-                       value={text}/>
-                <Button type={'submit'} colorScheme={'purple'}>Envoyer</Button>
+              <Flex gap={2} py={5} width={"100%"}>
+                <Input type={'text'} value={text} flexGrow={"grow"}
+                       onChange={evt => setText(evt.target.value)}/>
+                <IconButton aria-label={"Map"} onClick={evt => {
+                  evt.preventDefault();
+                  router.push("/map");
+                }} icon={<CalendarIcon/>} variant={"outline"}/>
+                <IconButton aria-label={"Envoyer"} variant={"outline"} icon={<ArrowForwardIcon/>} type={"submit"}/>
               </Flex>
             </FormControl>
           </form>
           <AlwaysScrollToBottom/>
         </Container>
-      </>
+      </Box>
   );
 }
