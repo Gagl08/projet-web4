@@ -1,7 +1,6 @@
 import { Flex } from "@chakra-ui/react";
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import SimpleMarkerBar from "./SimpleMarkerBar";
-import MarkerClusterGroup from "@christopherpickering/react-leaflet-markercluster";
 import "leaflet/dist/leaflet.css";
 
 type MapBarProps = {
@@ -19,7 +18,7 @@ export default function MapBar({ lat, lon, name, align }: MapBarProps) {
         zoom={13}
         minZoom={6}
         zoomControl={false}
-        style={{ width: "50%", height: "20rem" }}
+        style={{ width: "100%", height: "20rem" }}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

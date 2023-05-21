@@ -1,7 +1,6 @@
 import type {Message as MessageType} from '@prisma/client';
 import MessageText from '@/components/chat/MessageText';
 import React from 'react';
-import { Icon } from "leaflet";
 import MessageMap from '@/components/chat/MessageMap';
 
 type Props = {
