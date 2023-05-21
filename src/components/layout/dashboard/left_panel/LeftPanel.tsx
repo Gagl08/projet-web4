@@ -59,26 +59,22 @@ export default function LeftPanel(props) {
           direction={"column"}
           mt={"1vh"}
           spacing={3.5}
-          alignContent={"bottom"}
-        >
+          alignContent={"bottom"}>
           <LeftPanelButton
             leftIcon={<FaMapMarkedAlt />}
-            onClickHandler={() => router.push("/map")}
-          >
+            onClickHandler={() => router.push("/map")}>
             Carte
           </LeftPanelButton>
 
           <LeftPanelButton
             leftIcon={<BsFillPersonFill />}
-            onClickHandler={() => router.push("/profile")}
-          >
+            onClickHandler={() => router.push("/profile")}>
             Profil
           </LeftPanelButton>
           <LeftPanelButton
             variant={"outline"}
             leftIcon={<BiLogOut />}
-            onClickHandler={() => signOut({ callbackUrl: "/" })}
-          >
+            onClickHandler={() => signOut({ callbackUrl: "/" })}>
             Déconnexion
           </LeftPanelButton>
         </Flex>

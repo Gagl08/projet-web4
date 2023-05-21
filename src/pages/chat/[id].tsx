@@ -5,6 +5,7 @@ import {
   FormControl,
   IconButton,
   Input,
+  Text
 } from '@chakra-ui/react';
 import Head from 'next/head';
 import {websiteName} from '@/lib/constants';
@@ -15,22 +16,36 @@ import {useEffect, useRef, useState} from 'react';
 import MessageList from '@/components/chat/MessageList';
 
 import {io, Socket} from 'socket.io-client';
-import {Message, User} from '@prisma/client';
+import {Chat, Message, User} from '@prisma/client';
 import LoadingPage from '@/components/LoadingPage';
 import Navbar from '@/components/Navbar';
 import {ArrowForwardIcon, CalendarIcon} from '@chakra-ui/icons';
+import {FaMapMarkedAlt} from 'react-icons/fa';
 
 export default function ChatId() {
   const router = useRouter();
   const {data: session, status} = useSession({required: true});
   const {id: chatId} = router.query;
 
+  const [chatInfo, setChatInfo] = useState<Chat & { User: User[] }>();
+  const [otherUser, setOtherUser] = useState<User>()
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState('');
   const [socket, setSocket] = useState<Socket>();
 
   useEffect(() => {
-    if (status === 'authenticated') socketInitializer();
+    if (status === 'authenticated' && session) {
+      const user = session.user as User
+
+      socketInitializer();
+      fetch(`/api/chats/${chatId}?include=User`)
+          .then(res => res.json())
+          .then((chat: Chat & { User: User[] }) => {
+            setChatInfo(chat);
+            const other = chat.User.find(u => u.id !== user.id);
+            setOtherUser(other)
+          });
+    }
   }, [status]);
 
   const socketInitializer = () => {
@@ -49,7 +64,7 @@ export default function ChatId() {
   };
 
   const handleSubmit = (evt) => {
-    evt.preventDefault()
+    evt.preventDefault();
     if (text !== '' && socket && session?.user) {
       socket.emit('createdMessage', {text, sender: session.user.id});
       setText('');
@@ -69,19 +84,20 @@ export default function ChatId() {
 
         <Navbar/>
 
-        <Container pt={20} bgColor={"white"}>
+        <Container pt={20} bgColor={'white'}>
           <MessageList user={session.user as User} messages={messages}/>
 
           <form onSubmit={handleSubmit}>
             <FormControl>
-              <Flex gap={2} py={5} width={"100%"}>
-                <Input type={'text'} value={text} flexGrow={"grow"}
+              <Flex gap={2} py={5} width={'100%'}>
+                <Input placeholder={`Écrivez à ${otherUser?.firstName} ${otherUser?.lastName}...`} type={'text'} value={text} flexGrow={'grow'}
                        onChange={evt => setText(evt.target.value)}/>
-                <IconButton aria-label={"Map"} onClick={evt => {
+                <IconButton aria-label={'Map'} onClick={evt => {
                   evt.preventDefault();
-                  router.push("/map");
-                }} icon={<CalendarIcon/>} variant={"outline"}/>
-                <IconButton aria-label={"Envoyer"} variant={"outline"} icon={<ArrowForwardIcon/>} type={"submit"}/>
+                  router.push('/map');
+                }} icon={<FaMapMarkedAlt />} variant={'outline'}/>
+                <IconButton aria-label={'Envoyer'} variant={'outline'}
+                            icon={<ArrowForwardIcon/>} type={'submit'}/>
               </Flex>
             </FormControl>
           </form>
