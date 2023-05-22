@@ -1,6 +1,6 @@
 import {
   Box,
-  Button,
+  Button, Container,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -60,7 +60,7 @@ export default function settings() {
     };
 
     return (
-        <>
+        <Container>
           <Box as="form" id="form_passion" width={'80%'}
                onSubmit={handleSubmit(savePassion)}>
             <FormControl isInvalid={errors.name as boolean | undefined}>
@@ -77,7 +77,7 @@ export default function settings() {
               Submit
             </Button>
           </Box>
-        </>
+        </Container>
     );
   }
 }
