@@ -1,11 +1,10 @@
 import {
-  Box,
+  Box, Button,
   Container,
   Flex,
   FormControl,
   IconButton,
   Input,
-  Text
 } from '@chakra-ui/react';
 import Head from 'next/head';
 import {websiteName} from '@/lib/constants';
@@ -19,7 +18,8 @@ import {io, Socket} from 'socket.io-client';
 import {Chat, Message, User} from '@prisma/client';
 import LoadingPage from '@/components/LoadingPage';
 import Navbar from '@/components/Navbar';
-import {ArrowForwardIcon, CalendarIcon} from '@chakra-ui/icons';
+
+import {ArrowForwardIcon} from '@chakra-ui/icons';
 import {FaMapMarkedAlt} from 'react-icons/fa';
 
 export default function ChatId() {
@@ -84,8 +84,8 @@ export default function ChatId() {
 
         <Navbar/>
 
-        <Container pt={20} bgColor={'white'}>
-          <MessageList user={session.user as User} messages={messages}/>
+        <Container maxW={'container.md'} pt={20} bgColor={'white'}>
+          <MessageList chat={chatInfo} user={session.user as User} messages={messages}/>
 
           <form onSubmit={handleSubmit}>
             <FormControl>
@@ -103,6 +103,8 @@ export default function ChatId() {
           </form>
           <AlwaysScrollToBottom/>
         </Container>
+
+        <Button m={3} position={'fixed'} bottom={0} onClick={() => router.push("/dashboard")}>Tableau de bord</Button>
       </Box>
   );
 }

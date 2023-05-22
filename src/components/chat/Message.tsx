@@ -1,4 +1,4 @@
-import type {Message as MessageType} from '@prisma/client';
+import type {Message as MessageType, User} from '@prisma/client';
 import MessageText from '@/components/chat/MessageText';
 import React from 'react';
 import MessageMap from '@/components/chat/MessageMap';
@@ -6,9 +6,10 @@ import MessageMap from '@/components/chat/MessageMap';
 type Props = {
   align: "left" | 'right'
   message: MessageType
+  user?: User
 }
 
-const Message = ({message, align}: Props) => {
+const Message = ({message, align, user}: Props) => {
   if (message.text.match(/<!.+>/g)) {
     const regex = /<!lon=(?<lon>-?\d+\.\d+),lat=(?<lat>-?\d+\.\d+),name=(?<name>.+)>/g;
     const p = regex.exec(message.text)?.groups as unknown as {
@@ -16,12 +17,10 @@ const Message = ({message, align}: Props) => {
       lat: number
       name: string
     }
-    if (p) return <MessageMap align={align} point={p}/>
+    if (p) return <MessageMap user={user} align={align} point={p}/>
   }
 
-  return (
-      <MessageText message={message} align={align} />
-  )
+  return <MessageText user={user} message={message} align={align} />
 }
 
 export default Message;
