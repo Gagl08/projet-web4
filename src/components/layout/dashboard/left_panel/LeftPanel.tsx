@@ -41,7 +41,12 @@ export default function LeftPanel(props) {
             maxHeight={"50vh"}
           />
           <Box mt={"2rem"}>
-            <Flex align={"center"} justifyContent="space-between" mb={"1rem"}>
+            <Flex
+              align={"center"}
+              justifyContent="space-between"
+              gap={"1rem"}
+              mb={"1rem"}
+            >
               <Text fontSize={"1.5rem"} fontWeight={"bold"}>
                 {user.firstName} {user.lastName}
               </Text>
@@ -78,10 +83,11 @@ export default function LeftPanel(props) {
           </LeftPanelButton>
 
           <LeftPanelButton
-                      leftIcon={<BsGraphUp />}
-                      onClickHandler={() => router.push("/graphique")}>
-                      Statistiques
-                    </LeftPanelButton>
+            leftIcon={<BsGraphUp />}
+            onClickHandler={() => router.push("/graphique")}
+          >
+            Statistiques
+          </LeftPanelButton>
 
           <LeftPanelButton
             variant={"outline"}
