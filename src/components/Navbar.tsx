@@ -24,6 +24,8 @@ export default function Navbar({ variant = "fixed" }: Props) {
         <Link href={"/dashboard"}>Tableau de bord</Link>
         <Link href={"/profile"}>Profil</Link>
         <Link href={"/map"}>Carte</Link>
+        <Link href={"/graphique"}>Statistiques</Link>
+
       </>
     );
 

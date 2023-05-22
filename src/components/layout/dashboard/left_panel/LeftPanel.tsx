@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 
 import { AiFillMessage } from "react-icons/ai";
 import { BsFillPersonFill } from "react-icons/bs";
+import { BsGraphUp } from "react-icons/bs";
 import { BiLogOut } from "react-icons/bi";
 import { FaMapMarkedAlt } from "react-icons/fa";
 
@@ -75,6 +76,13 @@ export default function LeftPanel(props) {
           >
             Profil
           </LeftPanelButton>
+
+          <LeftPanelButton
+                      leftIcon={<BsGraphUp />}
+                      onClickHandler={() => router.push("/graphique")}>
+                      Statistiques
+                    </LeftPanelButton>
+
           <LeftPanelButton
             variant={"outline"}
             leftIcon={<BiLogOut />}
