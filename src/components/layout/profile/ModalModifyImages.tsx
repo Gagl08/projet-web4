@@ -192,7 +192,7 @@ export default function ModalModifyImages(props) {
             <Button
               mr={3}
               onClick={() => {
-                client.invalidateQueries("user");
+                client.invalidateQueries({ queryKey: ["userProfile"] });
                 onClose();
               }}
             >

@@ -72,7 +72,7 @@ export default function UserProfile() {
     data: userData,
     error,
   } = useQuery({
-    queryKey: ["user"],
+    queryKey: ["userProfile"],
     enabled: status === "authenticated",
     queryFn: async () => {
       const { user } = session as unknown as Session;
@@ -149,7 +149,7 @@ export default function UserProfile() {
             status: "success",
             isClosable: true,
           });
-          queryClient.invalidateQueries({ queryKey: ["user"] });
+          queryClient.invalidateQueries({ queryKey: ["userProfile"] });
         })
         .catch((err) => {
           setCurrentlyLoading(false);
