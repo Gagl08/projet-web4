@@ -189,12 +189,7 @@ export default function UserProfile() {
             Modifiez les champs en les selectionnants
           </Text>
 
-          <Box
-            position={"relative"}
-            as="form"
-            onSubmit={handleSubmit(saveData)}
-            width={"80%"}
-          >
+          <Box as="form" onSubmit={handleSubmit(saveData)} width={"80%"}>
             <Flex width={"100%"} justify={"space-between"} mb={"1rem"}>
               <Box>
                 <CustomEditable
@@ -347,7 +342,7 @@ export default function UserProfile() {
               />
             </Box>
             <Divider colorScheme={"purple"} />
-            <Center position={"sticky"} bottom={0} gap={"1rem"} my={"1rem"}>
+            <Center gap={"1rem"} my={"1rem"}>
               <Button
                 colorScheme={"purple"}
                 isLoading={currentlyLoading}

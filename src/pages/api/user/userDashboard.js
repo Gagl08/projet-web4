@@ -58,9 +58,9 @@ const get = async (req, res) => {
       return null;
     });
   if (users.length === 0 || users === undefined || users === null) {
-    return res.status(500).send({ error: "Aucun profil trouvé" });
+    return res.status(200).send({ users: [], message: "Aucun profil trouvé" });
   }
-  return res.status(200).send({ users });
+  return res.status(200).send({ users: users, message: "Profil(s) trouvé(s)" });
 };
 
 // faire une API pour ajouter un like / dislike
