@@ -41,7 +41,7 @@ const PieChart = () => {
 
   // Préparer les données pour le chart
   const data = {
-    labels: ["MALE", "FEMALE", "OTHER", "UNKNOWN"],
+    labels: ["Homme", "Femme", "Autre", "Inconnu"],
     datasets: [
       {
         data: countGenders(),
