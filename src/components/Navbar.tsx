@@ -21,11 +21,10 @@ export default function Navbar({ variant = "fixed" }: Props) {
   const MiddleSection = () => {
     const authenticatedLinks = (
       <>
-        <Link href={"/dashboard"}>Tableau de bord</Link>
+        <Link href={"/dashboard"}>Accueil</Link>
         <Link href={"/profile"}>Profil</Link>
         <Link href={"/map"}>Carte</Link>
         <Link href={"/graphique"}>Statistiques</Link>
-
       </>
     );
 
@@ -68,7 +67,8 @@ export default function Navbar({ variant = "fixed" }: Props) {
       backdropFilter={"auto"}
       backdropBlur={"20px"}
       px={10}
-      py={2}>
+      py={2}
+    >
       <Flex align={"center"}>
         <Box flexBasis={"100%"}>
           <Image src={"/logo.svg"} h={"3rem"} objectFit={"contain"} />
