@@ -11,9 +11,12 @@ import { useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import type { Session } from "@/models/auth/Session";
 import { Role } from "@prisma/client";
+import LoadingPage from '@/components/LoadingPage';
 
 export default function Graphique() {
   const { data: session, status } = useSession({ required: true });
+  if (status === 'loading') return <LoadingPage/>
+
   const { user } = session as unknown as Session;
   return (
     <>
