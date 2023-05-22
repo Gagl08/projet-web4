@@ -138,7 +138,7 @@ export default function ModalModifyImages(props) {
                 <GridItem key={index}>
                   <Flex
                     bg={"purple.100"}
-                    height={"95%"}
+                    height={"60vh"}
                     direction={"column"}
                     gap={"1rem"}
                     justifyContent={"space-between"}

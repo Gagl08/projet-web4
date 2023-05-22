@@ -30,7 +30,7 @@ import CustomSlider from "@/components/layout/profile/CustomSlider";
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function UserProfile() {
   const router = useRouter();
@@ -44,6 +44,8 @@ export default function UserProfile() {
   const [sliderAgeValue, setSliderAgeValue] = useState([[] as number[]]);
   const [showTooltipDistance, setShowTooltipDistance] = useState(false);
   const [sliderDistanceValue, setSliderDistanceValue] = useState<number>(0);
+
+  const queryClient = useQueryClient();
 
   const {
     handleSubmit,
@@ -147,6 +149,7 @@ export default function UserProfile() {
             status: "success",
             isClosable: true,
           });
+          queryClient.invalidateQueries({ queryKey: ["user"] });
         })
         .catch((err) => {
           setCurrentlyLoading(false);

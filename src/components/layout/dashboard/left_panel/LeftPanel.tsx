@@ -32,11 +32,12 @@ export default function LeftPanel(props) {
       bg={"#faf9ff"}
     >
       <Flex direction={"column"} height={"100%"} margin={"10%"}>
-        <Box>
+        <Flex direction={"column"} align={"center"}>
           <Image
             src={user.images[0] ?? "/blank_profile_picture.webp"}
             objectFit={"contain"}
             borderRadius={"1rem"}
+            maxHeight={"50vh"}
           />
           <Box mt={"2rem"}>
             <Flex align={"center"} justifyContent="space-between" mb={"1rem"}>
@@ -52,29 +53,33 @@ export default function LeftPanel(props) {
               {user.bio && `"${user.bio}"`}
             </Text>
           </Box>
-        </Box>
+        </Flex>
         <Spacer />
         <Flex
           gap={2}
           direction={"column"}
           mt={"1vh"}
           spacing={3.5}
-          alignContent={"bottom"}>
+          alignContent={"bottom"}
+        >
           <LeftPanelButton
             leftIcon={<FaMapMarkedAlt />}
-            onClickHandler={() => router.push("/map")}>
+            onClickHandler={() => router.push("/map")}
+          >
             Carte
           </LeftPanelButton>
 
           <LeftPanelButton
             leftIcon={<BsFillPersonFill />}
-            onClickHandler={() => router.push("/profile")}>
+            onClickHandler={() => router.push("/profile")}
+          >
             Profil
           </LeftPanelButton>
           <LeftPanelButton
             variant={"outline"}
             leftIcon={<BiLogOut />}
-            onClickHandler={() => signOut({ callbackUrl: "/" })}>
+            onClickHandler={() => signOut({ callbackUrl: "/" })}
+          >
             Déconnexion
           </LeftPanelButton>
         </Flex>

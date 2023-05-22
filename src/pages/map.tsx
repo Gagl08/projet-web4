@@ -56,7 +56,9 @@ export default function Map() {
   } = useQuery({
     queryKey: ["listBars"],
     refetchOnWindowFocus: false,
-    enabled: Boolean(loggedUser) && loggedUser.location.length > 0,
+    enabled:
+      Boolean(loggedUser) &&
+      (loggedUser.location?.length > 0 || location[0] !== null),
     queryFn: async () => {
       ///Utiliser api de noratim
 

@@ -17,16 +17,21 @@ import PassionTagList from "@/components/layout/dashboard/card_user/PassionTagLi
 import { useState } from "react";
 import SearchFailCard from "./SearchFailCard";
 import LoadingPage from "@/components/LoadingPage";
-import {User} from '@prisma/client';
+import { User } from "@prisma/client";
 
 type Props = {
-  users: User[]
-  loggedUser: User
-  setMatch: any
-  refetchLoggedUser: any
-}
+  users: User[];
+  loggedUser: User;
+  setMatch: any;
+  refetchLoggedUser: any;
+};
 
-export default function CardUser({users, loggedUser, setMatch, refetchLoggedUser}: Props) {
+export default function CardUser({
+  users,
+  loggedUser,
+  setMatch,
+  refetchLoggedUser,
+}: Props) {
   const toast = useToast({
     position: "top",
     duration: 2000,
@@ -174,7 +179,9 @@ export default function CardUser({users, loggedUser, setMatch, refetchLoggedUser
           <Heading size={"sm"} fontWeight={"bold"} mb="0.5rem">
             A propos :
           </Heading>
-          <Text as="i">&quot;{listUsers[0].bio}&quot;</Text>
+          <Text as="i" fontWeight={"bold"}>
+            {listUsers[0].bio && `"${listUsers[0].bio}"`}
+          </Text>
         </Box>
 
         <Box>
