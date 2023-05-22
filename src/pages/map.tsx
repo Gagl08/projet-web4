@@ -37,7 +37,7 @@ export default function Map() {
     enabled: status === "authenticated",
     queryFn: async () => {
       const { user } = session as unknown as Session;
-      console.log(loggedUser.location.length);
+
       return fetch(`/api/users/${user.id}`)
         .then((res) => {
           return res.json();
@@ -56,8 +56,9 @@ export default function Map() {
   } = useQuery({
     queryKey: ["listBars"],
     refetchOnWindowFocus: false,
-
-    enabled: Boolean(loggedUser) && loggedUser.location.length > 0,
+    enabled:
+      Boolean(loggedUser) &&
+      (loggedUser.location?.length > 0 || location[0] !== null),
     queryFn: async () => {
       ///Utiliser api de noratim
 
